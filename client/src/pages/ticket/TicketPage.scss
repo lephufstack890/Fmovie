@@ -1,0 +1,78 @@
+.note-seat-status {
+    justify-content: space-between;
+}
+
+.img-responsive {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.seat-cell {
+    width: 40px;
+    /* float: left; */
+    height: 30px;
+    display: inline-block;
+    text-align: center;
+    line-height: 40px;
+    font-size: 11px;
+}
+
+.seat-type-panel {
+    background-color: #f1f1f1;
+    padding: 15px 10px;
+    margin-top: 40px;
+    float: left;
+    width: 100%;
+}
+
+.border-dashed {
+    border-bottom: 1px dashed;
+  }
+
+.seat-used {
+    background-color: transparent !important;
+    background-repeat: no-repeat;
+    background-size: 35px 35px;
+    background-position: center;
+    color: #FFF;
+    font-family: SFProText;
+    font-size: 14px;
+    font-weight: 600;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: center;
+}
+
+.seat-normal {
+    background-image: url('https://www.betacinemas.vn/Assets/global/img/booking/seat-unselect-normal.png');
+}
+
+.action-type {
+    padding: 30px;
+}
+
+.action-type span {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.box-content-top{
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.dat-ve-sidebar {
+    background: #f1f1f1;
+    padding: 0;
+}
+
+.dat-ve-sidebar button {
+    background: #258dcf;
+    padding: 10px 35px;
+    color: #fff;
+    font-weight: 500;
+    border-radius: 6px;
+}

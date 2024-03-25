@@ -1,0 +1,25 @@
+.btn-mua-ve {
+  position: relative !important;
+  transition: 0.5s !important;
+  background-size: 200% auto;
+}
+
+.btn:disabled .btn-mua-ve:disabled {
+  cursor: not-allowed !important;
+}
+
+.btn-3, .btn-3:hover {
+  background-image: linear-gradient(to right, #fc3606 0%, #fda085 50%, #fc7704 100%) !important;
+}
+
+.btn-3:hover {
+  background-position: right center !important;
+}
+
+.password-icon {
+  position: absolute !important;
+  right: 10px !important;
+  top: 50% !important;
+  cursor: pointer !important;
+  transform: translateY(-50%) !important;
+}

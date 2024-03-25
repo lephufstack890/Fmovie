@@ -1,0 +1,61 @@
+.dayofweek li {
+    width: 14.285%;
+    text-align: center;
+}
+
+.dayofweek {
+    justify-content: center;
+}
+
+.nav-tabs {
+    border-color: #ccc;
+}
+
+.title {
+    font-size: 36px;
+    color: #337ab7;
+}
+
+.subtitle {
+    font-size: 25px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.list-time {
+    list-style: none;
+    padding-left: 0;
+    display: flex;
+}
+
+.item-time{
+    display: flex;
+    flex-direction: column;
+    padding-right: 10px;
+}
+
+.list-time span:first-child {
+    background-color: #cccccc;
+    padding: 10px 30px;
+}
+
+.list-time span:last-child {
+    text-align: center;
+    font-size: 10px;
+    margin-top: 10px;
+}
+
+.activeTab {
+    border-bottom: 2px solid #03599d;
+}
+
+.swiper-wrapper {
+    text-align: center;
+}
+
+.title-swiper {
+    border-bottom: 4px solid transparent;
+    border-image: linear-gradient(to right, #39adf0 0%, #075fa3 100%);
+    border-image-slice: 1;
+    border-width: 0px 0px 4px 0px;
+}

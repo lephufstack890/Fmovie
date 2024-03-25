@@ -1,0 +1,20 @@
+.list-showtime__nav {
+    border-bottom: 1px solid #cecece;
+    list-style: none;
+    margin-bottom: 20px;
+    padding-left: 0;
+    .nav-item {
+        cursor: pointer;
+        color: #333;
+        text-transform: uppercase;
+        font-weight: 400;
+        line-height: 40px;
+        padding: 15px 15px 4px;
+        border-bottom: 2px solid transparent;
+
+        &.active {
+            border-bottom: 4px solid #03599d;
+            color: #03599d;
+        }
+    }
+}

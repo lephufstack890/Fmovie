@@ -1,0 +1,38 @@
+*{
+    box-sizing: inherit;
+    margin: 0;
+    padding: 0;
+    
+
+}
+
+html{
+    box-sizing: border-box;
+}
+body{
+    font-family: "Oswald", sans-serif!important;
+    font-style: normal;
+    font-optical-sizing: auto;
+}
+a{
+    text-decoration: none!important;
+}
+
+// using rem: 1rem = 10px,
+
+
+
+
+// 
+.flex{
+    display: flex;
+}
+.items-center{
+    align-items: center;
+}
+.justify-center{
+    justify-content: center;
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
