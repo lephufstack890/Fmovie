@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import './index.scss';
-import { FaTag } from 'react-icons/fa';
+import { FaPlayCircle, FaTag } from 'react-icons/fa';
 import { IoTime } from 'react-icons/io5';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -11,9 +11,13 @@ import { useGetDayMovieListQuery } from "@/services/daymovie/daymovies.services"
 import { loadDayMovieList } from "@/services/daymovie/daymoviesSlices";
 import { useGetShowTimeListQuery } from "@/services/schedule/schedules.services";
 import { loadShowTimeList } from "@/services/schedule/schedulesSlices";
+import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
+import Showtime from '@/components/show-time/Showtime';
+import Trailer from '@/components/trailer/Trailer';
 
 const SchedulePage: React.FC = () => {
     const dispatch = useAppDispatch();
+    const [modal, setModal] = useState("");
     const movieState = useAppSelector((state) => state.showtimes.showtimes);
     const daymovieState = useAppSelector((state) => state.daymovies.daymovies);
     const [activeTab, setActiveTab] = useState<number>(1);
@@ -57,6 +61,7 @@ const SchedulePage: React.FC = () => {
     };
 
     return (
+        <Drawer>
         <div className='container'>
             <ul className="nav nav-tabs dayofweek mb-4">
                 {daymovieState?.map((item: any, index: number) => (
@@ -72,9 +77,22 @@ const SchedulePage: React.FC = () => {
                     <div className="row">
                         <div className="col-lg-12 col-md-12 col-12 mb-3" style={{ borderBottom: '1px solid #ccc' }}>
                             <div className='row mb-3'>
-                                <div className="col-lg-3 col-md-4 col-12">
-                                    <img className='rounded-4' src={selectedData?.movies?.image} alt="" />
-                                </div>
+                                <DrawerTrigger className={cn('p-0','col-lg-3')}>
+                                    <div className={cn('movie-item__image') } style={{ borderRadius: '20px' }}>
+                                        <img
+                                            src={selectedData?.movies?.image}
+                                            alt=""
+                                        />
+                                        <div
+                                            onClick={() => setModal("trailer")}
+                                            className="movie-item__overlay flex items-center justify-center"
+                                        >
+                                            <div className="play-icon flex items-center justify-center">
+                                                <FaPlayCircle className="icon" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </DrawerTrigger>
                                 <div className="col-lg-9 col-md-9 col-12 content">
                                     <h2 className="fw-bold title">
                                         <NavLink className={cn('text-[#03599d]')} to="/schedule/123">
@@ -144,7 +162,25 @@ const SchedulePage: React.FC = () => {
                     </SwiperSlide>
                 </Swiper>
             </div>
+            {modal !== "trailer" ? (
+                <DrawerContent
+                    className={cn(
+                        "mx-auto top-[18%]  fixed max-w-[1000px] w-full transform  h-[500px] overflow-hidden"
+                    )}
+                >
+                    <Showtime />
+                </DrawerContent>
+            ) : (
+                <DrawerContent
+                    className={cn(
+                        "mx-auto top-[18%] fixed max-w-[50%] w-full transform  max-h-[530px] overflow-hidden"
+                    )}
+                >
+                    <Trailer trailer={selectedData?.movies?.trailer?.url} name={selectedData?.movies.name} />
+                </DrawerContent>
+            )}
         </div>
+        </Drawer>
     );
 };
 

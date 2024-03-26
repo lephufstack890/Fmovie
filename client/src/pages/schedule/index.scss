@@ -1,7 +1,49 @@
+.movie-item__image {
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    max-height: 600px;
+    
+
+    img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+    }
+    &:hover {
+        .movie-item__overlay {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+    .movie-item__overlay {
+        opacity: 0;
+        transition: opacity 0.5s ease, visibility 0.5s;
+        position: absolute;
+
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 2px;
+        background: rgba(0, 0, 0, 0.3);
+
+        .play-icon {
+            width: 55px;
+            height: 55px;
+
+            .icon {
+                width: 55px;
+                height: 55px;
+                color: #fff;
+            }
+        }
+    }
+}
 .dayofweek li {
     width: 14.285%;
     text-align: center;
 }
+
 
 .dayofweek {
     justify-content: center;
@@ -59,3 +101,4 @@
     border-image-slice: 1;
     border-width: 0px 0px 4px 0px;
 }
+
