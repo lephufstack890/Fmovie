@@ -122,6 +122,7 @@ class TimeShowsController extends Controller
                 $seatType = SeatsType::find($seat->id_seatstype);
                 if ($seatType) {
                     $seatData[] = [
+                        'id' => $seat->id,
                         'nameRow' => $seat->nameRow,
                         'seatStatus' => $seat->seatStatus,
                         'seatType' => [
