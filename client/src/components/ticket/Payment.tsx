@@ -19,7 +19,7 @@ const Payment = ({ quantity, totalPriceProps, selectedSeatsId, selectedSeats, in
     const [timeCurrent, setTimeCurrent] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [isOpenPopup, setIsOpenPopup] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(300); 
+    const [timeLeft, setTimeLeft] = useState(360); 
     const [selectedBank, setSelectedBank] = useState(null);
     const [linkVnpay, setLinkVnpay] = useState("");
     const [cancelSeat, setCancelSeat] = useState({});
@@ -134,43 +134,6 @@ const Payment = ({ quantity, totalPriceProps, selectedSeatsId, selectedSeats, in
         <div className="row">
             <div className="col-8">
                 <h6 className="bg-gray-100 p-3">Chọn ngân hàng thanh toán</h6>
-                {/* <div className="border p-2 rounded">
-                    <div className="form-check">
-                        <input className="form-check-input" 
-                            type="radio" 
-                            name="paymentMethod" 
-                            // value="Tiền mặt"
-                            id="Tiền mặt" 
-                            onChange={() => handleInputChange("Tiền mặt")}
-                            checked={selectedInput === "Tiền mặt"}
-                        />
-                        <label className="form-check-label" htmlFor="Tiền mặt">
-                            Thanh toán tiền mặt
-                        </label>
-                    </div>
-
-                    {selectedInput === "credit_card" && (
-                    <div>
-                        <div className="text-center ml-10 mr-10 mb-2 pb-2" style={{borderBottom: "2px solid black", fontWeight: "bold"}}>
-                            Quét mã QR
-                        </div>
-                        <div className="text-center">
-                            <p>Vui lòng đăng nhập ứng dụng đã thêm thẻ UnionPay để quét mã QR và tiếp tục giao dịch</p>
-                        </div>
-                        <div className="text-center">
-                            <div style={{ border: "1px solid #ccc", borderRadius: "12px", display: "inline-block", padding: "5px" }}>
-                                <img
-                                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAo17eVU30taD4WtuJUFVZ9ymHpzBGrGwivbNQQL2hHA&s"
-                                    alt="QR Code"
-                                    id="qr_code"
-                                    className="img-fluid"
-                                />
-                                <p>Còn 17:34</p>
-                            </div>
-                        </div>
-                    </div>
-                    )}
-                </div> */}
                 <div className="border p-2 mt-2 rounded">
                     <div className="form-check">
                         <input 

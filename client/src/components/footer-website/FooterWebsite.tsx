@@ -1,7 +1,6 @@
 
 import './FooterWebsite.scss'
 import { NavLink } from 'react-router-dom'
-//
 const FooterWebsite = () => {
   return (
     <div className="pre-footer">

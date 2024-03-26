@@ -180,11 +180,11 @@ class TimeShowsController extends Controller
         $updated = $timeShow->save();
 
         // Kiểm tra xem thời gian chiếu đã được cập nhật thành công hay không
-        Seats::where('id_time', $timeShow->id)->delete();
         if ($updated) {
             // Xóa tất cả các ghế của thời gian chiếu trước khi tạo lại
-
+            
             // Kiểm tra xem mảng 'seatQuantities' có dữ liệu hay không
+            Seats::where('id_time', $timeShow->id)->delete();
             if (!empty($request->seat_quantities)) {
                 // Convert seat quantities JSON to associative array
                 $seatQuantities = json_decode($seatQuantities, true);
@@ -215,6 +215,7 @@ class TimeShowsController extends Controller
                             'nameRow' => $nameRowAbbreviation, // Assign nameRow abbreviation
                             'seatStatus' => "Chưa đặt", // You may need to adjust this based on your requirements
                             'id_seatstype' => $seatTypeIDs[$seatType], // Assign seat type ID
+                            'id_time' => $timeShow->id, // Assign seat type ID
                         ]);
                     }
                 }

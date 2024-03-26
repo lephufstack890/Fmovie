@@ -1,100 +1,110 @@
 import React, { useEffect, useState } from 'react'
 import "./index.scss"
 import { useParams } from "react-router-dom"
-import { useGetShowTimeQuery } from "@/services/schedule/schedules.services"
+import { useGetTimeShowQuery } from "@/services/timeshow/timeshows.services"
+import { any } from 'zod'
 
 
 const SelectPosition = ({ handleSeatClick, setQuantity, setTotalPriceProps, setSelectedSeatsId, setInfoShowtime }) => {
     const {id} = useParams()
 
     const {
-        data: showtime,
-        isLoading: isLoadingShowTime
-    } = useGetShowTimeQuery( id! );
+        data: timeshow,
+        isLoading: isLoadingTimeShow
+    } = useGetTimeShowQuery( id! );
 
-    
+    console.log(timeshow?.data[0].seats)
 
     const [selectedSeats, setSelectedSeats] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
-
-    // console.log(showtime)
-
+    const [seatNormal, setSeatNormal] = useState(0);
+    const [seatVip, setSeatVip] = useState(0);
+    const [seatDouble, setSeatDouble] = useState(0);
 
     useEffect(() => {
+        let seatNormal = 0;
+        let seatVip = 0;
+        let seatDouble = 0;
         let totalPrice = 0;
         let calculatedTotalPrice = 0;
         let calculatedQuantity = 0;
         selectedSeats.forEach(seat => {
-            const seatInfo = showtime?.data.rooms.seats.find(item => item.id === seat);
+            const seatInfo = timeshow?.data[0].seats.find(item => item.id === seat);
             if (seatInfo) {
-                totalPrice += parseInt(seatInfo.price);
-                calculatedTotalPrice += parseInt(seatInfo.price);
+                totalPrice += parseInt(seatInfo?.seatType.price);
+                calculatedTotalPrice += parseInt(seatInfo?.seatType.price);
                 calculatedQuantity += 1;
             }
+            if(seatInfo?.nameRow === 'T'){
+                seatNormal += 1;
+            }
+            if(seatInfo?.nameRow === 'V'){
+                seatVip += 1;
+            }
+            if(seatInfo?.nameRow === 'D'){
+                seatDouble += 1;
+            }
         });
+        setSeatNormal(seatNormal)
+        setSeatVip(seatVip)
+        setSeatDouble(seatDouble)
         setTotalPrice(totalPrice);
         setQuantity(calculatedQuantity);
         setTotalPriceProps(calculatedTotalPrice);
-        setInfoShowtime(showtime?.data);
-    }, [selectedSeats, showtime]);
+        setInfoShowtime(timeshow?.data);
+    }, [selectedSeats, timeshow]);
 
-    const toggleSeat = (seat) => {
+    const toggleSeat = (seat: any) => {
         if (selectedSeats.includes(seat)) {
-        setSelectedSeats(selectedSeats.filter((selectedSeat) => selectedSeat !== seat));
-        setSelectedSeatsId(selectedSeats.filter((selectedSeat) => selectedSeat !== seat));
+            setSelectedSeats(selectedSeats.filter((selectedSeat) => selectedSeat !== seat));
+            setSelectedSeatsId(selectedSeats.filter((selectedSeat) => selectedSeat !== seat));
         } else {
-        setSelectedSeats([...selectedSeats, seat]);
-        setSelectedSeatsId([...selectedSeats, seat]);
+            setSelectedSeats([...selectedSeats, seat]);
+            setSelectedSeatsId([...selectedSeats, seat]);
         }
     };
 
-    // for (let i = 1; i <= showtime?.data.rooms.quantity; i++) {
-    //     const seat = `J${i}`;
-    //     const seatInfo = showtime?.data.rooms.seats.find(seat => seat.id === i);
-    //     const isSelected = selectedSeats.includes(seat);
-    //     const seatClass = `seat-cell seat-used seat-normal ${isSelected ? 'seat-select' : ''} ${seatInfo?.seatStatus === 'Đã đặt' ? 'seat-booked' : ''}`;
-    //     seats.push(
-    //         <div 
-    //             // className={`seat-cell seat-used seat-normal ${isSelected ? 'seat-select' : ''}`}
-    //             className={seatClass}
-    //             key={i} 
-    //             data-id={seatInfo?.id}
-    //             data-seatStatus={seatInfo?.seatStatus}
-    //             data-price={seatInfo?.price}
-    //             onClick={() => {
-    //                 if (seatInfo?.seatStatus !== 'Đã đặt') { 
-    //                     toggleSeat(seat);
-    //                     handleSeatClick(seat);
-    //                 }
-    //             }}
-    //         >
-    //         {seat}
-    //         </div>
-    //     );
-    // }
     const renderSeats = () => {
-        if (!showtime) return null;
-
-        return showtime.data.rooms.seats.map((seatInfo) => {
-            const isSelected = selectedSeats.includes(seatInfo.id);
-            const seatClass = `seat-cell seat-used seat-normal ${isSelected ? 'seat-select' : ''} ${seatInfo.seatStatus === 'Đã đặt' ? 'seat-booked' : ''}`;
+        if (!timeshow) return null;
+        return timeshow?.data[0].seats.map((seatInfo) => {
+            const isSelected = selectedSeats.includes(seatInfo?.id);
+            // const seatClass = `seat-cell seat-empty  seat-used seat-normal ${isSelected ? 'seat-select' : ''} ${seatInfo?.seatStatus === 'Đã bán' ? 'seat-booked' : ''}`;
+            let seatClass = "seat-cell seat-empty  seat-used";
+            switch (seatInfo?.nameRow) {
+                case "T":
+                    seatClass += " seat-normal";
+                    break;
+                case "V":
+                    seatClass += " seat-vip";
+                    break;
+                case "D":
+                    seatClass += " seat-double";
+                    break;
+                default:
+                    seatClass += " seat-normal"; 
+                    break;
+            }
+            seatClass += isSelected && seatInfo?.nameRow === "T" ? " seat-select-normal" : "";
+            seatClass += isSelected && seatInfo?.nameRow === "V" ? " seat-select-vip" : "";
+            seatClass += isSelected && seatInfo?.nameRow === "D" ? " seat-select-double" : "";
+            seatClass += seatInfo?.seatStatus === 'Đã bán' ? " seat-booked" : "";
 
             return (
                 <div 
                     className={seatClass}
-                    key={seatInfo.id} 
-                    data-id={seatInfo.id}
-                    data-seatStatus={seatInfo.seatStatus}
-                    data-price={seatInfo.price}
+                    key={seatInfo?.id} 
+                    data-id={seatInfo?.id}
+                    data-seatStatus={seatInfo?.seatStatus}
+                    data-price={seatInfo?.seatType.price}
                     onClick={() => {
-                        if (seatInfo.seatStatus !== 'Đã đặt') { 
-                            toggleSeat(seatInfo.id);
+                        if (seatInfo?.seatStatus !== 'Đã bán') { 
+                            toggleSeat(seatInfo?.id);
                             // handleSeatClick(seatInfo.id);
-                            handleSeatClick(seatInfo.id, seatInfo.nameRow);
+                            handleSeatClick(seatInfo?.id, seatInfo?.nameRow);
                         }
                     }}
                 >
-                   {`${seatInfo?.nameRow}${seatInfo?.id}`}
+                   <span>{`${seatInfo?.nameRow}${seatInfo?.id}`}</span>
                 </div>
             );
         });
@@ -115,17 +125,13 @@ const SelectPosition = ({ handleSeatClick, setQuantity, setTotalPriceProps, setS
                         <span className="note-seat-status-label">Ghế đang chọn</span>
                     </div>
                     <div className="col-lg-3 col-md-3 col-12">
-                        <img width="35" height="35" src="https://www.betacinemas.vn/Assets/global/img/booking/seat-select-normal.png" />
+                        <img width="35" height="35" src="https://betacinemas.vn/Assets/global/img/booking/seat-process-normal.png" />
                         <span className="note-seat-status-label">Ghế đang được giữ</span>
                     </div>
                     <div className="col-lg-2 col-md-2 col-12">
                         <img width="35" height="35" src="https://www.betacinemas.vn/Assets/global/img/booking/seat-buy-normal.png" />
                         <span className="note-seat-status-label">Ghế đã bán</span>
                     </div>
-                    {/* <div className="col-lg-2 col-md-2 col-12">
-                        <img width="35" height="35" src="https://www.betacinemas.vn/Assets/global/img/booking/seat-set-normal.png" />
-                        <span className="note-seat-status-label">Ghế đặt trước</span>
-                    </div> */}
                 </div>
                 <div className='py-4'>
                     <div className="seat-diagram">
@@ -137,29 +143,47 @@ const SelectPosition = ({ handleSeatClick, setQuantity, setTotalPriceProps, setS
                         </div>
                     </div>
                 </div>
-                <div className='row seat-type-panel'>
+                <div className='row seat-type-panel' style={{ justifyContent: 'space-between' }}>
                     <div className="col-lg-2">
                         <img className="seat-type-image" style={{ width: '100%', maxWidth: '50px' }} src="https://www.betacinemas.vn/Assets/global/img/booking/seat-unselect-normal.png" />
-                        <span>Ghế thường</span>
+                        <div>
+                            <span>Ghế thường</span>
+                        </div>
+                        {seatNormal !== 0 && (
+                            <div className='' style={{ color: '#03599d' }}>
+                                <span>{seatNormal} x 70,000 VNĐ</span>
+                            </div>
+                        )}
                     </div>
                     <div className="col-lg-2">
-                        <img className="seat-type-image" style={{ width: '100%', maxWidth: '50px' }} src="https://www.betacinemas.vn/Assets/global/img/booking/seat-unselect-normal.png" />
-                        <span>Ghế vip</span>
+                        <img className="seat-type-image" style={{ width: '100%', maxWidth: '50px' }} src="https://betacinemas.vn/Assets/global/img/booking/seat-unselect-vip.png" />
+                        <div>
+                            <span>Ghế vip</span>
+                        </div>
+                        {seatVip !== 0 && (
+                            <div className='' style={{ color: '#03599d' }}>
+                                <span>{seatVip} x 90,000 VNĐ</span>
+                            </div>
+                        )}
                     </div>
                     <div className="col-lg-2">
-                        <img className="seat-type-image" style={{ width: '100%', maxWidth: '50px' }} src="https://www.betacinemas.vn/Assets/global/img/booking/seat-unselect-normal.png" />
-                        <span>Ghế đôi</span>
+                        <img className="seat-type-image" style={{ width: '100%', maxWidth: '50px' }} src="https://betacinemas.vn/Assets/global/img/booking/seat-unselect-double.png" />
+                        <div>
+                            <span>Ghế đôi</span>
+                        </div>
+                        {seatDouble !== 0 && (
+                            <div className='mt-4' style={{ color: '#03599d' }}>
+                                <span>{seatDouble} x 150,000 VNĐ</span>
+                            </div>
+                        )} 
                     </div>
                     <div className="col-lg-2" style={{ display: 'block' }}>
                         <div>
                             <span>Tổng tiền</span>
                         </div>
-                        <div className='mt-4' style={{ color: '#03599d' }}>
+                        <div className='mt-5' style={{ color: '#03599d' }}>
                             <span>{totalPrice.toLocaleString()} VNĐ</span>
                         </div>                       
-                    </div>
-                    <div className="col-lg-3">
-                        <span>Thời gian còn lại</span>
                     </div>
                 </div>
             </div>

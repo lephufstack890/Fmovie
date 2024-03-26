@@ -1,9 +1,38 @@
-.seat-select {
+.seat-select-normal {
     background-image: url('https://www.betacinemas.vn/Assets/global/img/booking/seat-select-normal.png');
+}
+
+.seat-select-vip {
+    background-image: url('https://www.betacinemas.vn/Assets/global/img/booking/seat-select-vip.png');
+}
+
+.seat-select-double {
+    background-image: url('https://www.betacinemas.vn/Assets/global/img/booking/seat-select-double.png');
 }
 
 .seat-booked {
     background-image: url('https://www.betacinemas.vn/Assets/global/img/booking/seat-buy-normal.png');
 }
 
+.check-show {
+    display: flex;
+}
+
+.full-width {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.seat-cell {
+    padding: 5px;
+    margin: 5px;
+    cursor: pointer;
+
+    span {
+        font-size: 10px;
+        color: #333;
+        font-weight: bold;
+    }
+}
   

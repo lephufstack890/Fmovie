@@ -5,28 +5,21 @@ import { MdOutlineHomeWork } from "react-icons/md";
 import { GrSchedules } from "react-icons/gr";
 import { MdOutlineBedroomParent } from "react-icons/md";
 import { GiRockingChair } from "react-icons/gi";
-import { useParams } from "react-router-dom"
 import { useGetShowTimeQuery } from "@/services/schedule/schedules.services"
 
 
-const DetailTicket = ({ selectedSeats, handlerNext }) => {
-    const {id} = useParams()
-
+const DetailTicket = ({ timeshow, idMovie, selectedSeats, handlerNext }) => {
+    
     const {
         data: showtime,
         isLoading: isLoadingShowTime
-    } = useGetShowTimeQuery( id! );
+    } = useGetShowTimeQuery( idMovie! );
 
     const formatDate = (dateString: string) => {
         const [year, month, day] = dateString.split('-');
         return `${day}/${month}/${year}`;
     };
     
-
-    const extractTime = (timeString: string) => {
-        const [hour, minute] = timeString.split(':');
-        return `${hour}:${minute}`;
-    };
   return (
     <>
      <div className="dat-ve-sidebar col-lg-4 col-md-4 col-12 ">
@@ -34,8 +27,8 @@ const DetailTicket = ({ selectedSeats, handlerNext }) => {
                     <img className='col-lg-6 p-0 w-80' 
                     src={showtime?.data.movies.image} alt="" />
                     <div className="box-content-top col-lg-6">
-                        <h2 className="title t">{showtime?.data.movies.name}</h2>
-                        <span>{showtime?.data.language}</span>
+                        <h2 className="title" style={{ fontSize: '25px' }}>{showtime?.data.movies.name}</h2>
+                        <span>2D Phụ đề</span>
                     </div>
                 </div>
                 <div className="action-type row border-dashed">
@@ -58,15 +51,15 @@ const DetailTicket = ({ selectedSeats, handlerNext }) => {
                         </div>
                         <div className="row pb-2">
                             <span className='d-flex align-items-center col-lg-6'><GrSchedules /> Ngày chiếu</span>
-                            <span className='col-lg-6'>{showtime?.data.showDate ? formatDate(showtime?.data.showDate) : ''}</span>
+                            <span className='col-lg-6'>{showtime?.data.movies.releaseDate ? formatDate(showtime?.data.movies.releaseDate) : ''}</span>
                         </div>
                         <div className="row pb-2">
                             <span className='d-flex align-items-center col-lg-6'><IoTime /> Giờ chiếu</span>
-                            <span className='col-lg-6'>{showtime?.data.showTime ? extractTime(showtime?.data.showTime) : ''}</span>
+                            <span className='col-lg-6'>{timeshow?.data[0].name}</span>
                         </div>
                         <div className="row pb-2">
                             <span className='d-flex align-items-center col-lg-6'><MdOutlineBedroomParent /> Phòng chiếu</span>
-                            <span className='col-lg-6'>{showtime?.data.rooms.name}</span>
+                            <span className='col-lg-6'>{timeshow?.data[0].room.name}</span>
                         </div>
                         <div className="row pb-2">
                             <span className='d-flex align-items-center col-lg-6'><GiRockingChair /> Ghế ngồi</span>

@@ -24,8 +24,6 @@ class ShowtimesResource extends JsonResource
             $categoryNames[] = $category['name'];
         }
 
-        $availableSeatsCount = $this->room->seats()->where('seatStatus', 'Chưa đặt')->count();
-
         // Khởi tạo mảng để lưu thông tin về các thời gian chiếu
         $timeShowsData = [];
         $dayMoviesData = [];
@@ -39,6 +37,10 @@ class ShowtimesResource extends JsonResource
                 if ($timeShow != null) {
                     $rooms = Room::find($timeShow->id_room);
                     $seats = Seats::where('id_time', $timeShow->id)->get();
+                    $available_seats = Seats::where([
+                        'id_time' => $timeShow->id,
+                        'seatStatus' => 'Chưa đặt'
+                    ])->count();
                 }
                 if (isset($timeShow)) {
                     // Thêm thông tin của thời gian chiếu vào mảng
@@ -58,6 +60,7 @@ class ShowtimesResource extends JsonResource
                     }
                     $timeShowsData[] = [
                         'id' => $timeShow->id,
+                        'available_seats' => $available_seats,
                         'name' => $timeShow->name,
                         'seat_quantities' => json_decode($timeShow->seat_quantities),
                         'room' => $rooms,

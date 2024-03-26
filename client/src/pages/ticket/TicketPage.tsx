@@ -9,11 +9,11 @@ import Payment from '../../components/ticket/Payment';
 // import { useSelector } from 'react-redux';
 // import { User } from '@/services/auth/auth.interface';
 import { useParams } from "react-router-dom"
+import { useGetTimeShowQuery } from "@/services/timeshow/timeshows.services"
 import { useGetShowTimeQuery } from "@/services/schedule/schedules.services"
 
 const TicketPage: React.FC = () => {
-    // const user = useSelector((state: any) => state.auth.user) as User;
-    // console.log(user);
+    const idMovie = localStorage.getItem('hiddenInfo');
 
     const {id} = useParams()
     const [totalPriceProps, setTotalPriceProps] = useState(0);
@@ -22,19 +22,24 @@ const TicketPage: React.FC = () => {
     const [selectedSeats, setSelectedSeats] = useState([]);
     const [infoShowtime, setInfoShowtime] = useState({});
 
-    // console.log(selectedSeats)
+    const {
+        data: timeshow,
+        isLoading: isLoadingTimeShow
+    } = useGetTimeShowQuery( id! );
+
+    // console.log(timeshow)
 
     const {
         data: showtime,
         isLoading: isLoadingShowTime
-    } = useGetShowTimeQuery( id! );
+    } = useGetShowTimeQuery( idMovie! );
     
-    const handleSeatClick = (seatId: any, rowName: any) => {
+    const handleSeatClick = (seatId: string, rowName: string) => {
         const seatString = rowName + seatId;
-        setSelectedSeats((prevSelectedSeatsId: any) =>
-            prevSelectedSeatsId.includes(seatString)
-                ? prevSelectedSeatsId.filter((seat: any) => seat !== seatString)
-                : [...prevSelectedSeatsId, seatString]
+        setSelectedSeats((prevSelectedSeatsId: string) =>
+            prevSelectedSeatsId.includes(seatString) 
+                ? prevSelectedSeatsId.filter((seat: string) => seat !== seatString) 
+                : [...prevSelectedSeatsId, seatString]  
         );
     };
     
@@ -80,7 +85,7 @@ const TicketPage: React.FC = () => {
                                                    infoShowtime={infoShowtime}
                                                    handlerPrevious={previousPage}
                                                 />}
-            {showDetailTicket && <DetailTicket selectedSeats={selectedSeats} handlerNext={nextPage} />}
+            {showDetailTicket && <DetailTicket timeshow={timeshow} idMovie={idMovie} selectedSeats={selectedSeats} handlerNext={nextPage} />}
         </div>
     </div>
   );

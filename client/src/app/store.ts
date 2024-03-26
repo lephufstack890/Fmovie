@@ -39,6 +39,12 @@ import showtimeSlice from "@/services/schedule/schedulesSlices";
 import { paymentApi } from "@/services/payment/payments.services";
 import paymentSlice from "@/services/payment/paymentsSlices";
 
+import { daymovieApi } from "@/services/daymovie/daymovies.services";
+import daymovieSlice from "@/services/daymovie/daymoviesSlices";
+
+import { timeshowApi } from "@/services/timeshow/timeshows.services";
+import timeshowSlice from "@/services/timeshow/timeshowsSlices";
+
 
 const persistConfig = {
     key: "root",
@@ -77,13 +83,21 @@ const rootReducer = combineReducers({
     [authApi.reducerPath]: authApi.reducer,
     auth: authSlice,
 
-     //schedule
-     [showtimeApi.reducerPath]: showtimeApi.reducer,
-     showtimes: showtimeSlice,
+    //schedule
+    [showtimeApi.reducerPath]: showtimeApi.reducer,
+    showtimes: showtimeSlice,
 
-      //payment
-      [paymentApi.reducerPath]: paymentApi.reducer,
-      payments: paymentSlice
+    //payment
+    [paymentApi.reducerPath]: paymentApi.reducer,
+    payments: paymentSlice,
+
+    //daymovie
+    [daymovieApi.reducerPath]: daymovieApi.reducer,
+    daymovies: daymovieSlice,
+
+    //timeshow
+    [timeshowApi.reducerPath]: timeshowApi.reducer,
+    timeshows: timeshowSlice,
 
 
 });
@@ -103,7 +117,11 @@ const middleware = [
 
     showtimeApi.middleware,
 
-    paymentApi.middleware
+    paymentApi.middleware,
+
+    daymovieApi.middleware,
+
+    timeshowApi.middleware
 
 ];
 
