@@ -5,7 +5,7 @@ import { useGetTimeShowQuery } from "@/services/timeshow/timeshows.services"
 import { any } from 'zod'
 
 
-const SelectPosition = ({ handleSeatClick, setQuantity, setTotalPriceProps, setSelectedSeatsId, setInfoShowtime }) => {
+const SelectPosition = ({ handleSeatClick, setQuantity, setTotalPriceProps, setSelectedSeatsId, setInfoShowtime }: any) => {
     const {id} = useParams()
 
     const {
@@ -29,7 +29,7 @@ const SelectPosition = ({ handleSeatClick, setQuantity, setTotalPriceProps, setS
         let calculatedTotalPrice = 0;
         let calculatedQuantity = 0;
         selectedSeats.forEach(seat => {
-            const seatInfo = timeshow?.data[0].seats.find(item => item.id === seat);
+            const seatInfo = timeshow?.data[0].seats.find((item: any) => item.id === seat);
             if (seatInfo) {
                 totalPrice += parseInt(seatInfo?.seatType.price);
                 calculatedTotalPrice += parseInt(seatInfo?.seatType.price);
@@ -54,7 +54,7 @@ const SelectPosition = ({ handleSeatClick, setQuantity, setTotalPriceProps, setS
         setInfoShowtime(timeshow?.data);
     }, [selectedSeats, timeshow]);
 
-    const toggleSeat = (seat: any) => {
+    const toggleSeat = (seat) => {
         if (selectedSeats.includes(seat)) {
             setSelectedSeats(selectedSeats.filter((selectedSeat) => selectedSeat !== seat));
             setSelectedSeatsId(selectedSeats.filter((selectedSeat) => selectedSeat !== seat));
