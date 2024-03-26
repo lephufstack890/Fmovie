@@ -16,7 +16,16 @@ class TimeShowsController extends Controller
      */
     public function index()
     {
-        //
+        // Lấy danh sách các thời gian chiếu
+        $timeShows = TimeShows::all();
+
+        // Kiểm tra xem có thời gian chiếu nào hay không
+        if ($timeShows->isEmpty()) {
+            // Nếu không có thời gian chiếu nào, trả về thông báo không tìm thấy dữ liệu
+            return response()->json(['message' => 'No time shows found'], 404);
+        }
+
+        return response()->json(['data' => $timeShows], 200);
     }
 
     /**
@@ -182,7 +191,7 @@ class TimeShowsController extends Controller
         // Kiểm tra xem thời gian chiếu đã được cập nhật thành công hay không
         if ($updated) {
             // Xóa tất cả các ghế của thời gian chiếu trước khi tạo lại
-            
+
             // Kiểm tra xem mảng 'seatQuantities' có dữ liệu hay không
             Seats::where('id_time', $timeShow->id)->delete();
             if (!empty($request->seat_quantities)) {

@@ -7,6 +7,7 @@ use App\Models\Room;
 use App\Models\Seats;
 use App\Models\SeatsType;
 use App\Models\TimeShows;
+use App\Models\Trailers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -104,6 +105,7 @@ class ShowtimesResource extends JsonResource
                 'releaseDate' => $this->movie->releaseDate,
                 'language' => $this->movie->language,
                 'image' => $this->movie->image,
+                'trailer' => Trailers::find($this->movie->id_trailer),
                 'day_movies' => $dayMoviesData,
                 'time_shows' => $timeShowsData, // Sử dụng mảng chứa thông tin về thời gian chiếu
             ],
