@@ -78,6 +78,7 @@ class MoviesResource extends JsonResource
                 if ($day_movie) {
                     // Thêm thông tin của thời gian chiếu vào mảng
                     $dayMoviesData[] = [
+                        'id' =>  $day_movie->id,
                         'day' => $day_movie->day,
                         'month_rank' => $day_movie->month_rank,
                     ];
