@@ -19,11 +19,19 @@ class SeatsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $seats = Seats::all();
+        $status = $request->input('status');
+
+        // Lấy danh sách ghế dựa trên trạng thái và kết hợp với thông tin phòng và kiểu ghế, sau đó phân trang với số lượng ghế trên mỗi trang là 10
+        $seats = Seats::with(['room', 'seatsType'])->where('seatStatus', $status)->paginate(10);
+
         return response()->json(['seats' => $seats]);
     }
+
+
+
+
 
     /**
      * Show the form for creating a new resource.
