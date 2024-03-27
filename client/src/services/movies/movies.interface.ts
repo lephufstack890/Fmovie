@@ -9,7 +9,7 @@ interface DetailMovie {
 }
 
 export interface Movie {
-    id?: string | number;
+    id?: number;
     name: string;
     description: string;
     time: string;

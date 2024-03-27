@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import "./index.scss"
 import { useParams } from "react-router-dom"
 import { useGetTimeShowQuery } from "@/services/timeshow/timeshows.services"
-import { any } from 'zod'
+import { TimeShow } from '@/services/timeshow/timeshows.interface'
 
 
 const SelectPosition = ({ handleSeatClick, setQuantity, setTotalPriceProps, setSelectedSeatsId, setInfoShowtime }: any) => {
@@ -12,8 +12,6 @@ const SelectPosition = ({ handleSeatClick, setQuantity, setTotalPriceProps, setS
         data: timeshow,
         isLoading: isLoadingTimeShow
     } = useGetTimeShowQuery( id! );
-
-    console.log(timeshow?.data[0].seats)
 
     const [selectedSeats, setSelectedSeats] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
@@ -29,7 +27,7 @@ const SelectPosition = ({ handleSeatClick, setQuantity, setTotalPriceProps, setS
         let calculatedTotalPrice = 0;
         let calculatedQuantity = 0;
         selectedSeats.forEach(seat => {
-            const seatInfo = timeshow?.data[0].seats.find((item: any) => item.id === seat);
+            const seatInfo = timeshow?.data[0].seats.find((item: TimeShow) => item.id === seat);
             if (seatInfo) {
                 totalPrice += parseInt(seatInfo?.seatType.price);
                 calculatedTotalPrice += parseInt(seatInfo?.seatType.price);
@@ -54,7 +52,7 @@ const SelectPosition = ({ handleSeatClick, setQuantity, setTotalPriceProps, setS
         setInfoShowtime(timeshow?.data);
     }, [selectedSeats, timeshow]);
 
-    const toggleSeat = (seat) => {
+    const toggleSeat = (seat: never) => {
         if (selectedSeats.includes(seat)) {
             setSelectedSeats(selectedSeats.filter((selectedSeat) => selectedSeat !== seat));
             setSelectedSeatsId(selectedSeats.filter((selectedSeat) => selectedSeat !== seat));
@@ -66,7 +64,7 @@ const SelectPosition = ({ handleSeatClick, setQuantity, setTotalPriceProps, setS
 
     const renderSeats = () => {
         if (!timeshow) return null;
-        return timeshow?.data[0].seats.map((seatInfo) => {
+        return timeshow?.data[0].seats.map((seatInfo: any) => {
             const isSelected = selectedSeats.includes(seatInfo?.id);
             // const seatClass = `seat-cell seat-empty  seat-used seat-normal ${isSelected ? 'seat-select' : ''} ${seatInfo?.seatStatus === 'Đã bán' ? 'seat-booked' : ''}`;
             let seatClass = "seat-cell seat-empty  seat-used";

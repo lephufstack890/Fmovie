@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./index.scss";
 import { Link } from "react-router-dom";
 import { FaTicketAlt, FaPlayCircle } from "react-icons/fa";
@@ -8,23 +8,21 @@ import Showtime from "../show-time/Showtime";
 import Trailer from "../trailer/Trailer";
 import { useGetMoviesByStatusQuery, useGetMoviesQuery } from "@/services/movies/movies.services";
 import { Movie } from "@/services/movies/movies.interface";
-import { log } from "console";
 
-type Props = {};
-
-const ListMovie = (props: Props) => {
+const ListMovie = () => {
     const [activeTab, setActiveTab] = useState("PHIM SẮP CHIẾU");
     const [modal, setModal] = useState("");
-    const [idMovie, setIdMovie] = useState<any>();
+    const [idMovie, setIdMovie] = useState(1);
     const [status, setStatus] = useState('Phim sắp chiếu')
     const handleGetMovie = (status: string, active: string) => {
         setActiveTab(active)
         setStatus(status)
     }
-    const handleTrailer = (id: any) => {
+    const handleTrailer = (id: number) => {
         setModal('trailer');
         setIdMovie(id);
     }
+
     const { data: movies } = useGetMoviesByStatusQuery(status)
 
     const { data: movie } = useGetMoviesQuery(idMovie)
@@ -74,7 +72,11 @@ const ListMovie = (props: Props) => {
                                         alt=""
                                     />
                                     <div
-                                        onClick={(): void => handleTrailer(movie.id)}
+                                        onClick={(): void => {
+                                            if (movie.id) {
+                                                handleTrailer(movie.id);
+                                            }
+                                        }}
                                         className="movie-item__overlay flex items-center justify-center"
                                     >
                                         <div className="play-icon flex items-center justify-center">
@@ -94,7 +96,9 @@ const ListMovie = (props: Props) => {
                                     <strong>Thời lượng:</strong> {movie.time} phút
                                 </p>
                                 <DrawerTrigger
-                                    onClick={() => setModal("showtime")}
+                                    onClick={() => {setModal("showtime"); if (movie.id) {
+                                        setIdMovie(movie.id);
+                                    }}}
                                     className={cn("btn-ticket")}
                                 >
                                     mua vé
@@ -113,7 +117,7 @@ const ListMovie = (props: Props) => {
                         "mx-auto top-[18%]  fixed max-w-[1000px] w-full transform  h-[500px] overflow-hidden"
                     )}
                 >
-                    <Showtime />
+                    <Showtime idMovie={idMovie}/>
                 </DrawerContent>
             ) : (
                 <DrawerContent

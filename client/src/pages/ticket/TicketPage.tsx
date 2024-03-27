@@ -34,11 +34,11 @@ const TicketPage: React.FC = () => {
         isLoading: isLoadingShowTime
     } = useGetShowTimeQuery( idMovie! );
     
-    const handleSeatClick = (seatId: string, rowName: string) => {
+    const handleSeatClick = (seatId: any, rowName: any) => {
         const seatString = rowName + seatId;
-        setSelectedSeats((prevSelectedSeatsId: string) =>
+        setSelectedSeats((prevSelectedSeatsId: any) =>
             prevSelectedSeatsId.includes(seatString) 
-                ? prevSelectedSeatsId.filter((seat: string) => seat !== seatString) 
+                ? prevSelectedSeatsId.filter((seat: any) => seat !== seatString) 
                 : [...prevSelectedSeatsId, seatString]  
         );
     };

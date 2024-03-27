@@ -15,12 +15,13 @@ import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import Showtime from '@/components/show-time/Showtime';
 import Trailer from '@/components/trailer/Trailer';
 
+
 const SchedulePage: React.FC = () => {
     const dispatch = useAppDispatch();
     const [modal, setModal] = useState("");
     const movieState = useAppSelector((state) => state.showtimes.showtimes);
     const daymovieState = useAppSelector((state) => state.daymovies.daymovies);
-    const [activeTab, setActiveTab] = useState<number>(1);
+    const [activeTab, setActiveTab] = useState(1);
 
     const {
         data: showtime,
@@ -66,7 +67,7 @@ const SchedulePage: React.FC = () => {
             <ul className="nav nav-tabs dayofweek mb-4">
                 {daymovieState?.map((item: any, index: number) => (
                     <li key={index} className={activeTab === item?.id ? 'activeTab' : ''}>
-                        <NavLink to="" onClick={() => handleTabClick(item?.id)} className='text-black text-decoration-none'>
+                        <NavLink to="" onClick={() => handleTabClick(movie.id)} className='text-black text-decoration-none'>
                             <span className='text-black fw-bold' style={{ fontSize: '38px' }}>{item?.day}</span>/{item?.month_rank}
                         </NavLink>
                     </li>
@@ -168,7 +169,7 @@ const SchedulePage: React.FC = () => {
                         "mx-auto top-[18%]  fixed max-w-[1000px] w-full transform  h-[500px] overflow-hidden"
                     )}
                 >
-                    <Showtime />
+                    <Showtime idMovie={selectedData?.id}/>
                 </DrawerContent>
             ) : (
                 <DrawerContent

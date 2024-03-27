@@ -59,7 +59,7 @@ const HeaderWebsite = () => {
         if (token) {
             const getUserByToken = async (token:string) => {
                 await getUser(token).unwrap().then((result) => {
-                    console.log(result);
+                    // console.log(result);
                     
                     dispatch(getUserToken(result))
                 })
