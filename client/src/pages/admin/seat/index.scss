@@ -1,0 +1,20 @@
+.list-seats__nav {
+    list-style: none;
+    margin-bottom: 30px;
+    padding-left: 0;
+    .nav-item {
+        cursor: pointer;
+        font-size: 19px;
+        color: #333;
+        text-transform: uppercase;
+        font-weight: 400;
+        line-height: 30px;
+        padding: 0 10px;
+        border-bottom: 4px solid transparent;
+
+        &.active {
+            border-bottom: 2px solid #03599d;
+            color: #03599d;
+        }
+    }
+}

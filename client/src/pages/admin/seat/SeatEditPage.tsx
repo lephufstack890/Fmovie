@@ -25,6 +25,10 @@ import {
   useGetSeatTypeListQuery,
 } from "@/services/seatstype/seatstype.services";
 import { loadSeatTypeList } from "@/services/seatstype/seatstypeSlices";
+import {
+  useGetTimeShowListQuery,
+} from "@/services/timeshow/timeshows.services";
+import { loadTimeShowList } from "@/services/timeshow/timeshowsSlices";
 
 const SeatEditPage = () => {
 
@@ -40,6 +44,10 @@ const SeatEditPage = () => {
     (state) => state.seatstype.seatstype
   );
 
+  const showtimeState = useAppSelector(
+    (state) => state.timeshows.timeshows
+  );
+
   const [editSeatMutation, { isLoading }] = useEditSeatMutation();
   const {
     data: seat,
@@ -51,6 +59,7 @@ const SeatEditPage = () => {
     nameRow: z.string(),
     seatStatus: z.string(),
     id_seatstype: z.union([z.number(), z.string()]),
+    id_time: z.union([z.number(), z.string()]),
   });
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -58,7 +67,8 @@ const SeatEditPage = () => {
       id_room: seat?.data.id_room,
       nameRow: seat?.data.quantity,
       seatStatus: seat?.data.seatStatus,
-      id_seatstype: seat?.data.id_seatstype
+      id_seatstype: seat?.data.id_seatstype,
+      id_time: seat?.data.id_time
     },
   })
 
@@ -68,7 +78,8 @@ const SeatEditPage = () => {
         id_room: seat.data.id_room,
         nameRow: seat.data.nameRow,
         seatStatus: seat.data.seatStatus,
-        id_seatstype: seat.data.id_seatstype
+        id_seatstype: seat.data.id_seatstype,
+        id_time: seat.data.id_time
       })
     }
   },[seat])
@@ -93,24 +104,36 @@ const SeatEditPage = () => {
     dispatch(loadSeatTypeList(seattype?.data));
   }, [isSeatTypeListSuccess]);
 
+  const {
+    data: timeshow,
+    isLoading: isTimeShowListLoading,
+    isSuccess: isTimeShowListSuccess,
+  } = useGetTimeShowListQuery([]);
+
+  useEffect(() => {
+    dispatch(loadTimeShowList(timeshow?.data));
+  }, [isTimeShowListSuccess]);
+
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     const formData = {
-      id,
-      id_room: data.id_room,
+      id: parseInt(id),
+      id_room: parseInt(data.id_room),
       nameRow: data.nameRow,
       seatStatus: data.seatStatus,
-      id_seatstype: data.id_seatstype
+      id_seatstype: parseInt(data.id_seatstype),
+      id_time: parseInt(data.id_time)
     }
+    console.log(formData)
     try {
       await editSeatMutation(formData).unwrap().then(() => {
         dispatch(editNewSeat(formData))
       }).then(() => {
-        toastSuccess('Cập nhật ghế thành công')
+        toastSuccess('Cập nhật thông tin ghế thành công')
       }).then(() => {
         navigate('/admin/seat')
       })
     } catch (error:unknown) {
-      toastError('Cập nhật ghế thất bại!')
+      toastError('Cập nhật thông tin ghế thất bại!')
     }
   };
 
@@ -193,13 +216,37 @@ const SeatEditPage = () => {
                     <select {...field} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                       <option value="">Tình trạng</option>
                       <option value="Chưa đặt">Chưa đặt</option>
-                      <option value="Đã đặt">Đã đặt</option>
+                      <option value="Đang giữ">Đang giữ</option>
+                      <option value="Đã bán">Đã bán</option>
                     </select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+            </div>
+
+            <div className="grid gap-3 lg:grid-cols-1">
+              <FormField
+                control={form.control}
+                name="id_time"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Thời gian chiếu</FormLabel>
+                    <FormControl>
+                      <select {...field} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option selected>Chọn thời gian chiếu</option>
+                        {showtimeState?.map((item, index) => (
+                          <option key={index} value={item?.id}>
+                            {item?.name}
+                          </option>
+                        ))}
+                      </select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
 
             <div>

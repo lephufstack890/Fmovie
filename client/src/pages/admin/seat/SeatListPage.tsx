@@ -1,5 +1,5 @@
 import { DeleteIcon, EditIcon } from "lucide-react";
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import {
@@ -8,13 +8,23 @@ import {
 } from "@/services/seats/seats.services";
 import { deleteSeat, loadSeatList } from "@/services/seats/seatsSlices";
 import { toastError, toastSuccess } from "@/hook/Toast";
+import Pagination from "@/components/pagination/Pagination";
+import "./index.scss";
 
 const SeatsPage = () => {
+
+    const [activeTab, setActiveTab] = useState("Ghế chưa đặt");
+    const [status, setStatus] = useState('chưa đặt')
+    const [currentPage, setCurrentPage] = useState(1)
+    const itemsPerPage = 10; 
 
     const dispatch = useAppDispatch();
     const seatState = useAppSelector(
         (state) => state.seats.seats
     );
+    const totalPages = seatState?.last_page;
+
+    // console.log(seatState?.seats);
 
     const tHead = ["STT", "STT phòng", "Tên ghế", "Trạng thái", ""];
 
@@ -22,15 +32,30 @@ const SeatsPage = () => {
         data: seat,
         isLoading: isSeatListLoading,
         isSuccess: isSeatListSuccess,
-    } = useGetSeatListQuery([]);
+    } = useGetSeatListQuery({ page: currentPage, status });
 
     const [deleteSeatApi, { isError: isDeleteSeatError }] =
     useDeleteSeatMutation();
 
     useEffect(() => {
-        dispatch(loadSeatList(seat?.seats));
-    }, [isSeatListSuccess]);
+        if (seat) {
+            dispatch(loadSeatList(seat?.seats));
+        }
+    }, [dispatch, isSeatListSuccess, seat]);
 
+    const handleGetSeat = (status: string, active: string) => {
+        setActiveTab(active)
+        setStatus(status)
+        setCurrentPage(1);
+    }
+
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage)
+    }
+
+    const getSTT = (index: number) => {
+        return (currentPage - 1) * itemsPerPage + index + 1;
+    }
 
     const handleDelete = async (id: string | number) => {
         try {
@@ -53,7 +78,7 @@ const SeatsPage = () => {
                                 Danh sách ghế
                             </h1>
                         </div>
-                        <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+                        {/* <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
                             <button
                                 type="button"
                                 className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -68,8 +93,34 @@ const SeatsPage = () => {
                                     Thêm ghế
                                 </Link>
                             </button>
-                        </div>
+                        </div> */}
                     </div>
+                    <ul className="list-seats__nav flex justify-center">
+                        <li
+                            onClick={() => handleGetSeat("chưa đặt","Ghế chưa đặt")}
+                            className={`nav-item ${
+                                activeTab === "Ghế chưa đặt" ? "active" : ""
+                            }`}
+                        >
+                            Ghế chưa đặt
+                        </li>
+                        <li
+                            onClick={() => handleGetSeat("đang giữ","Ghế đang giữ")}
+                            className={`nav-item ${
+                                activeTab === "Ghế đang giữ" ? "active" : ""
+                            }`}
+                        >
+                            Ghế đang giữ
+                        </li>
+                        <li
+                            onClick={() => handleGetSeat("đã bán","Ghế đã bán")}
+                            className={`nav-item ${
+                                activeTab === "Ghế đã bán" ? "active" : ""
+                            }`}
+                        >
+                            Ghế đã bán
+                        </li>
+                    </ul>
                 </div>
 
                 <div className="mt-8 flow-root overflow-hidden">
@@ -89,10 +140,10 @@ const SeatsPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {seatState?.map((item, index) => (
+                            {seatState?.data?.map((item, index) => (
                                 <tr key={index} className="border-b">
                                     <td className="py-2 px-3 text-base font-medium text-gray-900">
-                                        {index + 1}
+                                        {getSTT(index)}
                                     </td>
                                     <td className="hidden px-3 py-2 text-base text-gray-500 sm:table-cell">
                                         {item?.id_room}
@@ -123,6 +174,9 @@ const SeatsPage = () => {
                             ))}
                         </tbody>
                     </table>
+                    { seatState?.total > 10 && 
+                        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange}/>
+                    }
                 </div>
             </div>
             </div>

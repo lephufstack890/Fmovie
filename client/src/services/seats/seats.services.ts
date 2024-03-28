@@ -9,10 +9,11 @@ export const seatApi = createApi( {
     tagTypes: [ 'Seat' ],
     endpoints: ( builder ) => ( {
         getSeatList: builder.query( {
-            query: () => ( {
+            query: ({ page, status }) => ({
                 url: `/seats`,
                 method: 'GET',
-            } ),
+                params: { page, status }, 
+            }),
             providesTags: [ 'Seat' ]
         } ),
         getSeat: builder.query( {
