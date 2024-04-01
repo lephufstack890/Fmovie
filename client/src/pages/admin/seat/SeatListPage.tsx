@@ -26,7 +26,7 @@ const SeatsPage = () => {
 
     // console.log(seatState?.seats);
 
-    const tHead = ["STT", "Tên phòng", "Tên ghế","Kiểu ghế", "Trạng thái", ""];
+    const tHead = ["STT", "Tên phòng", "Tên ghế","Kiểu ghế", "Trạng thái", "Tác vụ"];
 
     const {
         data: seat,
