@@ -69,7 +69,7 @@ const navigation: SubNav[] = [
         current: false,
         children: [
             { name: "Danh sách ", href: "/admin/seat" },
-            { name: "Thêm ghế", href: "/admin/seat/add" },
+            // { name: "Thêm ghế", href: "/admin/seat/add" },
         ],
     },
     
