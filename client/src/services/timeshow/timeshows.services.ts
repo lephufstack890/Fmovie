@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-// import { ShowTime } from './schedules.interface';
+import { TimeShow } from './timeshows.interface';
 
 export const timeshowApi = createApi( {
     reducerPath: 'timeshowApi',
@@ -19,7 +19,30 @@ export const timeshowApi = createApi( {
             } ),
             providesTags: [ 'TimeShow' ]
         } ),
+        addTimeShow: builder.mutation<TimeShow[], TimeShow>( {
+            query: ( timeshow ) => ( {
+                url: ``,
+                method: 'POST',
+                body: timeshow
+            } ),
+            invalidatesTags: [ 'TimeShow' ]
+        } ),
+        editTimeShow: builder.mutation<TimeShow[], TimeShow>( {
+            query: ( timeshow ) => ( {
+                url: `/${ timeshow.id }`,
+                method: 'PATCH',
+                body: timeshow
+            } ),
+            invalidatesTags: [ 'TimeShow' ]
+        } ),
+        deleteTimeShow: builder.mutation<TimeShow[], string | number>( {
+            query: ( id ) => ( {
+                url: `/${ id }`,
+                method: 'DELETE',
+            } ),
+            invalidatesTags: [ 'TimeShow' ],
+        } ),
     } )
 } )
 
-export const { useGetTimeShowListQuery, useGetTimeShowQuery } = timeshowApi    
+export const { useGetTimeShowListQuery, useGetTimeShowQuery, useAddTimeShowMutation, useDeleteTimeShowMutation, useEditTimeShowMutation } = timeshowApi    

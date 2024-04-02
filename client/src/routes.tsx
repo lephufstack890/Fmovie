@@ -27,6 +27,12 @@ import {
     SeatEditPage,
     LoginPage,
     RegisterPage,
+    TrailerPageAdmin,
+    TrailerAddPage,
+    TrailerEditPage,
+    TimeShowPageAdmin,
+    TimeShowAddPage,
+    TimeShowEditPage,
 } from "./pages";
 
 import TicketPage from "./pages/ticket/TicketPage";
@@ -107,6 +113,12 @@ export const router = createBrowserRouter([
                     { path: "seat", element: <SeatPageAdmin /> },
                     { path: "seat/add", element: <SeatAddPage /> },
                     { path: "seat/edit/:id", element: <SeatEditPage /> },
+                    { path: "trailer", element: <TrailerPageAdmin /> },
+                    { path: "trailer/add", element: <TrailerAddPage /> },
+                    { path: "trailer/edit/:id", element: <TrailerEditPage /> },
+                    { path: "time-show", element: <TimeShowPageAdmin /> },
+                    { path: "time-show/add", element: <TimeShowAddPage /> },
+                    { path: "time-show/edit/:id", element: <TimeShowEditPage /> },
                 ],
             },
         ],

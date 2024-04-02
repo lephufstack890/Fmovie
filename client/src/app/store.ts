@@ -45,6 +45,9 @@ import daymovieSlice from "@/services/daymovie/daymoviesSlices";
 import { timeshowApi } from "@/services/timeshow/timeshows.services";
 import timeshowSlice from "@/services/timeshow/timeshowsSlices";
 
+import { trailerApi } from "@/services/trailer/trailers.services";
+import trailersSlices from "@/services/trailer/trailersSlices";
+
 
 const persistConfig = {
     key: "root",
@@ -99,6 +102,10 @@ const rootReducer = combineReducers({
     [timeshowApi.reducerPath]: timeshowApi.reducer,
     timeshows: timeshowSlice,
 
+    //trailer
+    [trailerApi.reducerPath]: trailerApi.reducer,
+    trailers: trailersSlices,
+
 
 });
 const middleware = [
@@ -121,7 +128,9 @@ const middleware = [
 
     daymovieApi.middleware,
 
-    timeshowApi.middleware
+    timeshowApi.middleware,
+
+    trailerApi.middleware
 
 ];
 

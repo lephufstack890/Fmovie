@@ -49,6 +49,15 @@ const navigation: SubNav[] = [
         href: 'movie-type'
     },
     {
+        name: "Trailer",
+        icon: MovieIcon,
+        current: false,
+        children: [
+            { name: "Danh sách ", href: "/admin/trailer" },
+            { name: "Thêm trailer", href: "/admin/trailer/add" },
+        ],
+    },
+    {
         name: "Rạp Phim",
         icon: CinemaIcon,
         current: false,
@@ -70,6 +79,16 @@ const navigation: SubNav[] = [
         children: [
             { name: "Danh sách ", href: "/admin/seat" },
             // { name: "Thêm ghế", href: "/admin/seat/add" },
+        ],
+    },
+
+    {
+        name: "TimeShow",
+        icon: MovieIcon,
+        current: false,
+        children: [
+            { name: "Danh sách ", href: "/admin/time-show" },
+            { name: "Thêm timeshow", href: "/admin/time-show/add" },
         ],
     },
     

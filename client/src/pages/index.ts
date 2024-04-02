@@ -21,3 +21,11 @@ export {default as SeatAddPage} from './admin/seat/SeatAddPage'
 export {default as SeatEditPage} from './admin/seat/SeatEditPage'
 export {default as LoginPage} from './auth/login/Login'
 export {default as RegisterPage} from './auth/register/Register'
+
+export {default as TrailerPageAdmin} from './admin/trailer/TrailerListPage'
+export {default as TrailerAddPage} from './admin/trailer/TrailerAddPage'
+export {default as TrailerEditPage} from './admin/trailer/TrailerEditPage'
+
+export {default as TimeShowPageAdmin} from './admin/time-show/TimeShowListPage'
+export {default as TimeShowAddPage} from './admin/time-show/TimeShowAddPage'
+export {default as TimeShowEditPage} from './admin/time-show/TimeShowEditPage'
