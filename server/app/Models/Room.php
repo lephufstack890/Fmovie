@@ -11,9 +11,8 @@ class Room extends Model
 
     protected $fillable = [
         'id_cinema',
-        'quantity',
         'name'
-        ];
+    ];
 
     public function cinema()
     {

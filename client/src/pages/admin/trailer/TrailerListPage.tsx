@@ -30,7 +30,7 @@ const TrailerListPage = () => {
     }, [isTrailerListSuccess]);
 
 
-    const tHead = ["STT", "Link Trailer", "DateShow", "Tình Trạng", ""];
+    const tHead = ["STT", "Link Trailer", "Thời gian", "Tác vụ", ""];
 
 
     const handleDeleteTrailer = async (id: string | number) => {
