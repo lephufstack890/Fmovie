@@ -33,6 +33,12 @@ import {
     TimeShowPageAdmin,
     TimeShowAddPage,
     TimeShowEditPage,
+    DayMoviePageAdmin,
+    DayMovieAddPage,
+    DayMovieEditPage,
+    RoomPageAdmin,
+    RoomAddPage,
+    RoomEditPage,
 } from "./pages";
 
 import TicketPage from "./pages/ticket/TicketPage";
@@ -119,6 +125,12 @@ export const router = createBrowserRouter([
                     { path: "time-show", element: <TimeShowPageAdmin /> },
                     { path: "time-show/add", element: <TimeShowAddPage /> },
                     { path: "time-show/edit/:id", element: <TimeShowEditPage /> },
+                    { path: "day-movie", element: <DayMoviePageAdmin /> },
+                    { path: "day-movie/add", element: <DayMovieAddPage /> },
+                    { path: "day-movie/edit/:id", element: <DayMovieEditPage /> },
+                    { path: "room", element: <RoomPageAdmin /> },
+                    { path: "room/add", element: <RoomAddPage /> },
+                    { path: "room/edit/:id", element: <RoomEditPage /> },
                 ],
             },
         ],

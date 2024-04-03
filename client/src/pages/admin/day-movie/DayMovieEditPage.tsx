@@ -12,45 +12,62 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useAppDispatch } from "@/app/hooks"
-import { useNavigate } from "react-router-dom"
+import { useEffect } from 'react'
+import { useNavigate, useParams } from "react-router-dom"
 import { toastError, toastSuccess } from "@/hook/Toast"
-import { addNewTrailer } from "@/services/trailer/trailersSlices"
-import { useAddTrailerMutation } from "@/services/trailer/trailers.services"
+import { editNewDayMovie } from "@/services/daymovie/daymoviesSlices"
+import { useEditDayMovieMutation, useGetDayMovieQuery } from "@/services/daymovie/daymovies.services"
 
 
-const TrailerAddPage = () => {
+const DayMovieEditPage = () => {
 
+  const { id } = useParams();
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const [addTrailerMutation, {isLoading}] = useAddTrailerMutation()
+  const [editDayMovieMutation, {isLoading}] = useEditDayMovieMutation()
+
+  const {
+    data: daymovie,
+    isLoading: isLoadingDayMovie
+  } = useGetDayMovieQuery( id! );
 
   const FormSchema = z.object({
-    url: z.string(),
-    dateShow: z.string(),
+    day: z.union([z.number(), z.string()]),
+    month_rank: z.string(),
   });
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      url: "",
-      dateShow: "",
+      day: daymovie?.data.day,
+      month_rank: daymovie?.data.month_rank,
     },
   })
 
+  useEffect(() => {
+    if (daymovie) {
+      form.reset({
+        day: daymovie.data.day,
+        month_rank: daymovie.data.month_rank,
+      })
+    }
+  },[daymovie])
+
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     const formData = {
-      url: data.url,
-      dateShow: data.dateShow,
+      id,
+      day: data.day,
+      month_rank: data.month_rank,
     }
     try {
-      await addTrailerMutation(formData).unwrap().then(() => {
-        dispatch(addNewTrailer(formData))
+      await editDayMovieMutation(formData).unwrap().then(() => {
+        dispatch(editNewDayMovie(formData))
       }).then(() => {
-        toastSuccess('Thêm trailer thành công')
+        toastSuccess('Cập nhật ngày chiếu thành công')
       }).then(() => {
-        navigate('/admin/trailer')
+        navigate('/admin/day-movie')
       })
     } catch (error:unknown) {
-      toastError('Thêm trailer thất bại!')
+      toastError('Cập nhật ngày chiếu thất bại!')
     }
   };
 
@@ -59,16 +76,16 @@ const TrailerAddPage = () => {
       <div  className="">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="relative border border-gray-100 space-y-3 max-w-screen-md mx-auto rounded-md bg-white p-6 shadow-xl ">
-          <h1  className="mb-6 text-xl font-semibold lg:text-2xl">Thêm Trailer</h1>
+          <h1  className="mb-6 text-xl font-semibold lg:text-2xl">Cập nhật ngày chiếu</h1>
             <div  className="grid gap-3 md:grid-cols-1">
               <FormField
                 control={form.control}
-                name="url"
+                name="day"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Link Trailer</FormLabel>
+                    <FormLabel>Ngày chiếu</FormLabel>
                     <FormControl>
-                      <Input placeholder="https://www.youtube.com/embed/7LH-TIcPqks?si=1uNBIaydQH56cXlm" className="mt-2 h-12 w-full rounded-md bg-gray-100 px-3" {...field} />
+                      <Input placeholder="Ví dụ: ngày 10 thì nhập 10" className="mt-2 h-12 w-full rounded-md bg-gray-100 px-3" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -79,22 +96,20 @@ const TrailerAddPage = () => {
             <div  className="grid gap-3 md:grid-cols-1">
               <FormField
                 control={form.control}
-                name="dateShow"
+                name="month_rank"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Ngày khởi chiếu</FormLabel>
+                    <FormLabel>Tháng chiếu</FormLabel>
                     <FormControl>
-                      <Input type="date" placeholder="" className="mt-2 h-12 w-full rounded-md bg-gray-100 px-3" {...field} />
+                      <Input placeholder="Ví dụ: tháng 03 thứ 2 thì nhập 03-T2" className="mt-2 h-12 w-full rounded-md bg-gray-100 px-3" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-
-
             <div>
-              <Button type="submit" className="mt-5 w-full rounded-md bg-blue-600 p-2 text-center font-semibold text-white">Xác Nhận Thêm</Button>
+              <Button type="submit" className="mt-5 w-full rounded-md bg-blue-600 p-2 text-center font-semibold text-white">Cập nhật</Button>
             </div>
         </form>
         </Form>
@@ -103,4 +118,4 @@ const TrailerAddPage = () => {
   )
 }
 
-export default TrailerAddPage
+export default DayMovieEditPage

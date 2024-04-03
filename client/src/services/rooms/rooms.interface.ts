@@ -1,7 +1,7 @@
 export interface Room {
     id?: string | number;
     id_cinema: string | number;
-    quantity: string | number;
+    name: string;
 }
 
 export interface RoomState {

@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-// import { ShowTime } from './schedules.interface';
+import { DayMovie } from './daymovies.interface';
 
 export const daymovieApi = createApi( {
     reducerPath: 'daymovieApi',
@@ -12,14 +12,37 @@ export const daymovieApi = createApi( {
             query: () => ``,
             providesTags: [ 'DayMovie' ]
         } ),
-        // getShowTime: builder.query( {
-        //     query: ( id: string | number ) => ( {
-        //         url: `/${ id }`,
-        //         method: 'GET',
-        //     } ),
-        //     providesTags: [ 'ShowTime' ]
-        // } ),
+        getDayMovie: builder.query({
+            query: (id: string | number) => ({
+                url: `/${id}`,
+                method: "GET",
+            }),
+            providesTags: [ 'DayMovie' ]
+        }),
+        addDayMovie: builder.mutation<DayMovie[], DayMovie>( {
+            query: ( daymovie ) => ( {
+                url: ``,
+                method: 'POST',
+                body: daymovie
+            } ),
+            invalidatesTags: [ 'DayMovie' ]
+        } ),
+        editDayMovie: builder.mutation<DayMovie[], DayMovie>( {
+            query: ( daymovie ) => ( {
+                url: `/${ daymovie.id }`,
+                method: 'PATCH',
+                body: daymovie
+            } ),
+            invalidatesTags: [ 'DayMovie' ]
+        } ),
+        deleteDayMovie: builder.mutation<DayMovie[], string | number>( {
+            query: ( id ) => ( {
+                url: `/${ id }`,
+                method: 'DELETE',
+            } ),
+            invalidatesTags: [ 'DayMovie' ],
+        } ),
     } )
 } )
 
-export const { useGetDayMovieListQuery } = daymovieApi    
+export const { useGetDayMovieListQuery, useAddDayMovieMutation, useDeleteDayMovieMutation, useEditDayMovieMutation, useGetDayMovieQuery } = daymovieApi    

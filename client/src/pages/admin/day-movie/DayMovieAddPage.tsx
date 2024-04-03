@@ -14,43 +14,43 @@ import { Input } from "@/components/ui/input"
 import { useAppDispatch } from "@/app/hooks"
 import { useNavigate } from "react-router-dom"
 import { toastError, toastSuccess } from "@/hook/Toast"
-import { addNewTrailer } from "@/services/trailer/trailersSlices"
-import { useAddTrailerMutation } from "@/services/trailer/trailers.services"
+import { addNewDayMovie } from "@/services/daymovie/daymoviesSlices"
+import { useAddDayMovieMutation } from "@/services/daymovie/daymovies.services"
 
 
-const TrailerAddPage = () => {
+const DayMovieAddPage = () => {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const [addTrailerMutation, {isLoading}] = useAddTrailerMutation()
+  const [addDayMovieMutation, {isLoading}] = useAddDayMovieMutation()
 
   const FormSchema = z.object({
-    url: z.string(),
-    dateShow: z.string(),
+    day: z.string(),
+    month_rank: z.string(),
   });
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      url: "",
-      dateShow: "",
+      day: "",
+      month_rank: "",
     },
   })
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     const formData = {
-      url: data.url,
-      dateShow: data.dateShow,
+      day: data.day,
+      month_rank: data.month_rank,
     }
     try {
-      await addTrailerMutation(formData).unwrap().then(() => {
-        dispatch(addNewTrailer(formData))
+      await addDayMovieMutation(formData).unwrap().then(() => {
+        dispatch(addNewDayMovie(formData))
       }).then(() => {
-        toastSuccess('Thêm trailer thành công')
+        toastSuccess('Thêm ngày chiếu thành công')
       }).then(() => {
-        navigate('/admin/trailer')
+        navigate('/admin/day-movie')
       })
     } catch (error:unknown) {
-      toastError('Thêm trailer thất bại!')
+      toastError('Thêm ngày chiếu thất bại!')
     }
   };
 
@@ -59,16 +59,16 @@ const TrailerAddPage = () => {
       <div  className="">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="relative border border-gray-100 space-y-3 max-w-screen-md mx-auto rounded-md bg-white p-6 shadow-xl ">
-          <h1  className="mb-6 text-xl font-semibold lg:text-2xl">Thêm Trailer</h1>
+          <h1  className="mb-6 text-xl font-semibold lg:text-2xl">Thêm ngày chiếu</h1>
             <div  className="grid gap-3 md:grid-cols-1">
               <FormField
                 control={form.control}
-                name="url"
+                name="day"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Link Trailer</FormLabel>
+                    <FormLabel>Ngày chiếu</FormLabel>
                     <FormControl>
-                      <Input placeholder="https://www.youtube.com/embed/7LH-TIcPqks?si=1uNBIaydQH56cXlm" className="mt-2 h-12 w-full rounded-md bg-gray-100 px-3" {...field} />
+                      <Input placeholder="Ví dụ: ngày 10 thì nhập 10" className="mt-2 h-12 w-full rounded-md bg-gray-100 px-3" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -79,20 +79,18 @@ const TrailerAddPage = () => {
             <div  className="grid gap-3 md:grid-cols-1">
               <FormField
                 control={form.control}
-                name="dateShow"
+                name="month_rank"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Ngày khởi chiếu</FormLabel>
+                    <FormLabel>Tháng chiếu</FormLabel>
                     <FormControl>
-                      <Input type="date" placeholder="" className="mt-2 h-12 w-full rounded-md bg-gray-100 px-3" {...field} />
+                      <Input placeholder="Ví dụ: tháng 03 thứ 2 thì nhập 03-T2" className="mt-2 h-12 w-full rounded-md bg-gray-100 px-3" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-
-
             <div>
               <Button type="submit" className="mt-5 w-full rounded-md bg-blue-600 p-2 text-center font-semibold text-white">Xác Nhận Thêm</Button>
             </div>
@@ -103,4 +101,4 @@ const TrailerAddPage = () => {
   )
 }
 
-export default TrailerAddPage
+export default DayMovieAddPage

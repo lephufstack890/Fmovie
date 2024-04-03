@@ -29,3 +29,11 @@ export {default as TrailerEditPage} from './admin/trailer/TrailerEditPage'
 export {default as TimeShowPageAdmin} from './admin/time-show/TimeShowListPage'
 export {default as TimeShowAddPage} from './admin/time-show/TimeShowAddPage'
 export {default as TimeShowEditPage} from './admin/time-show/TimeShowEditPage'
+
+export {default as DayMoviePageAdmin} from './admin/day-movie/DayMovieListPage'
+export {default as DayMovieAddPage} from './admin/day-movie/DayMovieAddPage'
+export {default as DayMovieEditPage} from './admin/day-movie/DayMovieEditPage'
+
+export {default as RoomPageAdmin} from './admin/room/RoomListPage'
+export {default as RoomAddPage} from './admin/room/RoomAddPage'
+export {default as RoomEditPage} from './admin/room/RoomEditPage'

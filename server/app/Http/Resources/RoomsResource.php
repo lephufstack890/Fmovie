@@ -28,6 +28,8 @@ class RoomsResource extends JsonResource
     return [
         'id' => $this->id,
         'cinema' => [
+            'id' => $this->cinema->id,
+            'name' => $this->cinema->name,
             'address' => $this->cinema->address,
             'description' => $this->cinema->description,
             'phoneContact' => $this->cinema->phoneContact,

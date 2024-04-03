@@ -56,6 +56,16 @@ const navigation: SubNav[] = [
     },
 
     {
+        name: "Phòng chiếu",
+        icon: MovieIcon,
+        current: false,
+        children: [
+            { name: "Danh sách ", href: "/admin/room" },
+            { name: "Thêm phòng chiếu", href: "/admin/room/add" },
+        ],
+    },
+
+    {
         name: "Voucher",
         icon: VoucherIcon,
         current: false,
@@ -92,6 +102,18 @@ const navigation: SubNav[] = [
             { name: "Thêm thời gian chiếu", href: "/admin/time-show/add" },
         ],
     },
+
+    {
+        name: "Ngày chiếu",
+        icon: MovieIcon,
+        current: false,
+        children: [
+            { name: "Danh sách ", href: "/admin/day-movie" },
+            { name: "Thêm ngày chiếu", href: "/admin/day-movie/add" },
+        ],
+    },
+
+    
     
 
 
