@@ -62,9 +62,14 @@ class DayMoviesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(DayMovies $dayMovies)
+    public function show(string $id)
     {
-        //
+        $dayMovies = DayMovies::find($id);
+        if (!$dayMovies) {
+            return response()->json(['message' => 'Không tìm thấy ']);
+        } else {
+            return response()->json(['data' => $dayMovies], 200);
+        }
     }
 
     /**
@@ -78,39 +83,27 @@ class DayMoviesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, DayMovies $dayMovies)
+    public function update(Request $request, string $id)
     {
-        // Validate the incoming request data
-        $validatedData = $request->validate([
-            'day' => 'required|integer',
-            'month_rank' => 'required|string|max:255',
-        ]);
-
-        // Update the DayMovies instance with the validated data
-        $dayMovies->update($validatedData);
-
-        // Return a response indicating success or failure
-        if ($dayMovies) {
-            return response()->json(['message' => 'Day movie updated successfully'], 200);
-        } else {
-            return response()->json(['message' => 'Failed to update day movie'], 500);
+        $dayMovies = DayMovies::find($id);
+        if (!$dayMovies) {
+            return response()->json(['message' => 'Không tìm thấy ']);
         }
+        $dayMovies->update($request->all());
+        return response()->json(['message' => 'Day movie updated successfully'], 200);
     }
 
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(DayMovies $dayMovies)
+    public function destroy(string $id)
     {
-        // Delete the specified DayMovies instance
-        $deleted = $dayMovies->delete();
-
-        // Return a response indicating success or failure
-        if ($deleted) {
-            return response()->json(['message' => 'Day movie deleted successfully'], 200);
-        } else {
-            return response()->json(['message' => 'Failed to delete day movie'], 500);
+        $dayMovies = DayMovies::find($id);
+        if(!$dayMovies){
+            return response()->json(['message' => 'Không tìm thấy']) ;
         }
+        $dayMovies->delete();
+        return response()->json(['message' => 'Day movie deleted successfully']) ;
     }
 }
