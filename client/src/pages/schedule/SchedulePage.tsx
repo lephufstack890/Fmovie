@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import './index.scss';
-import { FaPlayCircle, FaTag } from 'react-icons/fa';
+import { FaPlayCircle, FaTag, FaTicketAlt } from 'react-icons/fa';
 import { IoTime } from 'react-icons/io5';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -12,16 +12,27 @@ import { loadDayMovieList } from "@/services/daymovie/daymoviesSlices";
 import { useGetShowTimeListQuery } from "@/services/schedule/schedules.services";
 import { loadShowTimeList } from "@/services/schedule/schedulesSlices";
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
-import Showtime from '@/components/show-time/Showtime';
 import Trailer from '@/components/trailer/Trailer';
+import Showtime from "../../components/show-time/Showtime";
+import { useGetMoviesByStatusQuery, useGetMoviesQuery } from "@/services/movies/movies.services";
 
 
 const SchedulePage: React.FC = () => {
     const dispatch = useAppDispatch();
-    const [modal, setModal] = useState("");
     const movieState = useAppSelector((state) => state.showtimes.showtimes);
     const daymovieState = useAppSelector((state) => state.daymovies.daymovies);
     const [activeTab, setActiveTab] = useState(1);
+    const [modal, setModal] = useState("");
+    const [idMovie, setIdMovie] = useState(1);
+
+    const { data: movies } = useGetMoviesByStatusQuery('Phim sắp chiếu')
+
+    const { data: movie } = useGetMoviesQuery(idMovie)
+
+    const handleTrailer = (id: number) => {
+        setModal('trailer');
+        setIdMovie(id);
+    }
 
     const {
         data: showtime,
@@ -67,7 +78,7 @@ const SchedulePage: React.FC = () => {
             <ul className="nav nav-tabs dayofweek mb-4">
                 {daymovieState?.map((item: any, index: number) => (
                     <li key={index} className={activeTab === item?.id ? 'activeTab' : ''}>
-                        <NavLink to="" onClick={() => handleTabClick(movie.id)} className='text-black text-decoration-none'>
+                        <NavLink to="" onClick={() => handleTabClick(item.id)} className='text-black text-decoration-none'>
                             <span className='text-black fw-bold' style={{ fontSize: '38px' }}>{item?.day}</span>/{item?.month_rank}
                         </NavLink>
                     </li>
@@ -85,7 +96,7 @@ const SchedulePage: React.FC = () => {
                                             alt=""
                                         />
                                         <div
-                                            onClick={() => setModal("trailer")}
+                                            onClick={() => setModal("trailers")}
                                             className="movie-item__overlay flex items-center justify-center"
                                         >
                                             <div className="play-icon flex items-center justify-center">
@@ -132,7 +143,58 @@ const SchedulePage: React.FC = () => {
                 )}
             </div>
             <div>
-                <h2 className='text-center fw-bold'><span className='title-swiper'>PHIM SẮP CHIẾU</span></h2>
+                <h2 className='text-center fw-bold mb-4'><span className='title-swiper'>PHIM SẮP CHIẾU</span></h2>
+
+                <div className="list-movie flex ">
+                    {movies?.data?.map((movie: Movie) => (
+                        <div className="movie-item" key={movie.id}>
+                            <DrawerTrigger className={cn('p-0 ')}>
+                                <div className={cn('movie-item__image ') }>
+                                    <img
+                                        src={movie.image}
+                                        alt=""
+                                    />
+                                    <div
+                                        onClick={(): void => {
+                                            if (movie.id) {
+                                                handleTrailer(movie.id);
+                                            }
+                                        }}
+                                        // onClick={() => setModal("trailer")}
+                                        className="movie-item__overlay flex items-center justify-center"
+                                    >
+                                        <div className="play-icon flex items-center justify-center">
+                                            <FaPlayCircle className="icon" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </DrawerTrigger>
+                            <div className="movie-item__bottom">
+                                <Link className="movie-item__title" to={`/movie/${movie.id}`}>
+                                    {movie.name}
+                                </Link>
+                                <p>
+                                    <strong>Thể loại:</strong>{movie.detail.categories.map((category) => category.name).join(', ')}
+                                </p>
+                                <p>
+                                    <strong>Thời lượng:</strong> {movie.time} phút
+                                </p>
+                                <DrawerTrigger
+                                    onClick={() => {setModal("showtime"); if (movie.id) {
+                                        setIdMovie(movie.id);
+                                    }}}
+                                    className={cn("btn-ticket")}
+                                >
+                                    mua vé
+                                    <div className="icon-ticket flex items-center justify-center">
+                                        <FaTicketAlt className="icon" />
+                                    </div>
+                                </DrawerTrigger>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
                 <Swiper
                     className='my-4'
                     spaceBetween={20}
@@ -163,23 +225,30 @@ const SchedulePage: React.FC = () => {
                     </SwiperSlide>
                 </Swiper>
             </div>
-            {modal !== "trailer" ? (
-                <DrawerContent
+            {modal === "showtime" ? (
+               <DrawerContent
                     className={cn(
-                        "mx-auto top-[18%]  fixed max-w-[1000px] w-full transform  h-[500px] overflow-hidden"
+                        "mx-auto top-[18%] fixed max-w-[1000px] w-full transform h-[500px] overflow-hidden"
                     )}
                 >
-                    <Showtime idMovie={selectedData?.id}/>
+                    <Showtime idMovie={idMovie} />
                 </DrawerContent>
-            ) : (
+            ) : modal === "trailer" ? (
                 <DrawerContent
                     className={cn(
                         "mx-auto top-[18%] fixed max-w-[50%] w-full transform  max-h-[530px] overflow-hidden"
                     )}
                 >
+                    <Trailer trailer={movie?.data?.trailer?.url} name={movie?.data?.name} />
+                </DrawerContent>
+            ) : <DrawerContent
+                    className={cn(
+                        "mx-auto top-[18%]  fixed max-w-[1000px] w-full transform  h-[500px] overflow-hidden"
+                    )}
+                >
                     <Trailer trailer={selectedData?.movies?.trailer?.url} name={selectedData?.movies.name} />
                 </DrawerContent>
-            )}
+            }
         </div>
         </Drawer>
     );

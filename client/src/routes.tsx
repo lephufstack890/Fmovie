@@ -39,13 +39,13 @@ import {
     RoomPageAdmin,
     RoomAddPage,
     RoomEditPage,
+    MoviePageAdmin,
+    MovieAddPage,
+    MovieEditPage,
 } from "./pages";
 
 import TicketPage from "./pages/ticket/TicketPage";
 import DetailMoviePage from "./pages/detailMovie/DetailMoviePage";
-import MovieListPage from "./pages/admin/movie/MovieListPage";
-import MovieAddPage from "./pages/admin/movie/MovieAddPage";
-import MovieEditPage from "./pages/admin/movie/MovieEditPage";
 import { useEffect } from "react";
 import { useAppSelector } from "./app/hooks";
 import { useGetUserMutation } from "./services/auth/auth.services";
@@ -68,7 +68,7 @@ const PriviteRouter = () => {
                     }
                 })
                 .catch((error: unknown) => {
-                    console.log(error);
+                    // console.log(error);
                 });
         }
     }, [getUser, token]);
@@ -113,7 +113,7 @@ export const router = createBrowserRouter([
                     { path: "voucher", element: <VoucherPageAdmin /> },
                     { path: "voucher/add", element: <VoucherAddPage /> },
                     { path: "voucher/edit/:id", element: <VoucherEditPage /> },
-                    { path: "movie", element: <MovieListPage /> },
+                    { path: "movie", element: <MoviePageAdmin /> },
                     { path: "movie/add", element: <MovieAddPage /> },
                     { path: "movie/edit/:id", element: <MovieEditPage /> },
                     { path: "seat", element: <SeatPageAdmin /> },

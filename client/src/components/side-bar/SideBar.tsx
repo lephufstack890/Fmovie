@@ -40,7 +40,10 @@ const navigation: SubNav[] = [
         name: "Phim",
         icon: MovieIcon,
         current: false,
-        href: 'movie'
+        children: [
+            { name: "Danh sách ", href: "/admin/movie" },
+            { name: "Thêm phim", href: "/admin/movie/add" },
+        ],
     },
     {
         name: "Thể Loại",

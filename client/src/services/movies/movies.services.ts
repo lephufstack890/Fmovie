@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { Movie } from "./movies.interface"
 
 export const moviesApi = createApi({
     reducerPath: "moviesApi",
@@ -17,6 +18,29 @@ export const moviesApi = createApi({
                 method: "GET",
             }),
         }),
+        addMovies: builder.mutation<Movie[], Movie>( {
+            query: ( movie ) => ( {
+                url: ``,
+                method: 'POST',
+                body: movie
+            } ),
+            invalidatesTags: [ 'Movies' ]
+        } ),
+        editMovies: builder.mutation<Movie[], Movie>( {
+            query: ( movie ) => ( {
+                url: `/${ movie.id }`,
+                method: 'PATCH',
+                body: movie
+            } ),
+            invalidatesTags: [ 'Movies' ]
+        } ),
+        deleteMovies: builder.mutation<Movie[], string | number>( {
+            query: ( id ) => ( {
+                url: `/${ id }`,
+                method: 'DELETE',
+            } ),
+            invalidatesTags: [ 'Movies' ],
+        } ),
         getMoviesByStatus: builder.query({
             query: (status: string) => ({
                 url: `/filter-by-status/${status}`
@@ -25,4 +49,4 @@ export const moviesApi = createApi({
     }),
 });
 
-export const { useGetMoviesListQuery, useGetMoviesByStatusQuery, useGetMoviesQuery } = moviesApi;
+export const { useGetMoviesListQuery, useGetMoviesByStatusQuery, useGetMoviesQuery, useAddMoviesMutation, useDeleteMoviesMutation, useEditMoviesMutation } = moviesApi;

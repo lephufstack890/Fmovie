@@ -1,26 +1,18 @@
-interface DetailMovie {
-    trailer_url: string;
-    categories: [
-        {
-            id?: string;
-            name: string;
-        }
-    ];
-}
-
 export interface Movie {
-    id?: number;
+    id?: string | number;
     name: string;
     description: string;
+    status: string;
     time: string;
     director: string;
     actor: string;
     releaseDate: string;
     language: string;
-    id_category: string[];
     image: string;
+    id_category?: string | number;
     id_trailer?: string | number;
-    detail: DetailMovie;
+    id_time?: string[] | number[];
+    id_day_movie?: string[] | number[];
 }
 
 export interface MovieState {

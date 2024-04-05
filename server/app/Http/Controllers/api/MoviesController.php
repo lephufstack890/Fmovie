@@ -58,6 +58,7 @@ class MoviesController extends Controller
         $movie = Movies::create([
             'name' => $request->name,
             'description' => $request->description,
+            'status' => $request->status,
             'time' => $request->time,
             'director' => $request->director,
             'actor' => $request->actor,
@@ -133,6 +134,7 @@ class MoviesController extends Controller
         $movie->update([
             'name' => $request->name,
             'description' => $request->description,
+            'status' => $request->status,
             'time' => $request->time,
             'director' => $request->director,
             'actor' => $request->actor,

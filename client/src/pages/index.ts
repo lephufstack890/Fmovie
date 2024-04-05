@@ -19,6 +19,7 @@ export {default as VoucherEditPage} from './admin/voucher/VoucherEditPage'
 export {default as SeatPageAdmin} from './admin/seat/SeatListPage'
 export {default as SeatAddPage} from './admin/seat/SeatAddPage'
 export {default as SeatEditPage} from './admin/seat/SeatEditPage'
+
 export {default as LoginPage} from './auth/login/Login'
 export {default as RegisterPage} from './auth/register/Register'
 
@@ -37,3 +38,7 @@ export {default as DayMovieEditPage} from './admin/day-movie/DayMovieEditPage'
 export {default as RoomPageAdmin} from './admin/room/RoomListPage'
 export {default as RoomAddPage} from './admin/room/RoomAddPage'
 export {default as RoomEditPage} from './admin/room/RoomEditPage'
+
+export {default as MoviePageAdmin} from './admin/movie/MovieListPage'
+export {default as MovieAddPage} from './admin/movie/MovieAddPage'
+export {default as MovieEditPage} from './admin/movie/MovieEditPage'
