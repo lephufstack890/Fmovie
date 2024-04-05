@@ -49,8 +49,6 @@ class MoviesController extends Controller
             'language' => 'required|string|max:255',
             'image' => 'required|string|max:255',
             'id_trailer' => 'required|exists:trailers,id',
-            // 'id_category' => 'required|array',
-            // 'id_time' => 'required|array',
         ]);
 
 
@@ -58,7 +56,6 @@ class MoviesController extends Controller
         $movie = Movies::create([
             'name' => $request->name,
             'description' => $request->description,
-            'status' => $request->status,
             'time' => $request->time,
             'director' => $request->director,
             'actor' => $request->actor,
@@ -66,7 +63,7 @@ class MoviesController extends Controller
             'language' => $request->language,
             'image' => $request->image,
             'id_trailer' => $request->id_trailer,
-            'id_category' => $request->id_category,
+            'id_category' => json_encode($request->id_category),
             'id_time' => json_encode($request->id_time),
             'id_day_movie' => json_encode($request->id_day_movie),
         ]);
@@ -123,8 +120,6 @@ class MoviesController extends Controller
             'language' => 'required|string|max:255',
             'image' => 'required|string|max:255',
             'id_trailer' => 'required|exists:trailers,id',
-            // 'id_category' => 'required|array',
-            // 'id_time' => 'required|array',
         ]);
 
         // Find the movie by ID
@@ -134,7 +129,6 @@ class MoviesController extends Controller
         $movie->update([
             'name' => $request->name,
             'description' => $request->description,
-            'status' => $request->status,
             'time' => $request->time,
             'director' => $request->director,
             'actor' => $request->actor,
@@ -142,7 +136,7 @@ class MoviesController extends Controller
             'language' => $request->language,
             'image' => $request->image,
             'id_trailer' => $request->id_trailer,
-            'id_category' => $request->id_category,
+            'id_category' => json_encode($request->id_category),
             'id_time' => json_encode($request->id_time),
             'id_day_movie' => json_encode($request->id_day_movie),
         ]);

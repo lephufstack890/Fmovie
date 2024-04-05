@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Category;
 use App\Models\DayMovies;
 use App\Models\Room;
 use App\Models\Seats;
@@ -28,6 +29,7 @@ class MoviesResource extends JsonResource
         // Khởi tạo mảng để lưu thông tin về các thời gian chiếu
         $timeShowsData = [];
         $dayMoviesData = [];
+        $categoryData = [];
         // Khởi tạo mảng để lưu thông tin về các thời gian chiếu
         $seatData = [];
 
@@ -86,6 +88,20 @@ class MoviesResource extends JsonResource
             }
         }
 
+        if ($this->id_category) {
+            foreach (json_decode($this->id_category, true) as $item) {
+                $category = Category::find($item);
+
+                if ($category) {
+                    // Thêm thông tin của thời gian chiếu vào mảng
+                    $categoryData[] = [
+                        'id' =>  $category->id,
+                        'name' => $category->name,
+                    ];
+                }
+            }
+        }
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -96,7 +112,7 @@ class MoviesResource extends JsonResource
             'actor' => $this->actor,
             'releaseDate' => $this->releaseDate,
             'language' => $this->language,
-            'id_category' => $categoryIds,
+            'id_category' => $categoryData,
             'detail' => [
                 'trailer_url' => $this->trailer->url,
                 'categories' => $this->categories,
