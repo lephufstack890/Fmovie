@@ -41,6 +41,7 @@ const MovieEditPage = () => {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedDays, setSelectedDays] = useState([]);
   const [selectedTimes, setSelectedTimes] = useState([]);
 
@@ -52,8 +53,9 @@ const MovieEditPage = () => {
 
   console.log(movie)
 
-  const timeShowIds = movie?.data?.time_shows.map((timeshow) => timeshow.id) || []
-  const dayMovieIds = movie?.data?.day_movies.map((daymovie) => daymovie.id) || []
+  const categoryIds = movie?.data?.id_category.map((category: any) => category.id) || []
+  const timeShowIds = movie?.data?.time_shows.map((timeshow: any) => timeshow.id) || []
+  const dayMovieIds = movie?.data?.day_movies.map((daymovie: any) => daymovie.id) || []
 
   useEffect(() => {
     if (movie) {
@@ -67,9 +69,9 @@ const MovieEditPage = () => {
         releaseDate: movie.data.releaseDate,
         language: movie.data.language,
         image: movie.data.image,
-        id_category: movie.data.id_category,
         id_trailer: movie.data.trailer.id,
       }),
+      setSelectedCategories(categoryIds)
       setSelectedTimes(timeShowIds)
       setSelectedDays(dayMovieIds)
     }
@@ -77,7 +79,18 @@ const MovieEditPage = () => {
 
   const [editMovieMutation, {isLoading}] = useEditMoviesMutation()
 
-  const handleSelectTimeShowChange = (event) => {
+  const handleSelectCategoryChange = (event: any) => {
+    const selectedValue = event.target.value
+    const selectedCategory = categoryState?.find((category) => category.id == selectedValue)
+    if (selectedCategory && !selectedCategories.includes(selectedCategory.id)) {
+      setSelectedCategories((prevItems) => [...prevItems, selectedCategory.id])
+    }
+  };
+  const handleRemoveCategory = (selectedItemId: any) => {
+    setSelectedCategories((prevItems) => prevItems.filter((itemId) => itemId !== selectedItemId))
+  }
+
+  const handleSelectTimeShowChange = (event: any) => {
     const selectedValue = event.target.value
     const selectedTimeShow = timeshowState?.find((timeshow) => timeshow.id == selectedValue)
     if (selectedTimeShow && !selectedTimes.includes(selectedTimeShow.id)) {
@@ -154,7 +167,6 @@ const MovieEditPage = () => {
     releaseDate: z.string(),
     language: z.string(),
     image: z.string(),
-    id_category: z.union([z.number(), z.string()]),
     id_trailer: z.union([z.number(), z.string()]),
   });
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -169,7 +181,6 @@ const MovieEditPage = () => {
       releaseDate: movie?.data.releaseDate,
       language: movie?.data.language,
       image: movie?.data.image,
-      id_category: movie?.data.id_category,
       id_trailer: movie?.data.trailer.id,
     },
   })
@@ -187,7 +198,7 @@ const MovieEditPage = () => {
       releaseDate: data.releaseDate,
       language: data.language,
       image: data.image,
-      id_category: data.id_category,
+      id_category: selectedCategories,
       id_trailer: data.id_trailer,
       id_time: selectedTimes,
       id_day_movie: selectedDays,
@@ -245,14 +256,25 @@ const MovieEditPage = () => {
             </div>
 
             <div className="grid gap-3 lg:grid-cols-1">
-              <FormField
-                control={form.control}
-                name="id_category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Thể loại phim</FormLabel>
-                    <FormControl>
-                      <select {...field} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <FormLabel className="block text-sm font-medium text-gray-900 dark:text-white">Thể loại (Nếu bạn muốn bỏ thể loại đó thì nhấp chuột vào thể loại đó. Ví dụ: bỏ Hành động thì nhấp chuột vào "Hành động")</FormLabel>
+                  <div style={{ display: 'flex' }}>
+                      {selectedCategories?.map((selectedCategorysId, index) => {
+                        const selectedCategory = categoryState?.find(
+                          (category) => category.id == selectedCategorysId
+                        )
+                        return ( 
+                          <div 
+                            key={index} 
+                            style={{ margin: '0 8px', padding: '4px 12px', background: '#ccc', borderRadius: '6px' }}
+                            onClick={() => handleRemoveCategory(selectedCategory?.id)}
+                          >
+                              {selectedCategory?.name}
+                          </div>
+                        )
+                      })}
+                    </div>
+              <FormControl>
+                      <select onChange={handleSelectCategoryChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option selected>Chọn thể loại</option>
                         {categoryState?.map((item, index) => (
                           <option key={index} value={item?.id}>
@@ -260,11 +282,7 @@ const MovieEditPage = () => {
                           </option>
                         ))}
                       </select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                  </FormControl>
             </div>
 
             <div  className="grid gap-3 md:grid-cols-1">

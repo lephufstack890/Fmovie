@@ -16,6 +16,8 @@ const MovieListPage = () => {
         (state) => state.movies.movies
     );
 
+    console.log(movieState)
+
     const {
         data: movie,
         isSuccess: isMovieListSuccess,
@@ -111,7 +113,7 @@ const MovieListPage = () => {
                                         {item?.name}
                                     </td>
                                     <td className="hidden px-3 py-2 text-base text-gray-500 sm:table-cell">
-                                        {getCategoryNames(item?.detail?.categories)}
+                                        {getCategoryNames(item?.id_category)}
                                     </td>
                                     <td className="hidden px-3 py-2 text-base text-gray-500 sm:table-cell">
                                         {item?.time} phút

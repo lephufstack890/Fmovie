@@ -39,12 +39,24 @@ import { loadDayMovieList } from "@/services/daymovie/daymoviesSlices"
 
 const MovieAddPage = () => {
 
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedDays, setSelectedDays] = useState([]);
   const [selectedTimes, setSelectedTimes] = useState([]);
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const [addMovieMutation, {isLoading}] = useAddMoviesMutation()
+
+  const handleSelectCategoryChange = (event) => {
+    const selectedValue = event.target.value
+    const selectedCategory = categoryState?.find((category) => category.id == selectedValue)
+    if (selectedCategory && !selectedCategories.includes(selectedCategory.id)) {
+      setSelectedCategories((prevItems) => [...prevItems, selectedCategory.id])
+    }
+  };
+  const handleRemoveCategory = (selectedItemId: number) => {
+    setSelectedCategories((prevItems) => prevItems.filter((itemId) => itemId !== selectedItemId))
+  }
 
   const handleSelectTimeShowChange = (event) => {
     const selectedValue = event.target.value
@@ -71,6 +83,7 @@ const MovieAddPage = () => {
   const categoryState = useAppSelector(
     (state) => state.categories.categories
   );
+  console.log(categoryState);
   const {
     data: category,
     isSuccess: isCategoryListSuccess,
@@ -123,7 +136,7 @@ const MovieAddPage = () => {
     releaseDate: z.string(),
     language: z.string(),
     image: z.string(),
-    id_category: z.string(),
+    // id_category: z.string(),
     id_trailer: z.string(),
   });
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -138,7 +151,7 @@ const MovieAddPage = () => {
       releaseDate: "",
       language: "",
       image: "",
-      id_category: "",
+      // id_category: "",
       id_trailer: "",
     },
   })
@@ -155,7 +168,7 @@ const MovieAddPage = () => {
       releaseDate: data.releaseDate,
       language: data.language,
       image: data.image,
-      id_category: data.id_category,
+      id_category: selectedCategories,
       id_trailer: data.id_trailer,
       id_time: selectedTimes,
       id_day_movie: selectedDays,
@@ -213,14 +226,25 @@ const MovieAddPage = () => {
             </div>
 
             <div className="grid gap-3 lg:grid-cols-1">
-              <FormField
-                control={form.control}
-                name="id_category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Thể loại phim</FormLabel>
-                    <FormControl>
-                      <select {...field} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              <FormLabel className="block text-sm font-medium text-gray-900 dark:text-white">Thể loại (Nếu bạn muốn bỏ thể loại đó thì nhấp chuột vào thể loại đó. Ví dụ: bỏ Hành động thì nhấp chuột vào "Hành động")</FormLabel>
+                  <div style={{ display: 'flex' }}>
+                      {selectedCategories?.map((selectedCategorysId, index) => {
+                        const selectedCategory = categoryState?.find(
+                          (category) => category.id == selectedCategorysId
+                        )
+                        return ( 
+                          <div 
+                            key={index} 
+                            style={{ margin: '0 8px', padding: '4px 12px', background: '#ccc', borderRadius: '6px' }}
+                            onClick={() => handleRemoveCategory(selectedCategory?.id)}
+                          >
+                              {selectedCategory?.name}
+                          </div>
+                        )
+                      })}
+                    </div>
+              <FormControl>
+                      <select onChange={handleSelectCategoryChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option selected>Chọn thể loại</option>
                         {categoryState?.map((item, index) => (
                           <option key={index} value={item?.id}>
@@ -228,11 +252,7 @@ const MovieAddPage = () => {
                           </option>
                         ))}
                       </select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                  </FormControl>
             </div>
 
             <div  className="grid gap-3 md:grid-cols-1">
