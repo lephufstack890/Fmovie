@@ -116,19 +116,6 @@ class SeatsController extends Controller
 
     public function chooseSeat(Request $request)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'id_user' => 'required|exists:users,id',
-        //     'id_seat' => 'required',
-        //     'id_seat.*' => 'exists:seats,id',
-        //     'id_showtime' => 'required|exists:showtimes,id',
-        // ]);
-
-        // if ($validator->fails()) {
-        //     return response()->json([
-        //         'status' => 422,
-        //         'message' => $validator->messages()
-        //     ], 422);
-        // }
 
         // Chuyển đổi id_seat thành mảng nếu nó không phải là một mảng
         $id_seat = $request->input('id_seat');
@@ -139,22 +126,22 @@ class SeatsController extends Controller
         // Lặp qua các ghế được chọn
         foreach ($id_seat as $seatId) {
             $seat = Seats::find($seatId);
-            if (!$seat) {
-                return response()->json([
-                    'status' => 404,
-                    'message' => 'Ghế không tồn tại',
-                ], 404);
-            }
+            // if (!$seat) {
+            //     return response()->json([
+            //         'status' => 404,
+            //         'message' => 'Ghế không tồn tại',
+            //     ], 404);
+            // }
 
-            if ($seat->seatStatus !== 'Chưa đặt') {
-                return response()->json([
-                    'status' => 400,
-                    'message' => 'Ghế đã được đặt vui lòng chọn ghế khác', //hoặc đang giữ
-                ], 400);
-            }
+            // if ($seat->seatStatus !== 'Chưa đặt') {
+            //     return response()->json([
+            //         'status' => 400,
+            //         'message' => 'Ghế đã được giữ vui lòng chọn ghế khác', //hoặc đang giữ
+            //     ], 400);
+            // }
 
             // Cập nhật trạng thái ghế thành "Đang giữ"
-            $seat->seatStatus = 'Đã đặt';
+            $seat->seatStatus = $request->input('status');
             $seat->save();
             // Giữ ghế trong một khoảng thời gian nhất định
             // $this->holdSeats($seatId, $request->id_user);
@@ -163,7 +150,7 @@ class SeatsController extends Controller
         // Trả về phản hồi thành công
         return response()->json([
             'status' => 200,
-            'message' => 'Đã đặt ghế thành công',
+            'message' => 'Cập nhật trạng thái thành công',
 
         ], 200);
     }

@@ -25,6 +25,9 @@ const ListMovie = () => {
 
     const { data: movies } = useGetMoviesByStatusQuery(status)
 
+    console.log(movies);
+    
+
     const { data: movie } = useGetMoviesQuery(idMovie)
 
     return (
@@ -90,7 +93,7 @@ const ListMovie = () => {
                                     {movie.name}
                                 </Link>
                                 <p>
-                                    <strong>Thể loại:</strong>{movie.detail.categories.map((category) => category.name).join(', ')}
+                                    <strong>Thể loại:</strong>{movie?.id_category.map((category) => category.name).join(', ')}
                                 </p>
                                 <p>
                                     <strong>Thời lượng:</strong> {movie.time} phút

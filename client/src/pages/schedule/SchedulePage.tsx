@@ -107,7 +107,7 @@ const SchedulePage: React.FC = () => {
                                 </DrawerTrigger>
                                 <div className="col-lg-9 col-md-9 col-12 content">
                                     <h2 className="fw-bold title">
-                                        <NavLink className={cn('text-[#03599d]')} to="/schedule/123">
+                                        <NavLink className={cn('text-[#03599d]')} to={`/movie/${selectedData?.id}`}>
                                             {selectedData?.movies.name}
                                         </NavLink>
                                     </h2>

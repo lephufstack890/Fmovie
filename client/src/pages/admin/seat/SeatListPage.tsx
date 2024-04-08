@@ -134,7 +134,7 @@ const SeatsPage = () => {
                                             {item?.room?.name}
                                         </td>
                                         <td className="hidden px-3 py-2 text-base text-gray-500 sm:table-cell">
-                                            {item?.nameRow}
+                                            {item?.nameRow}{item?.id}
                                         </td>
                                         <td className="hidden px-3 py-2 text-base text-gray-500 sm:table-cell">
                                             {item?.seats_type?.name}

@@ -63,8 +63,8 @@ Route::resource('rooms',RoomsController::class);
 Route::resource('seats',SeatsController::class);
 Route::resource('seatstype',SeatsTypeController::class);
 Route::resource('tickets',TicketsController::class);
-Route::post('payment',[TransactionController::class, 'Payment']);
-Route::post('payment/update',[TransactionController::class, 'UpdatePayment']);
+// Route::post('payment',[TransactionController::class, 'Payment']);
+// Route::post('payment/update',[TransactionController::class, 'UpdatePayment']);
 
-// Route::post('/payment', [VNPayController::class, 'index']);
-// Route::get('/vnpay/callback', [VNPayController::class, 'callback'])->name('vnpay.callback');
+Route::post('/payment', [VNPayController::class, 'index']);
+Route::post('/vnpay/callback', [VNPayController::class, 'callback'])->name('vnpay.callback');

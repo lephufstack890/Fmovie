@@ -51,6 +51,13 @@ class TimeShowsController extends Controller
         // Convert seat quantities array to JSON string
         $seatQuantities = json_encode($request->seat_quantities);
 
+        $existingShowtime = TimeShows::where('name', $request->name)->first();
+
+        if ($existingShowtime) {
+            // Nếu tên đã tồn tại, trả về thông báo lỗi
+            return response()->json(['message' => 'Failed to create time show'], 400);
+        }
+
         // Create a new TimeShows instance with the validated data
         $timeShow = TimeShows::create([
             'id_room' => $request->id_room,

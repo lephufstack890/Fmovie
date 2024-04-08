@@ -14,7 +14,12 @@ class Transaction extends Model
         'paymentMethod',
         'time',
         'totalPayment',
-        'paymentStatus'
+        'paymentStatus',
+        'order_code',
+        'seats',
+        'name_cinemas',
+        'name_movie',
+        'name_room'
     ] ;
 
     public function user()

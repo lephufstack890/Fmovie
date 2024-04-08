@@ -36,22 +36,22 @@ const HeaderWebsite = () => {
             title: "Rạp",
             linkTo: "/cinema"
         },
-        {
-            title: "Giá Vé",
-            linkTo: ""
-        },
-        {
-            title: "Tin Mới và Ưu Đãi",
-            linkTo: ""
-        },
-        {
-            title: "Nhượng Quyền",
-            linkTo: ""
-        },
-        {
-            title: "Thành Viên",
-            linkTo: "/register"
-        },
+        // {
+        //     title: "Giá Vé",
+        //     linkTo: ""
+        // },
+        // {
+        //     title: "Tin Mới và Ưu Đãi",
+        //     linkTo: ""
+        // },
+        // {
+        //     title: "Nhượng Quyền",
+        //     linkTo: ""
+        // },
+        // {
+        //     title: "Thành Viên",
+        //     linkTo: "/register"
+        // },
     ]
 
 
@@ -76,7 +76,7 @@ const HeaderWebsite = () => {
             <div className="pre-header">
                 <div className="container">
                     <div className="row">
-                        <div className="col-md-16 col-sm-16 additional-nav">
+                        <div className="col-md-12 col-sm-12 additional-nav">
                             <div className="pull-right padding-left-10">
                                 <a href="#"></a>
                             </div>
@@ -104,14 +104,14 @@ const HeaderWebsite = () => {
             </div>
             <div className="header">
                 <div className="container">
-                    <div className="row">
+                    <div className="row" style={{ justifyContent: 'space-between' }}>
                         <div className="col-md-2">
                             <NavLink className="site-logo" to="/">
                                 <img style={{width: '100px'}}
                                      src="https://i.gyazo.com/f42624877a99b415498194df29e2e45b.png" alt=""/>
                             </NavLink>
                         </div>
-                        <div className="col-md-2">
+                        {/* <div className="col-md-2">
                             <div className="top-cart-block">
                                 <div className="top-cart-info">
                                     <div className="header-navigation menu-cinema">
@@ -203,8 +203,8 @@ const HeaderWebsite = () => {
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-md-8">
+                        </div> */}
+                        <div className="col-md-9">
                             <div className="header-navigation pull-right list-menu">
                                 <ul>
                                     {Menu?.map((item, index) => (

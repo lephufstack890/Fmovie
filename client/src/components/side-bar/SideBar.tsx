@@ -51,12 +51,12 @@ const navigation: SubNav[] = [
         current: false,
         href: 'movie-type'
     },
-    {
-        name: "Rạp Phim",
-        icon: CinemaIcon,
-        current: false,
-        href: 'cinema'
-    },
+    // {
+    //     name: "Rạp Phim",
+    //     icon: CinemaIcon,
+    //     current: false,
+    //     href: 'cinema'
+    // },
 
     {
         name: "Phòng chiếu",

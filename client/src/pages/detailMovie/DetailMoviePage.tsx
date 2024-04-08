@@ -91,10 +91,10 @@ const DetailMoviePage: React.FC = () => {
                                 </div>
                                 <div className="row">
                                     <span className="col-lg-4 fw-bold">
-                                        THỂ LOẠI:
+                                        THỂ LOẠI: 
                                     </span>
                                     <span className="col-lg-8">
-                                    {movie?.data.detail.categories.map((category:Category) => category.name).join(', ')}
+                                    {movie?.data?.id_category.map((category) => category.name).join(', ')}
                                     </span>
                                 </div>
                                 <div className="row">
