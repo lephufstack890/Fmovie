@@ -23,6 +23,7 @@ import { CalendarIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { useRegisterMutation } from "@/services/auth/auth.services";
 import { toastError, toastSuccess } from "@/hook/Toast";
+import { log } from "console";
 const FormSchema = z
     .object({
         email: z
@@ -87,6 +88,11 @@ const Register = () => {
           toastSuccess('Đăng kí thành công')
           navigate('/login')
         }).catch((error: any) => {
+            if(error.data.date[0]) {
+                form.setError("date", {
+                    type: "server",
+                message: error.data.date[0]});
+            }
      
             if (error.data.email[0]) {
                 form.setError("email", {
@@ -109,36 +115,6 @@ const Register = () => {
                     <h1 className="font-light text-lg">Đăng kí</h1>
                     <FormField
                         control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Email</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Email..." {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="password"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Mật khẩu</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="password"
-                                        placeholder="Mật khẩu..."
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
                         name="name"
                         render={({ field }) => (
                             <FormItem>
@@ -150,23 +126,7 @@ const Register = () => {
                             </FormItem>
                         )}
                     />
-                    <FormField
-                        control={form.control}
-                        name="phone_number"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Số điện thoại</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="Số điện thoại..."
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
+                     <FormField
                         control={form.control}
                         name="date"
                         render={({ field }) => (
@@ -214,12 +174,59 @@ const Register = () => {
                     />
                     <FormField
                         control={form.control}
+                        name="phone_number"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Số điện thoại</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="Số điện thoại..."
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Email</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Email..." {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Mật khẩu</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="password"
+                                        placeholder="Mật khẩu..."
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
                         name="confirmPassword"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Nhập lại mật khẩu</FormLabel>
                                 <FormControl>
                                     <Input
+                                        type="password"
                                         placeholder="Nhập lại mật khẩu..."
                                         {...field}
                                     />

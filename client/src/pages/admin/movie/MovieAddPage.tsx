@@ -421,7 +421,7 @@ const MovieAddPage = () => {
                           style={{ margin: '0 8px', padding: '4px 12px', background: '#ccc', borderRadius: '6px' }}
                           onClick={() => handleRemoveTimeShow(selectedTimeShow?.id)}
                         >
-                            {selectedTimeShow?.name}
+                            {selectedTimeShow?.name} - {'phòng chiếu '+ selectedTimeShow?.id_room}
                         </div>
                       )
                     })}
@@ -431,7 +431,7 @@ const MovieAddPage = () => {
                         <option selected>Chọn thời gian chiếu</option>
                         {timeshowState?.map((item, index) => (
                           <option key={index} value={item?.id}>
-                            {item?.name}
+                            {item?.name} - {'phòng chiếu '+ item?.id_room}
                           </option>
                         ))}
                       </select>
@@ -451,7 +451,7 @@ const MovieAddPage = () => {
                             style={{ margin: '0 8px', padding: '4px 12px', background: '#ccc', borderRadius: '6px' }}
                             onClick={() => handleRemoveDayMovie(selectedDayMovie?.id)}
                           >
-                              Ngày {selectedDayMovie?.day}
+                              Ngày {selectedDayMovie?.day} - {selectedDayMovie?.month_rank}
                           </div>
                         )
                       })}
@@ -461,7 +461,7 @@ const MovieAddPage = () => {
                         <option selected>Chọn ngày chiếu</option>
                         {daymovieState?.map((item, index) => (
                           <option key={index} value={item?.id}>
-                            {item?.day}
+                            {item?.day} - {item?.month_rank}
                           </option>
                         ))}
                       </select>

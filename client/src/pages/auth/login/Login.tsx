@@ -55,9 +55,6 @@ const Login = () => {
             })
             .catch((error:any) => {
                 toastError(error.data.message)
-                // form.setError("password", {
-                //     type: "server",
-                // message: error.data.message});
             });
     };
     return (
