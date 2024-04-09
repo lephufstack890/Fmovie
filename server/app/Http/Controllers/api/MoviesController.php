@@ -47,13 +47,20 @@ class MoviesController extends Controller
             'actor' => 'required|string|max:255',
             'releaseDate' => 'required|string|max:255',
             'language' => 'required|string|max:255',
-            'image' => 'required|string|max:255',
+            // 'image' => 'required|string|max:255',
             'id_trailer' => 'required|exists:trailers,id',
         ]);
 
+        if ($request->hasFile('image')) {
+            $file = $request->image;
+            $fileName = $file->getClientOriginalName();
+            $file->move('images', $file->getClientOriginalName());
+            $images = 'images/' . $fileName;
+            $data['image'] = $images;
+        }
 
         // Create a new movie instance with the validated data
-        $movie = Movies::create([
+        Movies::create([
             'name' => $request->name,
             'description' => $request->description,
             'status' => $request->status,
@@ -62,21 +69,14 @@ class MoviesController extends Controller
             'actor' => $request->actor,
             'releaseDate' => $request->releaseDate,
             'language' => $request->language,
-            'image' => $request->image,
+            'image' => url($data['image']),
             'id_trailer' => $request->id_trailer,
             'id_category' => json_encode($request->id_category),
             'id_time' => json_encode($request->id_time),
             'id_day_movie' => json_encode($request->id_day_movie),
         ]);
 
-        // // Attach categories to the movie
-        // $movie->categories()->attach($request->input('id_category'));
-
-        // // Attach times to the movie
-        // $movie->times()->attach($request->input('id_time'));
-
-        // Return the newly created movie
-        return new MoviesResource($movie);
+        return response()->json(['message' => 'Thêm phim thành công!'], 201);
     }
 
 
@@ -119,12 +119,21 @@ class MoviesController extends Controller
             'actor' => 'required|string|max:255',
             'releaseDate' => 'required|string|max:255',
             'language' => 'required|string|max:255',
-            'image' => 'required|string|max:255',
             'id_trailer' => 'required|exists:trailers,id',
+            // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Hình ảnh có thể là null và phải có định dạng hợp lệ
         ]);
 
         // Find the movie by ID
         $movie = Movies::findOrFail($id);
+
+        $data = [];
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $fileName = $file->getClientOriginalName();
+            $file->move('images', $fileName); // Lưu trữ hình ảnh vào thư mục 'images'
+            $data['image'] = 'images/' . $fileName; // Lưu đường dẫn của ảnh vào biến data
+        }
 
         // Update the movie with the validated data
         $movie->update([
@@ -136,16 +145,16 @@ class MoviesController extends Controller
             'actor' => $request->actor,
             'releaseDate' => $request->releaseDate,
             'language' => $request->language,
-            'image' => $request->image,
+            'image' => isset($data['image']) ? url($data['image']) : $movie->image, // Giữ nguyên đường dẫn của ảnh nếu không có hình ảnh mới được tải lên
             'id_trailer' => $request->id_trailer,
             'id_category' => json_encode($request->id_category),
             'id_time' => json_encode($request->id_time),
             'id_day_movie' => json_encode($request->id_day_movie),
         ]);
 
-        // Return the updated movie
-        return new MoviesResource($movie);
+        return response()->json(['message' => 'Cập nhật phim thành công!'], 200);
     }
+
 
 
     public function destroy($id)

@@ -16,7 +16,6 @@ const MovieListPage = () => {
         (state) => state.movies.movies
     );
 
-    console.log(movieState)
 
     const {
         data: movie,

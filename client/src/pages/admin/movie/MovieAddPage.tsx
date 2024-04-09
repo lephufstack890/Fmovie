@@ -127,17 +127,17 @@ const MovieAddPage = () => {
 
 
   const FormSchema = z.object({
-    name: z.string(),
-    description: z.string(),
-    status: z.string(),
-    time: z.string(),
-    director: z.string(),
-    actor: z.string(),
-    releaseDate: z.string(),
-    language: z.string(),
-    image: z.string(),
-    // id_category: z.string(),
-    id_trailer: z.string(),
+    name: z.string().nonempty("Tên phim không được để trống!"),
+    description: z.string().nonempty("Mô tả không được để trống!"),
+    status: z.string().nonempty("Trạng thái không được để trống!"),
+    time: z.string().nonempty("Thời lượng phim không được để trống!"),
+    director: z.string().nonempty("Giám đốc bộ phim không được để trống!"),
+    actor: z.string().nonempty("Diễn viên không được để trống!"),
+    releaseDate: z.string().nonempty("Ngày bộ phim ra mắt không được để trống!"),
+    language: z.string().nonempty("Ngôn ngữ không được để trống!"),
+    image: z.string().nonempty("Hình ảnh không được để trống!"),
+    // id_category: z.string().nonempty("Thể loại không được để trống!"),
+    id_trailer: z.string().nonempty("Trailer không được để trống!"),
   });
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -373,7 +373,7 @@ const MovieAddPage = () => {
             </div>
 
             <div className="grid gap-3 lg:grid-cols-1">
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="id_trailer"
                 render={({ field }) => (
@@ -388,6 +388,19 @@ const MovieAddPage = () => {
                           </option>
                         ))}
                       </select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              /> */}
+               <FormField
+                control={form.control}
+                name="id_trailer"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Link video trailer</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Link video trailer" className="mt-2 h-12 w-full rounded-md bg-gray-100 px-3" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
