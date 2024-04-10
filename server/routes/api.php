@@ -22,6 +22,7 @@ use App\Http\Controllers\api\TimeShowsController;
 use App\Http\Controllers\api\TransactionController;
 use App\Http\Resources\TransactionVoucherLinkResource;
 use App\Http\Controllers\api\TransactionVoucherLinkController;
+use App\Http\Controllers\api\UploadImageController;
 use App\Http\Controllers\api\VNPayController;
 use App\Models\DayMovies;
 
@@ -63,7 +64,7 @@ Route::resource('rooms',RoomsController::class);
 Route::resource('seats',SeatsController::class);
 Route::resource('seatstype',SeatsTypeController::class);
 Route::resource('tickets',TicketsController::class);
-// Route::post('payment',[TransactionController::class, 'Payment']);
+Route::post('upload/file',[UploadImageController::class, 'upload']);
 // Route::post('payment/update',[TransactionController::class, 'UpdatePayment']);
 
 Route::post('/payment', [VNPayController::class, 'index']);
