@@ -25,6 +25,7 @@ use App\Http\Controllers\api\TransactionVoucherLinkController;
 use App\Http\Controllers\api\UploadImageController;
 use App\Http\Controllers\api\VNPayController;
 use App\Models\DayMovies;
+use App\Models\Movies;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,7 +54,7 @@ Route::resource('daymovies',DayMoviesController::class);
 Route::get('/movies_search', [MoviesController::class, 'search']);  // tìm kiếm theo name
 Route::get('/movies/filter-by-category/{categoryName}', [MoviesController::class, 'filterByCategory']); // lọc phim theo danh mục
 Route::get('/movies/filter-by-status/{status}', [MoviesController::class, 'filterByStatus']);
-Route::get('/showtimes/filter/{id}', [ShowtimesController::class, 'filterByDate']); // lọc theo ngày chiếu
+Route::get('/movies/filter/{id}', [MoviesController::class, 'filterByDate']); // lọc theo ngày chiếu
 Route::post('tickets/book', [TicketsController::class, 'bookTicket']); // Đặt vé tạm thời bỏ
 Route::post('/select-seat', [SeatsController::class, 'chooseSeat']); // chọn ghế
 Route::resource('trailers',TrailersController::class);

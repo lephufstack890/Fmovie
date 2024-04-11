@@ -24,6 +24,19 @@ class MoviesController extends Controller
         return MoviesResource::collection($movies);
     }
 
+    public function filterByDate($id)
+    {
+        // Query the database to filter movies by id_day_movie
+        $movies = Movies::whereJsonContains('id_day_movie', [(int) $id])->get();
+
+        // $movies = [];
+        // foreach ($movies as $item) {
+        //     $movies[] = Movies::where('id_movie', $item->id)->get();
+        // }
+
+        return MoviesResource::collection(collect($movies)->flatten());
+    }
+
 
     /**
      * Show the form for creating a new resource.

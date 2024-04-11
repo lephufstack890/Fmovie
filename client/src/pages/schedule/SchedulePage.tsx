@@ -68,6 +68,9 @@ const SchedulePage: React.FC = () => {
         selectedData = movieState.find((item: any) => item?.id === activeTab);
     }
 
+    console.log(movieState);
+    
+
     const handleNavLinkClick = (id: string) => {
         localStorage.setItem('hiddenInfo', id);
     };

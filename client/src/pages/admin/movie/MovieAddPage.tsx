@@ -31,6 +31,8 @@ import {
   useGetDayMovieListQuery,
 } from "@/services/daymovie/daymovies.services"
 import { loadDayMovieList } from "@/services/daymovie/daymoviesSlices"
+import { useGetTrailerListQuery } from "@/services/trailer/trailers.services";
+import { loadTrailerList } from "@/services/trailer/trailersSlices";
 
 
 const MovieAddPage = () => {
@@ -101,6 +103,17 @@ const MovieAddPage = () => {
   const handleRemoveDayMovie = (selectedItemId) => {
     setSelectedDays((prevItems) => prevItems.filter((itemId) => itemId !== selectedItemId))
   }
+
+  const trailerState = useAppSelector(
+    (state) => state.trailers.trailers
+  );
+  const {
+    data: trailer,
+    isSuccess: isTrailerListSuccess,
+  } = useGetTrailerListQuery([]);
+  useEffect(() => {
+    dispatch(loadTrailerList(trailer?.data));
+  }, [isTrailerListSuccess])
 
   const categoryState = useAppSelector(
     (state) => state.categories.categories
@@ -374,22 +387,29 @@ const MovieAddPage = () => {
                     <FormControl>
                       <Input type="file" accept="image/*" onChange={handleImageChange} className="mt-2 h-12 w-full rounded-md bg-gray-100 px-3" />
                     </FormControl>
-                    {previewImage && <img src={previewImage} alt="Preview" className="mt-2 w-full max-h-96" />}
+                    {previewImage && <img style={{ width: '200px' }} src={previewImage} alt="Preview" className="mt-2 w-full max-h-96" />}
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
 
-             <div  className="grid gap-3 md:grid-cols-1">
+            <div className="grid gap-3 lg:grid-cols-1">
               <FormField
                 control={form.control}
                 name="id_trailer"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Link đoạn video ngắn giới thiệu</FormLabel>
+                    <FormLabel className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Link đoạn video ngắn giới thiệu</FormLabel>
                     <FormControl>
-                      <Input placeholder="Link video" className="mt-2 h-12 w-full rounded-md bg-gray-100 px-3" {...field} />
+                      <select {...field} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option selected>Chọn link video</option>
+                        {trailerState?.map((item, index) => (
+                          <option key={index} value={item?.id}>
+                            {item?.url}
+                          </option>
+                        ))}
+                      </select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
