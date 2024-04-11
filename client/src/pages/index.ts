@@ -22,6 +22,7 @@ export {default as SeatEditPage} from './admin/seat/SeatEditPage'
 
 export {default as LoginPage} from './auth/login/Login'
 export {default as RegisterPage} from './auth/register/Register'
+export {default as InfoAccountPage} from './auth/info-account/InfoAccount'
 
 export {default as TrailerPageAdmin} from './admin/trailer/TrailerListPage'
 export {default as TrailerAddPage} from './admin/trailer/TrailerAddPage'

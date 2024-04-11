@@ -18,7 +18,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { useEffect } from 'react'
 import { toastError, toastSuccess } from "@/hook/Toast"
 import { editNewMovie } from "@/services/movies/moviesSlices"
-import { useEditMoviesMutation, useGetMoviesQuery } from "@/services/movies/movies.services"
+import { useEditMoviesMutation, useGetMoviesQuery, useUploadImageMutation } from "@/services/movies/movies.services"
 import {
   useGetCategoryListQuery,
 } from "@/services/categories/categories.services"
@@ -44,6 +44,10 @@ const MovieEditPage = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedDays, setSelectedDays] = useState([]);
   const [selectedTimes, setSelectedTimes] = useState([]);
+  const [isFile, setIsFile] = useState('')
+  const [previewImage, setPreviewImage] = useState(null);
+
+  const [uploadImage, ] = useUploadImageMutation()
 
   const { id } = useParams();
   const {
@@ -51,11 +55,7 @@ const MovieEditPage = () => {
     isLoading: isLoadingMovie
   } = useGetMoviesQuery( id! );
 
-  console.log(movie)
-
-  const categoryIds = movie?.data?.id_category.map((category: any) => category.id) || []
-  const timeShowIds = movie?.data?.time_shows.map((timeshow: any) => timeshow.id) || []
-  const dayMovieIds = movie?.data?.day_movies.map((daymovie: any) => daymovie.id) || []
+  console.log(movie);
 
   useEffect(() => {
     if (movie) {
@@ -68,14 +68,35 @@ const MovieEditPage = () => {
         actor: movie.data.actor,
         releaseDate: movie.data.releaseDate,
         language: movie.data.language,
-        image: movie.data.image,
+        //image: movie.data.image,
         id_trailer: movie.data.trailer.id,
       }),
       setSelectedCategories(categoryIds)
       setSelectedTimes(timeShowIds)
       setSelectedDays(dayMovieIds)
+      setPreviewImage(movie.data.image);
     }
   },[movie])
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        setPreviewImage(reader.result);
+        const formData = new FormData();
+        formData.append('image', file);
+        const pathFile = await uploadImage(formData);
+        setIsFile(pathFile?.data.url);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const categoryIds = movie?.data?.id_category.map((category: any) => category.id) || []
+  const timeShowIds = movie?.data?.time_shows.map((timeshow: any) => timeshow.id) || []
+  const dayMovieIds = movie?.data?.day_movies.map((daymovie: any) => daymovie.id) || []
+
 
   const [editMovieMutation, {isLoading}] = useEditMoviesMutation()
 
@@ -166,7 +187,7 @@ const MovieEditPage = () => {
     actor: z.string(),
     releaseDate: z.string(),
     language: z.string(),
-    image: z.string(),
+    //image: z.string(),
     id_trailer: z.union([z.number(), z.string()]),
   });
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -180,7 +201,7 @@ const MovieEditPage = () => {
       actor: movie?.data.actor,
       releaseDate: movie?.data.releaseDate,
       language: movie?.data.language,
-      image: movie?.data.image,
+      //image: movie?.data.image,
       id_trailer: movie?.data.trailer.id,
     },
   })
@@ -197,12 +218,13 @@ const MovieEditPage = () => {
       actor: data.actor,
       releaseDate: data.releaseDate,
       language: data.language,
-      image: data.image,
+      image: isFile ? isFile : previewImage,
       id_category: selectedCategories,
       id_trailer: data.id_trailer,
       id_time: selectedTimes,
       id_day_movie: selectedDays,
     }
+    console.log(formData)
     try {
       await editMovieMutation(formData).unwrap().then(() => {
         dispatch(editNewMovie(formData))
@@ -394,8 +416,9 @@ const MovieEditPage = () => {
                   <FormItem>
                     <FormLabel>Ảnh đại diện</FormLabel>
                     <FormControl>
-                      <Input placeholder="https://files.betacorp.vn/media%2fimages%2f2024%2f.." className="mt-2 h-12 w-full rounded-md bg-gray-100 px-3" {...field} />
+                      <Input type="file" onChange={handleImageChange} className="mt-2 h-12 w-full rounded-md bg-gray-100 px-3" />
                     </FormControl>
+                    {previewImage && <img src={previewImage} alt="Preview" className="mt-2 w-full max-h-96" />}
                     <FormMessage />
                   </FormItem>
                 )}

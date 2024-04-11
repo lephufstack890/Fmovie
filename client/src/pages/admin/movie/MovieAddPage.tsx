@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom"
 import { useEffect } from 'react'
 import { toastError, toastSuccess } from "@/hook/Toast"
 import { addNewMovie } from "@/services/movies/moviesSlices"
-import { useAddMoviesMutation } from "@/services/movies/movies.services"
+import { useAddMoviesMutation, useUploadImageMutation } from "@/services/movies/movies.services"
 import {
   useGetCategoryListQuery,
 } from "@/services/categories/categories.services"
@@ -43,9 +43,35 @@ const MovieAddPage = () => {
   const [selectedDays, setSelectedDays] = useState([]);
   const [selectedTimes, setSelectedTimes] = useState([]);
 
+  const [isFile, setIsFile] = useState('')
+  const [previewImage, setPreviewImage] = useState(null);
+
+
+  const [uploadImage, ] = useUploadImageMutation()
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        setPreviewImage(reader.result);
+        const formData = new FormData();
+        formData.append('image', file);
+        try {
+          const pathFile = await uploadImage(formData);
+          setIsFile(pathFile?.data.url);
+        } catch (error) {
+          console.error('Error uploading image:', error);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const [addMovieMutation, {isLoading}] = useAddMoviesMutation()
+  
 
   const handleSelectCategoryChange = (event) => {
     const selectedValue = event.target.value
@@ -83,7 +109,7 @@ const MovieAddPage = () => {
   const categoryState = useAppSelector(
     (state) => state.categories.categories
   );
-  console.log(categoryState);
+  // console.log(categoryState);
   const {
     data: category,
     isSuccess: isCategoryListSuccess,
@@ -135,8 +161,7 @@ const MovieAddPage = () => {
     actor: z.string().nonempty("Diễn viên không được để trống!"),
     releaseDate: z.string().nonempty("Ngày bộ phim ra mắt không được để trống!"),
     language: z.string().nonempty("Ngôn ngữ không được để trống!"),
-    image: z.string().nonempty("Hình ảnh không được để trống!"),
-    // id_category: z.string().nonempty("Thể loại không được để trống!"),
+    image: z.string(),
     id_trailer: z.string().nonempty("Trailer không được để trống!"),
   });
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -151,7 +176,6 @@ const MovieAddPage = () => {
       releaseDate: "",
       language: "",
       image: "",
-      // id_category: "",
       id_trailer: "",
     },
   })
@@ -167,7 +191,7 @@ const MovieAddPage = () => {
       actor: data.actor,
       releaseDate: data.releaseDate,
       language: data.language,
-      image: data.image,
+      image: isFile,
       id_category: selectedCategories,
       id_trailer: data.id_trailer,
       id_time: selectedTimes,
@@ -364,8 +388,9 @@ const MovieAddPage = () => {
                   <FormItem>
                     <FormLabel>Ảnh đại diện</FormLabel>
                     <FormControl>
-                      <Input placeholder="https://files.betacorp.vn/media%2fimages%2f2024%2f.." className="mt-2 h-12 w-full rounded-md bg-gray-100 px-3" {...field} />
+                      <Input type="file" accept="image/*" onChange={handleImageChange} className="mt-2 h-12 w-full rounded-md bg-gray-100 px-3" />
                     </FormControl>
+                    {previewImage && <img src={previewImage} alt="Preview" className="mt-2 w-full max-h-96" />}
                     <FormMessage />
                   </FormItem>
                 )}
@@ -373,7 +398,7 @@ const MovieAddPage = () => {
             </div>
 
             <div className="grid gap-3 lg:grid-cols-1">
-              {/* <FormField
+              <FormField
                 control={form.control}
                 name="id_trailer"
                 render={({ field }) => (
@@ -388,19 +413,6 @@ const MovieAddPage = () => {
                           </option>
                         ))}
                       </select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
-               <FormField
-                control={form.control}
-                name="id_trailer"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Link video trailer</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Link video trailer" className="mt-2 h-12 w-full rounded-md bg-gray-100 px-3" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

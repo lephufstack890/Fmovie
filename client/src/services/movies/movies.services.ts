@@ -4,23 +4,26 @@ import { Movie } from "./movies.interface"
 export const moviesApi = createApi({
     reducerPath: "moviesApi",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://127.0.0.1:8000/api/movies",
+        baseUrl: "http://127.0.0.1:8000/api",
     }),
     tagTypes: ["Movies"],
     endpoints: (builder) => ({
         getMoviesList: builder.query({
-            query: () => ``,
+            query: () => ({
+                url: `/movies`,
+                method: "GET",
+            }),
             providesTags: ["Movies"],
         }),
         getMovies: builder.query({
             query: (id: string | number) => ({
-                url: `/${id}`,
+                url: `/movies/${id}`,
                 method: "GET",
             }),
         }),
         addMovies: builder.mutation<Movie[], Movie>( {
             query: ( movie ) => ( {
-                url: ``,
+                url: `/movies`,
                 method: 'POST',
                 body: movie
             } ),
@@ -28,7 +31,7 @@ export const moviesApi = createApi({
         } ),
         editMovies: builder.mutation<Movie[], Movie>( {
             query: ( movie ) => ( {
-                url: `/${ movie.id }`,
+                url: `/movies/${ movie.id }`,
                 method: 'PATCH',
                 body: movie
             } ),
@@ -36,17 +39,27 @@ export const moviesApi = createApi({
         } ),
         deleteMovies: builder.mutation<Movie[], string | number>( {
             query: ( id ) => ( {
-                url: `/${ id }`,
+                url: `/movies/${ id }`,
                 method: 'DELETE',
             } ),
             invalidatesTags: [ 'Movies' ],
         } ),
         getMoviesByStatus: builder.query({
             query: (status: string) => ({
-                url: `/filter-by-status/${status}`
+                url: `/movies/filter-by-status/${status}`
             })
-        })
+        }),
+        uploadImage: builder.mutation<File, FormData>({
+            query: (formData) => ({
+                url: `/upload/file`, // Địa chỉ API của bạn để xử lý tải lên hình ảnh
+                method: 'POST',
+                body: formData,
+                // headers: {
+                //     'Content-Type': 'multipart/form-data', // Đảm bảo gửi dữ liệu dưới dạng FormData
+                // },
+            }),
+        }),
     }),
 });
 
-export const { useGetMoviesListQuery, useGetMoviesByStatusQuery, useGetMoviesQuery, useAddMoviesMutation, useDeleteMoviesMutation, useEditMoviesMutation } = moviesApi;
+export const { useGetMoviesListQuery, useGetMoviesByStatusQuery, useGetMoviesQuery, useAddMoviesMutation, useDeleteMoviesMutation, useEditMoviesMutation, useUploadImageMutation } = moviesApi;

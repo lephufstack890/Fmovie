@@ -1,0 +1,14 @@
+ul{
+    padding-left: 0 !important;
+    list-style: none;
+}
+
+.list-info .nav-item{
+    color: #333;
+    padding: 6px 11px;
+}
+
+.list-info .nav-item.active{
+    color: #fff;
+    background: #03599d;
+}

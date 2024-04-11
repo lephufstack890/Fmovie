@@ -1,4 +1,4 @@
-import {useCallback, useEffect} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {NavLink, useNavigate} from 'react-router-dom'
 import './HeaderWebsite.scss'
 import {useSelector} from "react-redux";
@@ -9,8 +9,8 @@ import {useAppDispatch} from "@/app/hooks.ts";
 
 const HeaderWebsite = () => {
 
+    const [isOpen, setIsOpen] = useState(false);
     const dispatch = useAppDispatch();
-
     const navigate = useNavigate();
 
     // const [ isLogged, setIsLogged ] = React.useState<boolean>(true);
@@ -22,6 +22,10 @@ const HeaderWebsite = () => {
         await logoutMutation(token);
         dispatch(logout());
     }, [logoutMutation, dispatch, token]);
+
+    const toggleDropdown = () => {
+        setIsOpen(!isOpen);
+    };
 
     const Menu = [
         {
@@ -72,7 +76,7 @@ const HeaderWebsite = () => {
         
     }, [token])
     return (
-        <div className='w-full h-full '>
+        <div className='w-full h-full '> 
             <div className="pre-header">
                 <div className="container">
                     <div className="row">
@@ -83,9 +87,28 @@ const HeaderWebsite = () => {
                             <ul className="list-unstyled list-inline pull-right">
                                 {user ?
                                     <>
-                                        <li>
+                                        <li className="dropdown" onClick={toggleDropdown}>
                                             <span className="me-1" style={{fontSize: "12px"}}>Xin chào</span>
                                             <a href="#" className="text-primary">{user?.name}</a>
+                                            <i className="fa fa-angle-down" style={{ fontSize: "10px" }}></i>
+                                            <ul className={`dropdown-menu ${isOpen ? 'show' : ''}`} style={{
+                                                minWidth: "160px",
+                                                boxShadow: "0px 8px 16px 0px rgba(0,0,0,0.2)",
+                                                padding: "15px 15px",
+                                            }}>
+                                                <li className='d-flex pl-3'>
+                                                    <i className="fas fa-user"></i>
+                                                    <a href='#thongtintaikhoan' onClick={() => navigate('/info-account')} className="dropdown-item" style={{ cursor: 'pointer', color: '#333', fontWeight: '700', marginRight: '0', padding: '2px 0 20px 5px' }}>
+                                                        Thông tin tài khoản
+                                                    </a>
+                                                </li>
+                                                <li className='d-flex pl-3'>
+                                                    <i className="fas fa-briefcase"></i>
+                                                    <a href='#voucher' onClick={() => navigate('/info-account')} className="dropdown-item" style={{ cursor: 'pointer', color: '#333', fontWeight: '700', marginRight: '0', padding: '1px 0 0 5px' }}>
+                                                        Voucher của tôi
+                                                    </a>
+                                                </li>
+                                            </ul>
                                         </li>
                                         <li><a className="cursor-pointer" onClick={() => handleLogout()}>Đăng xuất</a></li>
                                     </>
