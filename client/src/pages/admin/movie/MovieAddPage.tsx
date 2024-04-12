@@ -118,6 +118,17 @@ const MovieAddPage = () => {
     dispatch(loadCategoryList(category?.data));
   }, [isCategoryListSuccess])
 
+  const trailerState = useAppSelector(
+    (state) => state.trailers.trailers
+  );
+  const {
+    data: trailer,
+    isSuccess: isTrailerListSuccess,
+  } = useGetTrailerListQuery([]);
+  useEffect(() => {
+    dispatch(loadTrailerList(trailer?.data));
+  }, [isTrailerListSuccess])
+
   const timeshowState = useAppSelector(
     (state) => state.timeshows.timeshows
   );
@@ -139,17 +150,6 @@ const MovieAddPage = () => {
   useEffect(() => {
     dispatch(loadDayMovieList(daymovie?.data));
   }, [isDayMovieListSuccess])
-
-  const trailerState = useAppSelector(
-    (state) => state.trailers.trailers
-  );
-  const {
-    data: trailer,
-    isSuccess: isTrailerListSuccess,
-  } = useGetTrailerListQuery([]);
-  useEffect(() => {
-    dispatch(loadTrailerList(trailer?.data));
-  }, [isTrailerListSuccess])
 
 
   const FormSchema = z.object({
@@ -386,7 +386,7 @@ const MovieAddPage = () => {
                     </FormControl>
                   {previewImage && <img style={{ width: '200px' }} src={previewImage} alt="Preview" className="mt-2 w-full max-h-96" />}
             </div>
-            
+
             <div className="grid gap-3 lg:grid-cols-1">
               <FormField
                 control={form.control}
@@ -408,6 +408,7 @@ const MovieAddPage = () => {
                   </FormItem>
                 )}
               />
+              
             </div>
 
             <div className="grid gap-3 lg:grid-cols-1">

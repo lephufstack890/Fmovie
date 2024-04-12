@@ -55,8 +55,6 @@ const MovieEditPage = () => {
   const {
     data: movie,
   } = useGetMoviesQuery( id! );
-  //console.log(movie);
-
 
   const FormSchema = z.object({
     name: z.string(),
@@ -404,22 +402,6 @@ const MovieEditPage = () => {
               />
             </div>
 
-            {/* <div  className="grid gap-3 md:grid-cols-1">
-              <FormField
-                control={form.control}
-                name="image"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Ảnh đại diện</FormLabel>
-                    <FormControl>
-                      <Input type="file" onChange={handleImageChange} className="mt-2 h-12 w-full rounded-md bg-gray-100 px-3" />
-                    </FormControl>
-                    {previewImage && <img style={{ width: '200px' }} src={previewImage} alt="Preview" className="mt-2 w-full max-h-96" />}
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div> */}
             <div  className="grid gap-3 md:grid-cols-1">
                   <FormLabel>Ảnh đại diện</FormLabel>
                     <FormControl>
@@ -449,6 +431,7 @@ const MovieEditPage = () => {
                   </FormItem>
                 )}
               />
+              
             </div>
 
             <div className="grid gap-3 lg:grid-cols-1">
