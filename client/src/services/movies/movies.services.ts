@@ -49,6 +49,11 @@ export const moviesApi = createApi({
                 url: `/movies/filter-by-status/${status}`
             })
         }),
+        getMoviesByDate: builder.query({
+            query: (id: number | string) => ({
+                url: `/movies/filter/${id}`
+            })
+        }),
         uploadImage: builder.mutation<File, FormData>({
             query: (formData) => ({
                 url: `/upload/file`, // Địa chỉ API của bạn để xử lý tải lên hình ảnh
@@ -62,4 +67,4 @@ export const moviesApi = createApi({
     }),
 });
 
-export const { useGetMoviesListQuery, useGetMoviesByStatusQuery, useGetMoviesQuery, useAddMoviesMutation, useDeleteMoviesMutation, useEditMoviesMutation, useUploadImageMutation } = moviesApi;
+export const { useGetMoviesListQuery, useGetMoviesByStatusQuery, useGetMoviesQuery, useAddMoviesMutation, useDeleteMoviesMutation, useEditMoviesMutation, useGetMoviesByDateQuery, useUploadImageMutation } = moviesApi;

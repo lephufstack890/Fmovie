@@ -15,8 +15,6 @@ const MovieListPage = () => {
     const movieState = useAppSelector(
         (state) => state.movies.movies
     );
-
-
     const {
         data: movie,
         isSuccess: isMovieListSuccess,

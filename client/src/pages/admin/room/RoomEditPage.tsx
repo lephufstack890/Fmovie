@@ -25,6 +25,7 @@ import { loadCinemaList } from "@/services/cinema/cinemasSlices"
 
 const RoomEditPage = () => {
   const { id } = useParams();
+
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const [editRoomMutation, {isLoading}] = useEditRoomMutation()

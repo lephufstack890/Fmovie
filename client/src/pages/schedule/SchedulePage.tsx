@@ -9,46 +9,30 @@ import { cn } from '@/lib/utils';
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { useGetDayMovieListQuery } from "@/services/daymovie/daymovies.services";
 import { loadDayMovieList } from "@/services/daymovie/daymoviesSlices";
-import { useGetShowTimeListQuery } from "@/services/schedule/schedules.services";
-import { loadShowTimeList } from "@/services/schedule/schedulesSlices";
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import Trailer from '@/components/trailer/Trailer';
 import Showtime from "../../components/show-time/Showtime";
-import { useGetMoviesByStatusQuery, useGetMoviesQuery } from "@/services/movies/movies.services";
+import { useGetMoviesByStatusQuery, useGetMoviesQuery, useGetMoviesByDateQuery } from "@/services/movies/movies.services";
 
 
 const SchedulePage: React.FC = () => {
     const dispatch = useAppDispatch();
-    const movieState = useAppSelector((state) => state.showtimes.showtimes);
     const daymovieState = useAppSelector((state) => state.daymovies.daymovies);
     const [activeTab, setActiveTab] = useState(1);
     const [modal, setModal] = useState("");
     const [idMovie, setIdMovie] = useState(1);
+    const [idMovieByDate, setIdMovieByDate] = useState(1);
+    const [idDetailMovie, setIdDetailMovie] = useState(0);
 
     const { data: movies } = useGetMoviesByStatusQuery('Phim sắp chiếu')
+    const { data: movieUpComing } = useGetMoviesQuery(idMovie)
+    const { data: movie } = useGetMoviesQuery(idDetailMovie)
+    const { data: movieByDate } = useGetMoviesByDateQuery(idMovieByDate);
 
-    const { data: movie } = useGetMoviesQuery(idMovie)
-
-    const handleTrailer = (id: number) => {
-        setModal('trailer');
-        setIdMovie(id);
-    }
-
-    const {
-        data: showtime,
-        isLoading: isShowTimeListLoading,
-        isSuccess: isShowTimeListSuccess,
-    } = useGetShowTimeListQuery([]);
-
-    useEffect(() => {
-        if (showtime) {
-            dispatch(loadShowTimeList(showtime.data));
-        }
-    }, [dispatch, showtime, isShowTimeListSuccess]);
+    console.log(idDetailMovie);
 
     const {
         data: daymovie,
-        isLoading: isDayMovieListLoading,
         isSuccess: isDayMovieListSuccess,
     } = useGetDayMovieListQuery([]);
 
@@ -60,16 +44,13 @@ const SchedulePage: React.FC = () => {
 
     const handleTabClick = (id: number) => {
         setActiveTab(id);
+        setIdMovieByDate(id);
     };
 
-    let selectedData: any = "";
-
-    if (movieState) {
-        selectedData = movieState.find((item: any) => item?.id === activeTab);
+    const handleTrailer = (id: number) => {
+        setModal('trailer');
+        setIdMovie(id);
     }
-
-    console.log(movieState);
-    
 
     const handleNavLinkClick = (id: string) => {
         localStorage.setItem('hiddenInfo', id);
@@ -88,18 +69,18 @@ const SchedulePage: React.FC = () => {
                 ))}
             </ul>
             <div>
-                {selectedData && (
-                    <div className="row">
+                {movieByDate?.data?.map((item: any, index: number) => (
+                    <div key={index} className="row">
                         <div className="col-lg-12 col-md-12 col-12 mb-3" style={{ borderBottom: '1px solid #ccc' }}>
                             <div className='row mb-3'>
                                 <DrawerTrigger className={cn('p-0','col-lg-3')}>
                                     <div className={cn('movie-item__image') } style={{ borderRadius: '20px' }}>
                                         <img
-                                            src={selectedData?.movies?.image}
+                                            src={item?.image}
                                             alt=""
                                         />
                                         <div
-                                            onClick={() => setModal("trailers")}
+                                            onClick={() => {setModal("trailers"); setIdDetailMovie(item?.id)}}
                                             className="movie-item__overlay flex items-center justify-center"
                                         >
                                             <div className="play-icon flex items-center justify-center">
@@ -110,32 +91,32 @@ const SchedulePage: React.FC = () => {
                                 </DrawerTrigger>
                                 <div className="col-lg-9 col-md-9 col-12 content">
                                     <h2 className="fw-bold title">
-                                        <NavLink className={cn('text-[#03599d]')} to={`/movie/${selectedData?.id}`}>
-                                            {selectedData?.movies.name}
+                                        <NavLink className={cn('text-[#03599d]')} to={`/movie/${item?.id}`}>
+                                            {item?.name}
                                         </NavLink>
                                     </h2>
                                     <div className="d-flex align-items-center mb-4">
                                         <span className='d-flex align-items-center fw-bold pr-4'>
                                             <FaTag style={{ color: '#337ab7' }} />
-                                            {selectedData?.movies.categories.join(', ')}
+                                            {item?.id_category.map((category) => category.name).join(', ')}
                                         </span>
                                         <span className='d-flex align-items-center fw-bold'>
                                             <IoTime style={{ color: '#337ab7' }} />
-                                            {selectedData?.movies.time} phút
+                                            {item?.time} phút
                                         </span>
                                     </div>
                                     <span className="subtitle">2D phụ đề</span>
                                     <ul className="list-time mt-2">
-                                        {selectedData?.movies?.time_shows.map((item: any, index: number) => (
+                                        {item?.time_shows.map((itemTimeShow: any, index: number) => (
                                             <li key={index} className="item-time">
                                                 <NavLink
-                                                    to={`/ticket/${item?.id}`}
-                                                    onClick={() => handleNavLinkClick(selectedData?.id)}
+                                                    to={`/ticket/${itemTimeShow?.id}`}
+                                                    onClick={() => handleNavLinkClick(item?.id)}
                                                     className='text-decoration-none text-black'
                                                 >
-                                                    <span>{item?.name}</span>
+                                                    <span>{itemTimeShow?.name}</span>
                                                 </NavLink>
-                                                <span>{item?.available_seats} ghế trống</span>
+                                                <span>{itemTimeShow?.available_seats} ghế trống</span>
                                             </li>
                                         ))}
                                     </ul>
@@ -143,13 +124,13 @@ const SchedulePage: React.FC = () => {
                             </div>
                         </div>
                     </div>
-                )}
+                ))}
             </div>
             <div>
                 <h2 className='text-center fw-bold mb-4'><span className='title-swiper'>PHIM SẮP CHIẾU</span></h2>
 
                 <div className="list-movie flex ">
-                    {movies?.data?.map((movie: Movie) => (
+                    {movies?.data?.map((movie) => (
                         <div className="movie-item" key={movie.id}>
                             <DrawerTrigger className={cn('p-0 ')}>
                                 <div className={cn('movie-item__image ') }>
@@ -242,14 +223,14 @@ const SchedulePage: React.FC = () => {
                         "mx-auto top-[18%] fixed max-w-[50%] w-full transform  max-h-[530px] overflow-hidden"
                     )}
                 >
-                    <Trailer trailer={movie?.data?.trailer?.url} name={movie?.data?.name} />
+                    <Trailer trailer={movieUpComing?.data?.trailer?.url} name={movieUpComing?.data?.name} />
                 </DrawerContent>
             ) : <DrawerContent
                     className={cn(
                         "mx-auto top-[18%]  fixed max-w-[1000px] w-full transform  h-[500px] overflow-hidden"
                     )}
                 >
-                    <Trailer trailer={selectedData?.movies?.trailer?.url} name={selectedData?.movies.name} />
+                    <Trailer trailer={movie?.data?.trailer?.url} name={movie?.data?.name} />
                 </DrawerContent>
             }
         </div>

@@ -31,8 +31,7 @@ import {
   useGetDayMovieListQuery,
 } from "@/services/daymovie/daymovies.services"
 import { loadDayMovieList } from "@/services/daymovie/daymoviesSlices"
-import { useGetTrailerListQuery } from "@/services/trailer/trailers.services";
-import { loadTrailerList } from "@/services/trailer/trailersSlices";
+
 
 
 const MovieAddPage = () => {
@@ -71,49 +70,38 @@ const MovieAddPage = () => {
   const [addMovieMutation, {isLoading}] = useAddMoviesMutation()
   
 
-  const handleSelectCategoryChange = (event) => {
+  const handleSelectCategoryChange = (event: any) => {
     const selectedValue = event.target.value
     const selectedCategory = categoryState?.find((category) => category.id == selectedValue)
     if (selectedCategory && !selectedCategories.includes(selectedCategory.id)) {
       setSelectedCategories((prevItems) => [...prevItems, selectedCategory.id])
     }
   };
-  const handleRemoveCategory = (selectedItemId: number) => {
+  const handleRemoveCategory = (selectedItemId: number | undefined | string) => {
     setSelectedCategories((prevItems) => prevItems.filter((itemId) => itemId !== selectedItemId))
   }
 
-  const handleSelectTimeShowChange = (event) => {
+  const handleSelectTimeShowChange = (event: any) => {
     const selectedValue = event.target.value
     const selectedTimeShow = timeshowState?.find((timeshow) => timeshow.id == selectedValue)
     if (selectedTimeShow && !selectedTimes.includes(selectedTimeShow.id)) {
       setSelectedTimes((prevItems) => [...prevItems, selectedTimeShow.id])
     }
   };
-  const handleRemoveTimeShow = (selectedItemId) => {
+  const handleRemoveTimeShow = (selectedItemId : number | undefined | string) => {
     setSelectedTimes((prevItems) => prevItems.filter((itemId) => itemId !== selectedItemId))
   }
 
-  const handleSelectDayMovieChange = (event) => {
+  const handleSelectDayMovieChange = (event: any) => {
     const selectedValue = event.target.value
     const selectedDayMovie = daymovieState?.find((daymovie) => daymovie.id == selectedValue)
     if (selectedDayMovie && !selectedDays.includes(selectedDayMovie.id)) {
       setSelectedDays((prevItems) => [...prevItems, selectedDayMovie.id])
     }
   };
-  const handleRemoveDayMovie = (selectedItemId) => {
+  const handleRemoveDayMovie = (selectedItemId: number | undefined | string) => {
     setSelectedDays((prevItems) => prevItems.filter((itemId) => itemId !== selectedItemId))
   }
-
-  const trailerState = useAppSelector(
-    (state) => state.trailers.trailers
-  );
-  const {
-    data: trailer,
-    isSuccess: isTrailerListSuccess,
-  } = useGetTrailerListQuery([]);
-  useEffect(() => {
-    dispatch(loadTrailerList(trailer?.data));
-  }, [isTrailerListSuccess])
 
   const categoryState = useAppSelector(
     (state) => state.categories.categories
@@ -158,7 +146,6 @@ const MovieAddPage = () => {
     actor: z.string().nonempty("Diễn viên không được để trống!"),
     releaseDate: z.string().nonempty("Ngày bộ phim ra mắt không được để trống!"),
     language: z.string().nonempty("Ngôn ngữ không được để trống!"),
-    image: z.string(),
     id_trailer: z.string().nonempty("Trailer không được để trống!"),
   });
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -172,7 +159,6 @@ const MovieAddPage = () => {
       actor: "",
       releaseDate: "",
       language: "",
-      image: "",
       id_trailer: "",
     },
   })
@@ -194,6 +180,7 @@ const MovieAddPage = () => {
       id_time: selectedTimes,
       id_day_movie: selectedDays,
     }
+    console.log(formData)
     try {
       await addMovieMutation(formData).unwrap().then(() => {
         dispatch(addNewMovie(formData))
@@ -377,7 +364,7 @@ const MovieAddPage = () => {
               />
             </div>
 
-            <div  className="grid gap-3 md:grid-cols-1">
+            {/* <div  className="grid gap-3 md:grid-cols-1">
               <FormField
                 control={form.control}
                 name="image"
@@ -392,6 +379,13 @@ const MovieAddPage = () => {
                   </FormItem>
                 )}
               />
+            </div> */}
+            <div  className="grid gap-3 md:grid-cols-1">
+                  <FormLabel>Ảnh đại diện</FormLabel>
+                    <FormControl>
+                      <Input type="file" onChange={handleImageChange} className="mt-2 h-12 w-full rounded-md bg-gray-100 px-3" />
+                    </FormControl>
+                  {previewImage && <img style={{ width: '200px' }} src={previewImage} alt="Preview" className="mt-2 w-full max-h-96" />}
             </div>
 
             <div className="grid gap-3 lg:grid-cols-1">
@@ -402,19 +396,13 @@ const MovieAddPage = () => {
                   <FormItem>
                     <FormLabel className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Link đoạn video ngắn giới thiệu</FormLabel>
                     <FormControl>
-                      <select {...field} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option selected>Chọn link video</option>
-                        {trailerState?.map((item, index) => (
-                          <option key={index} value={item?.id}>
-                            {item?.url}
-                          </option>
-                        ))}
-                      </select>
+                      <Input placeholder="Link video" className="mt-2 h-12 w-full rounded-md bg-gray-100 px-3" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              
             </div>
 
             <div className="grid gap-3 lg:grid-cols-1">
