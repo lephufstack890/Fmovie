@@ -20,6 +20,10 @@ import { toastError, toastSuccess } from "@/hook/Toast"
 import { editNewMovie } from "@/services/movies/moviesSlices"
 import { useEditMoviesMutation, useGetMoviesQuery, useUploadImageMutation } from "@/services/movies/movies.services"
 import {
+  useGetTrailerListQuery,
+} from "@/services/trailer/trailers.services"
+import { loadTrailerList } from "@/services/trailer/trailersSlices"
+import {
   useGetCategoryListQuery,
 } from "@/services/categories/categories.services"
 import { loadCategoryList } from "@/services/categories/categoriesSlices"
@@ -31,8 +35,6 @@ import {
   useGetDayMovieListQuery,
 } from "@/services/daymovie/daymovies.services"
 import { loadDayMovieList } from "@/services/daymovie/daymoviesSlices"
-import { useGetTrailerListQuery } from "@/services/trailer/trailers.services";
-import { loadTrailerList } from "@/services/trailer/trailersSlices";
 
 
 const MovieEditPage = () => {
@@ -53,18 +55,6 @@ const MovieEditPage = () => {
   const {
     data: movie,
   } = useGetMoviesQuery( id! );
-  
-  const trailerState = useAppSelector(
-    (state) => state.trailers.trailers
-  );
-  const {
-    data: trailer,
-    isSuccess: isTrailerListSuccess,
-  } = useGetTrailerListQuery([]);
-  useEffect(() => {
-    dispatch(loadTrailerList(trailer?.data));
-  }, [isTrailerListSuccess])
-
 
   const FormSchema = z.object({
     name: z.string(),
@@ -197,6 +187,18 @@ const MovieEditPage = () => {
   useEffect(() => {
     dispatch(loadDayMovieList(daymovie?.data));
   }, [isDayMovieListSuccess])
+
+  const trailerState = useAppSelector(
+    (state) => state.trailers.trailers
+  );
+  const {
+    data: trailer,
+    isSuccess: isTrailerListSuccess,
+  } = useGetTrailerListQuery([]);
+  useEffect(() => {
+    dispatch(loadTrailerList(trailer?.data));
+  }, [isTrailerListSuccess])
+
 
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
@@ -400,22 +402,6 @@ const MovieEditPage = () => {
               />
             </div>
 
-            {/* <div  className="grid gap-3 md:grid-cols-1">
-              <FormField
-                control={form.control}
-                name="image"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Ảnh đại diện</FormLabel>
-                    <FormControl>
-                      <Input type="file" onChange={handleImageChange} className="mt-2 h-12 w-full rounded-md bg-gray-100 px-3" />
-                    </FormControl>
-                    {previewImage && <img style={{ width: '200px' }} src={previewImage} alt="Preview" className="mt-2 w-full max-h-96" />}
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div> */}
             <div  className="grid gap-3 md:grid-cols-1">
                   <FormLabel>Ảnh đại diện</FormLabel>
                     <FormControl>
@@ -423,23 +409,6 @@ const MovieEditPage = () => {
                     </FormControl>
                   {previewImage && <img style={{ width: '200px' }} src={previewImage} alt="Preview" className="mt-2 w-full max-h-96" />}
             </div>
-
-            {/* <div className="grid gap-3 lg:grid-cols-1">
-              <FormField
-                control={form.control}
-                name="id_trailer"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Link đoạn video ngắn giới thiệu</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Link video" className="mt-2 h-12 w-full rounded-md bg-gray-100 px-3" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-            </div> */}
 
             <div className="grid gap-3 lg:grid-cols-1">
               <FormField
@@ -462,6 +431,7 @@ const MovieEditPage = () => {
                   </FormItem>
                 )}
               />
+              
             </div>
 
             <div className="grid gap-3 lg:grid-cols-1">
