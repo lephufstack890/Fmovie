@@ -19,7 +19,7 @@ class VNPayController extends Controller
         date_default_timezone_set('Asia/Ho_Chi_Minh');
 
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        $vnp_Returnurl = "http://localhost:5173/";
+        $vnp_Returnurl = $request->input('redirect');
         $vnp_TmnCode = "QG94D41U"; //Mã website tại VNPAY 
         $vnp_HashSecret = "DVUXWKEOQEETCBUPBKHDPFFPCTQJDBKM"; //Chuỗi bí mật
 
@@ -94,6 +94,8 @@ class VNPayController extends Controller
             'totalQuantity' => $request->input('totalQuantity'),
             'paymentMethod' => "Chuyển khoản",
             'time' => now()->toTimeString(),
+            'day_movie' => $request->input('day_movie'),
+            'time_show' => $request->input('time_show'),
             'totalPayment' => $request->input('totalPayment'),
             'paymentStatus' => 'Đã thanh toán',
             'seats' => json_encode($request->input('seats')),
@@ -108,6 +110,8 @@ class VNPayController extends Controller
             $transaction->totalQuantity,
             $transaction->paymentMethod,
             $transaction->time,
+            $transaction->day_movie,
+            $transaction->time_show,
             $transaction->totalPayment,
             $transaction->paymentStatus,
             $transaction->seats,
@@ -121,6 +125,24 @@ class VNPayController extends Controller
             'message' => 'Thanh toán thành công. Vui lòng kiểm tra email!.',
         ]);
 
-        // return redirect()->away('http://localhost:5173/');
+    }
+
+    public function get_all_transaction() {
+        $data = Transaction::with('user')->get();
+
+        return response()->json([
+            'data' => $data,
+        ]);
+    }
+
+
+    public function destroy(string $id)
+    {
+        $transaction = Transaction::find($id);
+        if(!$transaction){
+            return response()->json(['message' => 'Không tìm thấy']) ;
+        }
+        $transaction->delete();
+        return response()->json(['message' => 'Xoá thành công']) ;
     }
 }

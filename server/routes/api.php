@@ -46,6 +46,8 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/login', [AuthController::class,'login']);
 Route::post('/register', [AuthController::class,'register']);
 
+Route::get('/users', [UserController::class, 'index']);
+Route::get('/users/{id}', [UserController::class, 'show']);
 Route::resource('cinema', CinemaController::class);
 Route::resource('voucher',VoucherController::class);
 Route::resource('category',CategoryController::class);
@@ -68,5 +70,7 @@ Route::resource('tickets',TicketsController::class);
 Route::post('upload/file',[UploadImageController::class, 'upload']);
 // Route::post('payment/update',[TransactionController::class, 'UpdatePayment']);
 
+Route::get('/get_all_transaction', [VNPayController::class, 'get_all_transaction']);
+Route::delete('/delete_transaction/{id}', [VNPayController::class, 'destroy']);
 Route::post('/payment', [VNPayController::class, 'index']);
 Route::post('/vnpay/callback', [VNPayController::class, 'callback'])->name('vnpay.callback');

@@ -15,8 +15,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        $user = User::all();
-        return UserResource::collection($user);
+        $users = User::with('transactions')->get();
+
+        // Sử dụng Resource để trả về dữ liệu JSON
+        return UserResource::collection($users);
     }
 
     /**
@@ -53,12 +55,15 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        $user = User::find($id);
-        if(!$user){
-            return response()->json(['message'=> 'Không tìm thấy User']);
+        $user = User::with('transactions')->find($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'Không tìm thấy User']);
         }
+
         return new UserResource($user);
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -86,8 +91,8 @@ class UserController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
         $user = User::find($id);
-        if(!$user){
-            return response()->json(['message'=> 'Không tìm thấy User']);
+        if (!$user) {
+            return response()->json(['message' => 'Không tìm thấy User']);
         }
         $user->update($request->all());
         return new UserResource($user);
@@ -99,10 +104,10 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         $user = User::find($id);
-        if(!$user){
-            return response()->json(['message'=> 'Không tìm thấy User']);
+        if (!$user) {
+            return response()->json(['message' => 'Không tìm thấy User']);
         }
         $user->delete();
-        return response()->json(['message'=> 'Xoá User thành công']);
+        return response()->json(['message' => 'Xoá User thành công']);
     }
 }

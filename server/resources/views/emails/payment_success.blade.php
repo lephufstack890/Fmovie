@@ -108,12 +108,16 @@
                 <td>{{ $totalQuantity }}</td>
             </tr>
             <tr>
-                <td>Hình thức:</td>
-                <td>{{ $paymentMethod }}</td>
+                <td>Ngày chiếu:</td>
+                <td>{{ $day_movie }}</td>
             </tr>
             <tr>
-                <td>Thời gian:</td>
-                <td>{{ $time }}</td>
+                <td>Thời gian chiếu:</td>
+                <td>{{ $time_show }}</td>
+            </tr>
+            <tr>
+                <td>Hình thức:</td>
+                <td>{{ $paymentMethod }}</td>
             </tr>
             <tr>
                 <td>Trạng thái:</td>

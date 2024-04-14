@@ -123,7 +123,7 @@ const SelectPosition = ({ handleSeatClick, setQuantity, setTotalPriceProps, setS
                         <span className="note-seat-status-label">Ghế đang chọn</span>
                     </div> */}
                     <div className="col-lg-3 col-md-3 col-12">
-                        <img width="35" height="35" src="https://betacinemas.vn/Assets/global/img/booking/seat-process-normal.png" />
+                        <img width="35" height="35" src="https://www.betacinemas.vn/Assets/global/img/booking/seat-select-normal.png" />
                         <span className="note-seat-status-label">Ghế đang được giữ</span>
                     </div>
                     <div className="col-lg-2 col-md-2 col-12">

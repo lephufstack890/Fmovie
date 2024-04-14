@@ -13,6 +13,8 @@ class PaymentSuccessEmail extends Mailable
     public $totalQuantity;
     public $paymentMethod;
     public $time;
+    public $day_movie;
+    public $time_show;
     public $totalPayment;
     public $paymentStatus;
     public $seats;
@@ -21,11 +23,13 @@ class PaymentSuccessEmail extends Mailable
     public $name_movie;
     public $name_room;
 
-    public function __construct($totalQuantity, $paymentMethod, $time, $totalPayment, $paymentStatus, $seats, $order_code, $name_cinemas, $name_movie, $name_room)
+    public function __construct($totalQuantity, $paymentMethod, $time, $day_movie, $time_show, $totalPayment, $paymentStatus, $seats, $order_code, $name_cinemas, $name_movie, $name_room)
     {
         $this->totalQuantity = $totalQuantity;
         $this->paymentMethod = $paymentMethod;
         $this->time = $time;
+        $this->day_movie = $day_movie;
+        $this->time_show = $time_show;
         $this->totalPayment = $totalPayment;
         $this->paymentStatus = $paymentStatus;
         $this->seats = $seats;

@@ -19,7 +19,9 @@ class Transaction extends Model
         'seats',
         'name_cinemas',
         'name_movie',
-        'name_room'
+        'name_room',
+        'day_movie',
+        'time_show'
     ] ;
 
     public function user()
