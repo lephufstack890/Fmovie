@@ -76,15 +76,15 @@ const navigation: SubNav[] = [
         
     // },
 
-    // {
-    //     name: "Trailer",
-    //     icon: MovieIcon,
-    //     current: false,
-    //     children: [
-    //         { name: "Danh sách ", href: "/admin/trailer" },
-    //         { name: "Thêm trailer", href: "/admin/trailer/add" },
-    //     ],
-    // },
+    {
+        name: "Trailer",
+        icon: MovieIcon,
+        current: false,
+        children: [
+            { name: "Danh sách ", href: "/admin/trailer" },
+            { name: "Thêm trailer", href: "/admin/trailer/add" },
+        ],
+    },
 
     {
         name: "Ghế",

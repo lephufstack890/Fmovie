@@ -51,7 +51,7 @@ const MovieTypeListPage = () => {
                 <div className="sm:flex sm:items-center">
                     <div className="sm:flex-auto">
                         <h1 className="text-2xl font-semibold leading-6 text-gray-900">
-                            Danh sách danh mục phim
+                            Danh sách thể loại
                         </h1>
                     </div>
                     <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">

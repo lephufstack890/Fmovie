@@ -67,7 +67,7 @@ const TrailerListPage = () => {
                     <div className="sm:flex sm:items-center">
                         <div className="sm:flex-auto">
                             <h1 className="text-2xl font-semibold leading-6 text-gray-900">
-                                Danh sách timeshow
+                                Danh sách thời gian chiếu
                             </h1>
                         </div>
                         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
@@ -82,7 +82,7 @@ const TrailerListPage = () => {
                                         color: "inherit",
                                     }}
                                 >
-                                    Thêm timeshow
+                                    Thêm thời gian chiếu
                                 </Link>
                             </button>
                         </div>
