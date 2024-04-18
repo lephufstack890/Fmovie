@@ -30,7 +30,7 @@ const TrailerListPage = () => {
     }, [isTrailerListSuccess]);
 
 
-    const tHead = ["STT", "Link Trailer", "Thời gian", "Tác vụ", ""];
+    const tHead = ["STT","Tên phim", "Link Trailer", "Thời gian", "Tác vụ", ""];
 
 
     const handleDeleteTrailer = async (id: string | number) => {
@@ -94,6 +94,9 @@ const TrailerListPage = () => {
                                 <tr key={index} className="border-b">
                                     <td className="py-2 px-3 text-base font-medium text-gray-900">
                                         {index + 1}
+                                    </td>
+                                    <td className="hidden px-3 py-2 text-base text-gray-500 sm:table-cell">
+                                        {item?.id_movie?.name}
                                     </td>
                                     <td className="hidden px-3 py-2 text-base text-gray-500 sm:table-cell">
                                         {item?.url}

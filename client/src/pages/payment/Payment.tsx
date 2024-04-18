@@ -69,12 +69,12 @@ const Payment = () => {
     let totalPriceProps: number, quantity: number, seatsConvert: any, selectedSeats: any, currentURL1: string, showtime: any, timeshow: any;
         if(storedPayment){
             const paymentInfo = JSON.parse(storedPayment);
-            totalPriceProps = paymentInfo.totalPriceProps;
-            quantity = paymentInfo.quantity;
-            currentURL1 = paymentInfo.currentURL;
-            selectedSeats = paymentInfo.selectedSeats;
-            showtime = paymentInfo.showtime;
-            timeshow = paymentInfo.timeshow;
+            totalPriceProps = paymentInfo?.totalPriceProps;
+            quantity = paymentInfo?.quantity;
+            currentURL1 = paymentInfo?.currentURL;
+            selectedSeats = paymentInfo?.selectedSeats;
+            showtime = paymentInfo?.showtime;
+            timeshow = paymentInfo?.timeshow;
 
             seatsConvert = selectedSeats.map(str => parseInt(str.replace(/[^\d]/g, ''), 10));
         }

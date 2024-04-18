@@ -422,7 +422,7 @@ const MovieEditPage = () => {
                         <option selected>Chọn link video</option>
                         {trailerState?.map((item, index) => (
                           <option key={index} value={item?.id}>
-                            {item?.url}
+                            {item?.url} - {item?.id_movie?.name}
                           </option>
                         ))}
                       </select>
