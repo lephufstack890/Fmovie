@@ -48,6 +48,9 @@ import timeshowSlice from "@/services/timeshow/timeshowsSlices";
 import { trailerApi } from "@/services/trailer/trailers.services";
 import trailersSlices from "@/services/trailer/trailersSlices";
 
+import { userApi } from "@/services/users/users.services";
+import usersSlices from "@/services/users/usersSlices";
+
 
 const persistConfig = {
     key: "root",
@@ -106,7 +109,9 @@ const rootReducer = combineReducers({
     [trailerApi.reducerPath]: trailerApi.reducer,
     trailers: trailersSlices,
 
-
+    //user
+    [userApi.reducerPath]: userApi.reducer,
+    users: usersSlices,
 });
 const middleware = [
     categoryApi.middleware,
@@ -130,8 +135,9 @@ const middleware = [
 
     timeshowApi.middleware,
 
-    trailerApi.middleware
+    trailerApi.middleware,
 
+    userApi.middleware,
 ];
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

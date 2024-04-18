@@ -4,7 +4,6 @@ import "./DetailMoviePage.scss";
 import { cn } from "@/lib/utils";
 import { IoIosArrowForward } from "react-icons/io";
 import { useGetMoviesQuery } from "@/services/movies/movies.services";
-import { Category } from "@/services/categories/categories.interface";
 import Trailer from "../../components/trailer/Trailer";
 import { Drawer, DrawerContent, DrawerTrigger } from "../../components/ui/drawer";
 import { FaPlayCircle } from "react-icons/fa";

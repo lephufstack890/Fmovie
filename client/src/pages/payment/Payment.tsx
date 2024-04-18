@@ -1,29 +1,38 @@
 import { useEffect, useState } from 'react';
+import { useAppDispatch } from "@/app/hooks"
 import { useLocation } from 'react-router-dom';
 import { User } from '@/services/auth/auth.interface';
 import { useSelector } from 'react-redux';
 import { usePaymentMutation } from "@/services/payment/payments.services"
 import { toastError } from "@/hook/Toast"
 import QRCode from '@/pages/popup/payment/QRCode';
+import { useChooseSeatMutation } from "@/services/seats/seats.services"
+import { useVnpayCallbackMutation } from "@/services/payment/payments.services"
+import { addNewPayment } from "@/services/payment/paymentsSlices"
+import Success from '../popup/payment/Success';
 
-const Payment = ({ quantity, totalPriceProps, selectedSeats, handlerPrevious, showtime, timeshow }: any) => {
+const Payment = () => {
 
+    const dispatch = useAppDispatch()
     const location = useLocation();
     const { pathname, search } = location;
     const currentURL = "http://localhost:5173" + `${pathname}${search}`;
     const user = useSelector((state: any) => state.auth.user) as User;
-
     
     const [selectedInput, setSelectedInput] = useState("Chuyển khoản");
     const [orderNumber, setOrderNumber] = useState("");
-    const [timeCurrent, setTimeCurrent] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [isOpenPopup, setIsOpenPopup] = useState(false);
+    const [isOpenPopupSuccess, setIsOpenPopupSuccess] = useState(false);
     const [timeLeft, setTimeLeft] = useState(360); 
     const [selectedBank, setSelectedBank] = useState(null);
     const [linkVnpay, setLinkVnpay] = useState("");
 
-    const [paymentMutation, {isLoadingPayment}] = usePaymentMutation()
+    const [paymentMutation, ] = usePaymentMutation()
+    const [addTransaction, ] = useVnpayCallbackMutation();
+    const [chooseSeat, ] = useChooseSeatMutation();
+    const [isPaymentProcessed, setIsPaymentProcessed] = useState(true);
+    const [isChooseSeatCalled, setIsChooseSeatCalled] = useState(false);
 
     const handleInputChange = (inputId: any): void => {
         setSelectedInput(inputId === selectedInput ? null : inputId);
@@ -32,6 +41,10 @@ const Payment = ({ quantity, totalPriceProps, selectedSeats, handlerPrevious, sh
     const handlePopupClick = (responseData: any) => {
         setIsOpenPopup(true);
         setLinkVnpay(responseData)
+    }
+
+    const handlePopupSuccess = () => {
+        setIsOpenPopupSuccess(true);
     }
 
     const handleBankImageClick = (bankId: any) => {
@@ -48,22 +61,132 @@ const Payment = ({ quantity, totalPriceProps, selectedSeats, handlerPrevious, sh
         const day = currentDate.getDate();
         const month = currentDate.getMonth() + 1; 
         const year = currentDate.getFullYear();
-        setTimeCurrent(`${day}/${month}/${year}`);
         const order = `TN-${randomDigits}${day}${month}${year}`;
         setOrderNumber(order);
     };
 
-    useEffect(() => {
-        if (timeLeft === 0) {
-            handlerPrevious();
+    const storedPayment = localStorage.getItem('payment');
+    let totalPriceProps: number, quantity: number, seatsConvert: any, selectedSeats: any, currentURL1: string, showtime: any, timeshow: any;
+        if(storedPayment){
+            const paymentInfo = JSON.parse(storedPayment);
+            totalPriceProps = paymentInfo.totalPriceProps;
+            quantity = paymentInfo.quantity;
+            currentURL1 = paymentInfo.currentURL;
+            selectedSeats = paymentInfo.selectedSeats;
+            showtime = paymentInfo.showtime;
+            timeshow = paymentInfo.timeshow;
+
+            seatsConvert = selectedSeats.map(str => parseInt(str.replace(/[^\d]/g, ''), 10));
         }
-    }, [timeLeft]);
+    
+    let queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const vnp_TxnRef = urlParams.get('vnp_TxnRef');
+    const vnp_Amount = urlParams.get('vnp_Amount');
+
+    const handlePayment = async () => {
+        const storedPaymentInfo = localStorage.getItem('paymentInfo');
+        let seats, numbersArray, name_cinema, name_movie, name_room, time_show, formattedDate;
+        if(storedPaymentInfo){
+            const paymentInfo = JSON.parse(storedPaymentInfo);
+            seats = paymentInfo.seats;
+            name_cinema = paymentInfo.showtime.data.cinema.name;
+            name_movie = paymentInfo.showtime.data.movies.name;
+            name_room = paymentInfo.timeshow.data[0].room.name;
+            time_show = paymentInfo.timeshow?.data[0].name;
+
+            //convert từ mảng chuỗi sang mảng số nguyên 
+            numbersArray = seats.map(str => parseInt(str.replace(/[^\d]/g, ''), 10));
+
+
+            //convert từ ngày kiểu 2024-01-01 sang 01/01/2024
+            const dateShow = paymentInfo.showtime.data.movies.trailer.dateShow;
+            const parts = dateShow.split("-");
+            const date = new Date(parts[0], parts[1] - 1, parts[2]);
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            formattedDate = `${day}/${month}/${year}`;
+        }
+
+        const formData = {
+            id_user: user?.id,
+            totalQuantity: quantity,
+            paymentMethod: "Chuyển khoản",
+            totalPayment: parseInt(vnp_Amount)/100,
+            paymentStatus: "Đã thanh toán",
+            seats: seats,
+            order_code: vnp_TxnRef,
+            name_cinemas: name_cinema,
+            name_movie: name_movie,
+            name_room: name_room,
+            day_movie: formattedDate,
+            time_show: time_show,
+            email: user?.email
+        }
+        try {
+            await chooseSeat({
+                id_user: user?.id,
+                id_seat: numbersArray,
+                status: "Đã bán"
+            });
+            await addTransaction(formData).unwrap()
+                .then(() => {dispatch(addNewPayment(formData))});
+            handlePopupSuccess();
+            localStorage.removeItem('paymentInfo');
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    if(vnp_TxnRef){
+        if(isPaymentProcessed){
+            handlePayment();
+            setIsPaymentProcessed(false);
+            queryString = '';
+        }
+    }
+
+    if(isChooseSeatCalled){
+        chooseSeat({
+            id_user: user?.id,
+            id_seat: seatsConvert,
+            status: "Chưa đặt"
+        });
+        setIsChooseSeatCalled(false);
+        setTimeout(() => {
+            window.location.href = currentURL1;
+        }, 2000);
+    }
+
+    useEffect(() => {
+        const handleBeforeUnload = (event) => {
+            if(isPaymentProcessed){
+                chooseSeat({
+                    id_user: user?.id,
+                    id_seat: seatsConvert,
+                    status: "Chưa đặt"
+                });
+                const confirmationMessage = "Bạn có chắc chắn muốn rời khỏi trang này?";
+                (event || window.event).returnValue = confirmationMessage;
+                return confirmationMessage;
+            }
+        };
+    
+        window.addEventListener('beforeunload', handleBeforeUnload);
+    
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, [chooseSeat, user, seatsConvert]);
+
     
     useEffect(() => {
         const countdownTimer = setInterval(() => {
             setTimeLeft(prevTime => {
                 if (prevTime === 0) {
                     clearInterval(countdownTimer);
+                    setIsChooseSeatCalled(true);
                     return 0;
                 } else {
                     return prevTime - 1;
@@ -79,6 +202,17 @@ const Payment = ({ quantity, totalPriceProps, selectedSeats, handlerPrevious, sh
         const seconds = time % 60;
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     };
+
+    const handleBack = async () => {
+        if(isPaymentProcessed){
+            await chooseSeat({
+                id_user: user?.id,
+                id_seat: seatsConvert,
+                status: "Chưa đặt"
+            });
+            window.location.href = currentURL1;
+        }
+    }
     
 
     const handleSubmit = async () => {
@@ -88,7 +222,7 @@ const Payment = ({ quantity, totalPriceProps, selectedSeats, handlerPrevious, sh
             setIsLoading(true);
             const payment = {
                 "order_code": orderNumber,
-                "totalPayment": totalPriceProps.toString(),
+                "totalPayment": totalPriceProps,
                 "namebank": selectedBank,
                 "redirect": currentURL,
                 "email": user?.email,
@@ -174,6 +308,9 @@ const Payment = ({ quantity, totalPriceProps, selectedSeats, handlerPrevious, sh
                         <p className='mb-0'>{formatTime(timeLeft)}</p>
                     </div>  
                 </div>
+                <div style={{ display: 'flex', justifyContent: 'end', marginTop: '15px' }}>
+                    <a onClick={handleBack} href="">Quay lại</a>
+                </div>
             </div>
             <div className="col-4">
                 <h6 className="bg-gray-100 p-3">Thông tin đơn hàng</h6>
@@ -200,6 +337,9 @@ const Payment = ({ quantity, totalPriceProps, selectedSeats, handlerPrevious, sh
                 {isOpenPopup && <QRCode 
                     setIsOpenPopup={setIsOpenPopup} 
                     linkVnpay={linkVnpay}
+                />}
+                {isOpenPopupSuccess && <Success 
+                    setIsOpenPopupSuccess={setIsOpenPopupSuccess} 
                 />}
             </div>
         </div>

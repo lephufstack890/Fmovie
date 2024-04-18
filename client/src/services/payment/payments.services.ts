@@ -4,19 +4,37 @@ import { Payment } from './payments.interface';
 export const paymentApi = createApi( {
     reducerPath: 'paymentApi',
     baseQuery: fetchBaseQuery( {
-        baseUrl: 'http://127.0.0.1:8000/api/payment/vnpay'
+        baseUrl: 'http://127.0.0.1:8000/api'
     } ),
     tagTypes: [ 'Payment' ],
     endpoints: ( builder ) => ( {
-        addPayment: builder.mutation<Payment[], Payment>( {
+        getPaymentList: builder.query( {
+            query: () => `/get_all_transaction`,
+            providesTags: [ 'Payment' ]
+        } ),
+        payment: builder.mutation<void, any>( {
             query: ( payment ) => ( {
-                url: ``,
+                url: `/payment`,
+                method: 'POST',
+                body: payment
+            } ),
+        } ),
+        vnpayCallback: builder.mutation<Payment[], Payment>( {
+            query: ( payment ) => ( {
+                url: `/vnpay/callback`,
                 method: 'POST',
                 body: payment
             } ),
             invalidatesTags: [ 'Payment' ]
         } ),
+        deletePayment: builder.mutation<Payment[], string | number>( {
+            query: ( id ) => ( {
+                url: `/delete_transaction/${ id }`,
+                method: 'DELETE',
+            } ),
+            invalidatesTags: [ 'Payment' ],
+        } ),
     } )
 } )
 
-export const { useAddPaymentMutation } = paymentApi    
+export const { useGetPaymentListQuery, usePaymentMutation, useVnpayCallbackMutation, useDeletePaymentMutation } = paymentApi    

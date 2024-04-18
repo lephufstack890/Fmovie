@@ -29,8 +29,6 @@ const SchedulePage: React.FC = () => {
     const { data: movie } = useGetMoviesQuery(idDetailMovie)
     const { data: movieByDate } = useGetMoviesByDateQuery(idMovieByDate);
 
-    console.log(idDetailMovie);
-
     const {
         data: daymovie,
         isSuccess: isDayMovieListSuccess,

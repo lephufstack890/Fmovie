@@ -1,4 +1,3 @@
-import React from 'react'
 import { FaTag } from 'react-icons/fa';
 import { IoTime } from 'react-icons/io5';
 import { MdOutlineHomeWork } from "react-icons/md";
@@ -6,13 +5,13 @@ import { GrSchedules } from "react-icons/gr";
 import { MdOutlineBedroomParent } from "react-icons/md";
 import { GiRockingChair } from "react-icons/gi";
 import { useGetShowTimeQuery } from "@/services/schedule/schedules.services"
+import { NavLink } from 'react-router-dom';
 
 
 const DetailTicket = ({ timeshow, idMovie, selectedSeats, handlerNext }) => {
     
     const {
         data: showtime,
-        isLoading: isLoadingShowTime
     } = useGetShowTimeQuery( idMovie! );
 
     const formatDate = (dateString: string) => {
@@ -25,9 +24,9 @@ const DetailTicket = ({ timeshow, idMovie, selectedSeats, handlerNext }) => {
      <div className="dat-ve-sidebar col-lg-4 col-md-4 col-12 ">
                 <div className="row pb-2">
                     <img className='col-lg-6 p-0 w-80' 
-                    src={showtime?.data.movies.image} alt="" />
+                    src={showtime?.data?.movies?.image} alt="" />
                     <div className="box-content-top col-lg-6">
-                        <h2 className="title" style={{ fontSize: '25px' }}>{showtime?.data.movies.name}</h2>
+                        <h2 className="title" style={{ fontSize: '25px' }}>{showtime?.data?.movies?.name}</h2>
                         <span>2D Phụ đề</span>
                     </div>
                 </div>
@@ -35,11 +34,11 @@ const DetailTicket = ({ timeshow, idMovie, selectedSeats, handlerNext }) => {
                     <div className="col-lg-12">
                         <div className="row pb-2">
                             <span className='d-flex align-items-center col-lg-6'><FaTag /> Thể loại</span>
-                            <span className='col-lg-6'>{showtime?.data.movies.categories.join(', ')}</span>
+                            <span className='col-lg-6'>{showtime?.data?.movies.categories.join(', ')}</span>
                         </div>
                         <div className="row pb-2">
                             <span className='d-flex align-items-center col-lg-6'><IoTime /> Thời gian</span>
-                            <span className='col-lg-6'>{showtime?.data.movies.time} phút</span>
+                            <span className='col-lg-6'>{showtime?.data?.movies.time} phút</span>
                         </div>
                     </div>
                 </div>
@@ -47,11 +46,11 @@ const DetailTicket = ({ timeshow, idMovie, selectedSeats, handlerNext }) => {
                     <div className="col-lg-12">
                         <div className="row pb-2">
                             <span className='d-flex align-items-center col-lg-6'><MdOutlineHomeWork /> Rạp chiếu</span>
-                            <span className='col-lg-6'>{showtime?.data.cinema.name}</span>
+                            <span className='col-lg-6'>{showtime?.data?.cinema?.name}</span>
                         </div>
                         <div className="row pb-2">
                             <span className='d-flex align-items-center col-lg-6'><GrSchedules /> Ngày chiếu</span>
-                            <span className='col-lg-6'>{showtime?.data.movies.releaseDate ? formatDate(showtime?.data.movies.releaseDate) : ''}</span>
+                            <span className='col-lg-6'>{showtime?.data?.movies.releaseDate ? formatDate(showtime?.data?.movies.releaseDate) : ''}</span>
                         </div>
                         <div className="row pb-2">
                             <span className='d-flex align-items-center col-lg-6'><IoTime /> Giờ chiếu</span>
@@ -68,12 +67,14 @@ const DetailTicket = ({ timeshow, idMovie, selectedSeats, handlerNext }) => {
                     </div>
                 </div>
                 <div className='text-center'>
-                    <button
-                        onClick={handlerNext}
-                        className='mb-4'
-                    >
-                        Tiếp tục
-                    </button>
+                    <NavLink to={{ pathname: '/payment'}}>
+                        <button
+                            onClick={handlerNext}
+                            className='mb-4'
+                        >
+                            Tiếp tục
+                        </button>
+                    </NavLink>
                 </div>
             </div>
     </>

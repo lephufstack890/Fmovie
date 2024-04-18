@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import "./index.scss"
 import { useParams } from "react-router-dom"
 import { useGetTimeShowQuery } from "@/services/timeshow/timeshows.services"
 import { TimeShow } from '@/services/timeshow/timeshows.interface'
 
 
-const SelectPosition = ({ handleSeatClick, setQuantity, setTotalPriceProps, setSelectedSeatsId, setInfoShowtime }: any) => {
+const SelectPosition = ({ handleSeatClick, setQuantity, setTotalPriceProps, setSelectedSeatsId }: any) => {
     const {id} = useParams()
 
     const {
         data: timeshow,
-        isLoading: isLoadingTimeShow
     } = useGetTimeShowQuery( id! );
 
     const [selectedSeats, setSelectedSeats] = useState([]);
@@ -49,11 +48,11 @@ const SelectPosition = ({ handleSeatClick, setQuantity, setTotalPriceProps, setS
         setTotalPrice(totalPrice);
         setQuantity(calculatedQuantity);
         setTotalPriceProps(calculatedTotalPrice);
-        setInfoShowtime(timeshow?.data);
     }, [selectedSeats, timeshow]);
 
     const toggleSeat = (seat: never) => {
-        if (selectedSeats.includes(seat)) {
+        const seatIndex = selectedSeats.indexOf(seat);
+        if (seatIndex !== -1) {
             setSelectedSeats(selectedSeats.filter((selectedSeat) => selectedSeat !== seat));
             setSelectedSeatsId(selectedSeats.filter((selectedSeat) => selectedSeat !== seat));
         } else {
@@ -85,7 +84,12 @@ const SelectPosition = ({ handleSeatClick, setQuantity, setTotalPriceProps, setS
             seatClass += isSelected && seatInfo?.nameRow === "T" ? " seat-select-normal" : "";
             seatClass += isSelected && seatInfo?.nameRow === "V" ? " seat-select-vip" : "";
             seatClass += isSelected && seatInfo?.nameRow === "D" ? " seat-select-double" : "";
-            seatClass += seatInfo?.seatStatus === 'Đã bán' ? " seat-booked" : "";
+            seatClass += seatInfo?.seatStatus === 'Đang giữ' && seatInfo?.nameRow === "T" ? " seat-process-normal" : "";
+            seatClass += seatInfo?.seatStatus === 'Đang giữ' && seatInfo?.nameRow === "V" ? " seat-process-vip" : "";
+            seatClass += seatInfo?.seatStatus === 'Đang giữ' && seatInfo?.nameRow === "D" ? " seat-process-double" : "";
+            seatClass += seatInfo?.seatStatus === 'Đã bán' && seatInfo?.nameRow === "T" ? " seat-buy-normal" : "";
+            seatClass += seatInfo?.seatStatus === 'Đã bán' && seatInfo?.nameRow === "V" ? " seat-buy-vip" : "";
+            seatClass += seatInfo?.seatStatus === 'Đã bán' && seatInfo?.nameRow === "D" ? " seat-buy-double" : "";
 
             return (
                 <div 
@@ -97,7 +101,6 @@ const SelectPosition = ({ handleSeatClick, setQuantity, setTotalPriceProps, setS
                     onClick={() => {
                         if (seatInfo?.seatStatus !== 'Đã bán') { 
                             toggleSeat(seatInfo?.id);
-                            // handleSeatClick(seatInfo.id);
                             handleSeatClick(seatInfo?.id, seatInfo?.nameRow);
                         }
                     }}
@@ -118,12 +121,12 @@ const SelectPosition = ({ handleSeatClick, setQuantity, setTotalPriceProps, setS
                         <img width="35" height="35" src="https://www.betacinemas.vn/Assets/global/img/booking/seat-unselect-normal.png" />
                         <span className="note-seat-status-label">Ghế trống</span>
                     </div>
-                    {/* <div className="col-lg-2 col-md-2 col-12">
+                    <div className="col-lg-2 col-md-2 col-12">
                         <img width="35" height="35" src="https://www.betacinemas.vn/Assets/global/img/booking/seat-select-normal.png" />
                         <span className="note-seat-status-label">Ghế đang chọn</span>
-                    </div> */}
+                    </div>
                     <div className="col-lg-3 col-md-3 col-12">
-                        <img width="35" height="35" src="https://www.betacinemas.vn/Assets/global/img/booking/seat-select-normal.png" />
+                        <img width="35" height="35" src="https://www.betacinemas.vn/Assets/global/img/booking/seat-process-normal.png" />
                         <span className="note-seat-status-label">Ghế đang được giữ</span>
                     </div>
                     <div className="col-lg-2 col-md-2 col-12">

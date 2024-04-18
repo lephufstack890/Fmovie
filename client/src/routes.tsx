@@ -16,6 +16,7 @@ import {
     MovieTypeListPage,
     PageNotFound,
     SchedulePage,
+    PaymentPage,
     CinemaPageAdmin,
     CinemaAddPage,
     CinemaEditPage,
@@ -43,6 +44,8 @@ import {
     MoviePageAdmin,
     MovieAddPage,
     MovieEditPage,
+    UserPageAdmin,
+    OrderPageAdmin,
 } from "./pages";
 
 import TicketPage from "./pages/ticket/TicketPage";
@@ -93,6 +96,7 @@ export const router = createBrowserRouter([
             { path: "schedule", element: <SchedulePage /> },
             { path: "cinema", element: <CinemaPage /> },
             { path: "ticket/:id", element: <TicketPage /> },
+            { path: "payment", element: <PaymentPage /> },
         ],
     },
     {
@@ -133,6 +137,8 @@ export const router = createBrowserRouter([
                     { path: "room", element: <RoomPageAdmin /> },
                     { path: "room/add", element: <RoomAddPage /> },
                     { path: "room/edit/:id", element: <RoomEditPage /> },
+                    { path: "user", element: <UserPageAdmin /> },
+                    { path: "order", element: <OrderPageAdmin /> },
                 ],
             },
         ],

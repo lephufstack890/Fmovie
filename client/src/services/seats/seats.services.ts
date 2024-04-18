@@ -60,15 +60,8 @@ export const seatApi = createApi( {
                 body: data,
             }),
         }),
-        cancelSeat: builder.mutation<void, any>({
-            query: (data) => ({
-                url: '/cancel-seat',
-                method: 'POST',
-                body: data,
-            }),
-        }),
     } )
 
 } )
 
-export const { useAddSeatMutation, useGetSeatListQuery, useDeleteSeatMutation, useEditSeatMutation, useGetSeatQuery, useChooseSeatMutation, useCancelSeatMutation  } = seatApi    
+export const { useAddSeatMutation, useGetSeatListQuery, useDeleteSeatMutation, useEditSeatMutation, useGetSeatQuery, useChooseSeatMutation  } = seatApi    

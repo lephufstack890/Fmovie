@@ -11,6 +11,8 @@ export interface Payment {
     name_cinemas: string;
     name_movie: string;
     name_room: string;
+    day_movie: string;
+    time_show: string;
 }
 
 export interface PaymentState {

@@ -1,15 +1,11 @@
-import { useCancelSeatMutation } from "@/services/seats/seats.services"
-const QRCode = ({setIsOpenPopup, linkVnpay, cancelSeat}) => {
-
-    const [cancelSeats, { isLoadingCancelSeat }] = useCancelSeatMutation();
-
+const QRCode = ({setIsOpenPopup, linkVnpay}) => {
     const handleCloseQRCodeChange = async () => {
-        await cancelSeats(cancelSeat);
         setIsOpenPopup(false);
     }
 
     const handleNextPaymentChange = () => {
-        window.open(linkVnpay, '_blank');
+        // window.open(linkVnpay);
+        window.location.href = linkVnpay;
         setIsOpenPopup(false);
     }
   

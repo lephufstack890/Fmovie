@@ -57,7 +57,7 @@ class VNPayController extends Controller
             $inputData['vnp_Bill_State'] = $vnp_Bill_State;
         }
 
-        //var_dump($inputData);
+        // var_dump($inputData);
         ksort($inputData);
         $query = "";
         $i = 0;

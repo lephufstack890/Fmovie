@@ -13,6 +13,8 @@ import HomeIcon from "../../assets/icon/HomeIcon";
 import MovieType from "../../assets/icon/MovieType";
 import CinemaIcon from "@/assets/icon/CinemaIcon";
 import VoucherIcon from "@/assets/icon/VoucherIcon";
+import UserIcon from "@/assets/icon/UserIcon";
+import OrderIcon from "@/assets/icon/OrderIcon";
 
 interface Children {
     name: string;
@@ -36,6 +38,7 @@ interface SubNav {
 
 const navigation: SubNav[] = [
     { name: "Dashboard", href: "/admin", icon: HomeIcon, current: true },
+    { name: "User", href: "/admin/user", icon: UserIcon, current: true },
     {
         name: "Phim",
         icon: MovieIcon,
@@ -115,6 +118,8 @@ const navigation: SubNav[] = [
             { name: "Thêm ngày chiếu", href: "/admin/day-movie/add" },
         ],
     },
+
+    { name: "Đơn hàng", href: "/admin/order", icon: OrderIcon, current: true },
 
     
     

@@ -1,39 +1,44 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { toastError } from "@/hook/Toast"
 import './TicketPage.scss';
 import { IoIosArrowForward } from "react-icons/io";
 import SelectPosition from '../../components/ticket/SelectPosition';
 import DetailTicket from '../../components/ticket/DetailTicket';
-// import InfoPayment from '../../components/ticket/InfoPayment';
-import Payment from '../../components/ticket/Payment';
-// import { useSelector } from 'react-redux';
-// import { User } from '@/services/auth/auth.interface';
+import Payment from '../payment/Payment';
+import { User } from '@/services/auth/auth.interface';
 import { useParams } from "react-router-dom"
+import { useSelector } from 'react-redux';
 import { useGetTimeShowQuery } from "@/services/timeshow/timeshows.services"
 import { useGetShowTimeQuery } from "@/services/schedule/schedules.services"
+import { useChooseSeatMutation } from "@/services/seats/seats.services"
 
-const TicketPage: React.FC = () => {
+const TicketPage = () => {
     const idMovie = localStorage.getItem('hiddenInfo');
 
     const {id} = useParams()
+    const location = useLocation();
+
+    const { pathname, search } = location;
+    const currentURL = "http://localhost:5173" + `${pathname}${search}`;
+
+    const user = useSelector((state: any) => state.auth.user) as User;
+
     const [totalPriceProps, setTotalPriceProps] = useState(0);
     const [quantity, setQuantity] = useState(0);
     const [selectedSeatsId, setSelectedSeatsId] = useState([]);
     const [selectedSeats, setSelectedSeats] = useState([]);
-    const [infoShowtime, setInfoShowtime] = useState({});
+
+    const [chooseSeat, ] = useChooseSeatMutation();
 
     const {
         data: timeshow,
-        isLoading: isLoadingTimeShow
     } = useGetTimeShowQuery( id! );
-
-    // console.log(timeshow)
 
     const {
         data: showtime,
-        isLoading: isLoadingShowTime
     } = useGetShowTimeQuery( idMovie! );
-    
+
     const handleSeatClick = (seatId: any, rowName: any) => {
         const seatString = rowName + seatId;
         setSelectedSeats((prevSelectedSeatsId: any) =>
@@ -47,27 +52,35 @@ const TicketPage: React.FC = () => {
     const [showDetailTicket, setShowDetailTicket] = useState(true);
 
      
-    const nextPage = () => {
+    const nextPage = async () => {
         if(selectedSeatsId.length == 0){
             toastError('Bạn chưa chọn ghế')
         }else{
+            const seats = selectedSeats.map((str: any) => parseInt(str.replace(/[^\d]/g, ''), 10));
+            await chooseSeat({
+                id_user: user?.id,
+                id_seat: seats,
+                status: "Đang giữ"
+            });
             setCurrentPage('payment');
             setShowDetailTicket(false); 
+            const formData = {
+                quantity: quantity,
+                totalPriceProps: totalPriceProps,
+                showtime: showtime,
+                timeshow: timeshow,
+                selectedSeats: selectedSeats,
+                currentURL: currentURL
+            }
+            localStorage.setItem('payment', JSON.stringify(formData));
         }
         
     };
 
-    const previousPage = () => {
-        setCurrentPage('selectPosition');
-        setShowDetailTicket(true); 
-        setSelectedSeatsId([]);
-        setSelectedSeats([]);
-    }
-
   return (
     <div className='container'>
         <div className="d-flex align-items-center py-2 breadcrumb">
-            <span>Trang chủ</span><IoIosArrowForward /><span>Đặt vé</span><IoIosArrowForward /><span>{showtime?.data.movies.name}</span>
+            <span>Trang chủ</span><IoIosArrowForward /><span>Đặt vé</span><IoIosArrowForward /><span>{showtime?.data?.movies?.name}</span>
         </div>
 
         <div className="row pb-4">
@@ -76,16 +89,14 @@ const TicketPage: React.FC = () => {
                                                     setQuantity={setQuantity}
                                                     setTotalPriceProps={setTotalPriceProps}
                                                     setSelectedSeatsId={setSelectedSeatsId}
-                                                    setInfoShowtime={setInfoShowtime}
                                                 />}
-            {currentPage === 'payment' && <Payment quantity={quantity}
-                                                   totalPriceProps={totalPriceProps}
-                                                   selectedSeatsId={selectedSeatsId}
-                                                   selectedSeats={selectedSeats}
-                                                   infoShowtime={infoShowtime}
-                                                   handlerPrevious={previousPage}
-                                                />}
-            {showDetailTicket && <DetailTicket timeshow={timeshow} idMovie={idMovie} selectedSeats={selectedSeats} handlerNext={nextPage} />}
+            {currentPage === 'payment' && <Payment />}
+            {showDetailTicket && <DetailTicket 
+                                        timeshow={timeshow} 
+                                        idMovie={idMovie} 
+                                        selectedSeats={selectedSeats} 
+                                        handlerNext={nextPage} 
+                                />}
         </div>
     </div>
   );

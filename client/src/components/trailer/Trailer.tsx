@@ -1,5 +1,3 @@
-import React from "react";
-import { Link } from "react-router-dom";
 import { DrawerClose } from "../ui/drawer";
 import CloseIcon from "@/assets/icon/CloseIcon";
 import { cn } from "@/lib/utils";

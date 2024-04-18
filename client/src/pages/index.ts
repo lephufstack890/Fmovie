@@ -4,8 +4,9 @@ export { default as Dashboard } from './admin/dashboard/Dashboard';
 export {default as MoviePage} from './movie/MoviePage'
 export { default as CinemaPage } from './cinema/CinemaPage'
 export {default as SchedulePage} from './schedule/SchedulePage'
-export { default as MovieTypeListPage } from './admin/movie-type/MovieTypeListPage'
-export { default as MovieTypeAddPage } from './admin/movie-type/MovieTypeAddPage'
+export {default as PaymentPage} from './payment/Payment'
+export {default as MovieTypeListPage } from './admin/movie-type/MovieTypeListPage'
+export {default as MovieTypeAddPage } from './admin/movie-type/MovieTypeAddPage'
 export {default as MovieTypeEditPage} from './admin/movie-type/MovieTypeEditPage'
 
 export {default as CinemaPageAdmin} from './admin/cinema/CinemaPage'
@@ -43,3 +44,7 @@ export {default as RoomEditPage} from './admin/room/RoomEditPage'
 export {default as MoviePageAdmin} from './admin/movie/MovieListPage'
 export {default as MovieAddPage} from './admin/movie/MovieAddPage'
 export {default as MovieEditPage} from './admin/movie/MovieEditPage'
+
+export {default as UserPageAdmin} from './admin/user/UserListPage'
+
+export {default as OrderPageAdmin} from './admin/order/OrderListPage'
