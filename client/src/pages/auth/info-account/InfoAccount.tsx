@@ -254,8 +254,8 @@ const Login = () => {
                         <tr>
                             <th style={{ border: '1px solid #ddd' }} scope="col">THỜI GIAN</th>
                             <th style={{ border: '1px solid #ddd' }} scope="col">MÃ ĐƠN HÀNG</th>
-                            <th style={{ border: '1px solid #ddd', width: '550px' }} scope="col">NỘI DUNG ĐƠN HÀNG</th>
                             <th style={{ border: '1px solid #ddd' }} scope="col">TRẠNG THÁI</th>
+                            {/* <th style={{ border: '1px solid #ddd', width: '550px' }} scope="col">NỘI DUNG ĐƠN HÀNG</th> */}
                         </tr>
                     </thead>
                     <tbody>
@@ -263,7 +263,7 @@ const Login = () => {
                             <tr key={index}>
                                 <td>{item?.time}</td>
                                 <td>{item?.order_code}</td>
-                                <td>{}</td>
+                                {/* <td>{}</td> */}
                                 <td>{item?.paymentStatus}</td>
                             </tr>
                         ))}

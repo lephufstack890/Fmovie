@@ -328,7 +328,7 @@ const Payment = () => {
                     <hr />
                     <div className="d-flex justify-content-between align-items-center mb-2">
                         <p className="m-0">Số tiền thanh toán</p>
-                        <h4 className="m-0 text-primary">{totalPriceProps.toLocaleString()} VND</h4>
+                        <h4 className="m-0 text-primary">{totalPriceProps?.toLocaleString()} VND</h4>
                     </div>
                 </div>
                 <div className="mt-3">
