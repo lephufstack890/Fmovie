@@ -15,8 +15,6 @@ const OrderListPage = () => {
         (state) => state.payments.payments
     );
 
-    console.log(paymentState)
-
     const {
         data: payment,
         isSuccess: isPaymentListSuccess,

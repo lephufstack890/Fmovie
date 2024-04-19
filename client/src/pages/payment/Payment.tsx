@@ -10,6 +10,7 @@ import { useChooseSeatMutation } from "@/services/seats/seats.services"
 import { useVnpayCallbackMutation } from "@/services/payment/payments.services"
 import { addNewPayment } from "@/services/payment/paymentsSlices"
 import Success from '../popup/payment/Success';
+import Load from '../popup/payment/Load';
 
 const Payment = () => {
 
@@ -24,6 +25,7 @@ const Payment = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isOpenPopup, setIsOpenPopup] = useState(false);
     const [isOpenPopupSuccess, setIsOpenPopupSuccess] = useState(false);
+    const [isOpenPopupLoad, setIsOpenPopupLoad] = useState(false);
     const [timeLeft, setTimeLeft] = useState(360); 
     const [selectedBank, setSelectedBank] = useState(null);
     const [linkVnpay, setLinkVnpay] = useState("");
@@ -85,6 +87,7 @@ const Payment = () => {
     const vnp_Amount = urlParams.get('vnp_Amount');
 
     const handlePayment = async () => {
+        setIsOpenPopupLoad(true);
         const storedPaymentInfo = localStorage.getItem('paymentInfo');
         let seats, numbersArray, name_cinema, name_movie, name_room, time_show, formattedDate;
         if(storedPaymentInfo){
@@ -97,7 +100,6 @@ const Payment = () => {
 
             //convert từ mảng chuỗi sang mảng số nguyên 
             numbersArray = seats.map(str => parseInt(str.replace(/[^\d]/g, ''), 10));
-
 
             //convert từ ngày kiểu 2024-01-01 sang 01/01/2024
             const dateShow = paymentInfo.showtime.data.movies.trailer.dateShow;
@@ -131,7 +133,8 @@ const Payment = () => {
                 status: "Đã bán"
             });
             await addTransaction(formData).unwrap()
-                .then(() => {dispatch(addNewPayment(formData))});
+            .then(() => {dispatch(addNewPayment(formData))});
+            setIsOpenPopupLoad(false);
             handlePopupSuccess();
             localStorage.removeItem('paymentInfo');
         } catch (error) {
@@ -339,8 +342,9 @@ const Payment = () => {
                     linkVnpay={linkVnpay}
                 />}
                 {isOpenPopupSuccess && <Success 
-                    setIsOpenPopupSuccess={setIsOpenPopupSuccess} 
+                        setIsOpenPopupSuccess={setIsOpenPopupSuccess} 
                 />}
+                {isOpenPopupLoad && <Load />}
             </div>
         </div>
     </div>

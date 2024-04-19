@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import './InfoAccount.scss'
@@ -13,10 +14,28 @@ import {
   } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import {
+    useGetPaymentListQuery,
+} from "@/services/payment/payments.services";
+import { loadPaymentList } from "@/services/payment/paymentsSlices";
 
 const Login = () => {
 
     const [activeTab, setActiveTab] = useState("THÔNG TIN TÀI KHOẢN");
+
+    const dispatch = useAppDispatch();
+    const paymentState = useAppSelector(
+        (state) => state.payments.payments
+    );
+
+    const {
+        data: payment,
+        isSuccess: isPaymentListSuccess,
+    } = useGetPaymentListQuery([]);
+
+    useEffect(() => {
+        dispatch(loadPaymentList(payment?.data));
+    }, [isPaymentListSuccess]);
 
     const handleSetTab = (active: string) => {
         setActiveTab(active)
@@ -51,7 +70,7 @@ const Login = () => {
                         activeTab === "VOUCHER" ? "active" : ""
                     }`}
                 >
-                    VOUCHER
+                    LỊCH SỬ ĐƠN HÀNG
                 </li>
             </ul>
             { activeTab === "THÔNG TIN TÀI KHOẢN" && 
@@ -64,7 +83,7 @@ const Login = () => {
                             </div>  
                             <div>
                                 <a style={{ background: '#ddd', padding: '3px 15px', marginRight: '10px', fontWeight: '300', fontSize: '14px' }}>TẢI ẢNH LÊN</a>
-                                <a style={{ color: '#ffffff', background: '#44b6ae', padding: '3px 15px', fontWeight: '300', fontSize: '14px' }}>LƯU ẢNH</a>
+                                {/* <a style={{ color: '#ffffff', background: '#44b6ae', padding: '3px 15px', fontWeight: '300', fontSize: '14px' }}>LƯU ẢNH</a> */}
                             </div>                        
                         </div>
 
@@ -229,48 +248,25 @@ const Login = () => {
 
             { activeTab === "VOUCHER" && 
             <div style={{ background: '#f8f9fa', padding: '20px 30px' }}>
-                <h4 style={{ color: '#03599d' }}>VOUCHER CỦA TÔI</h4>
-                <table className="table">
-                    <thead >
-                        <tr>
-                            <th style={{ border: '1px solid #ddd' }} scope="col">MÃ VOUCHER</th>
-                            <th style={{ border: '1px solid #ddd', width: '500px' }} scope="col">NỘI DUNG VOUCHER</th>
-                            <th style={{ border: '1px solid #ddd' }} scope="col">LOẠI VOUCHER</th>
-                            <th style={{ border: '1px solid #ddd' }} scope="col">NGÀY HẾT HẠN</th>
-                            <th style={{ border: '1px solid #ddd' }} scope="col">THAO TÁC</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        {/* <td>Voucher001</td>
-                        <td>Nội dung voucher 1</td>
-                        <td>Loại voucher 1</td>
-                        <td>01/01/2025</td>
-                        <td>
-                            <button type="button" className="btn btn-primary">Sửa</button>
-                            <button type="button" className="btn btn-danger">Xóa</button>
-                        </td> */}
-                    </tr>
-                    </tbody>
-                </table>
-
-                <h4 style={{ color: '#03599d', marginTop: '50px' }}>LỊCH SỬ VOUCHER</h4>
+                <h4 style={{ color: '#03599d' }}>LỊCH SỬ ĐƠN HÀNG</h4>
                 <table className="table">
                     <thead>
                         <tr>
                             <th style={{ border: '1px solid #ddd' }} scope="col">THỜI GIAN</th>
-                            <th style={{ border: '1px solid #ddd' }} scope="col">MÃ VOUCHER</th>
-                            <th style={{ border: '1px solid #ddd', width: '550px' }} scope="col">NỘI DUNG VOUCHER</th>
+                            <th style={{ border: '1px solid #ddd' }} scope="col">MÃ ĐƠN HÀNG</th>
+                            <th style={{ border: '1px solid #ddd', width: '550px' }} scope="col">NỘI DUNG ĐƠN HÀNG</th>
                             <th style={{ border: '1px solid #ddd' }} scope="col">TRẠNG THÁI</th>
                         </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        {/* <td>Voucher001</td>
-                        <td>Nội dung voucher 1</td>
-                        <td>Loại voucher 1</td>
-                        <td>01/01/2025</td> */}
-                    </tr>
+                        {paymentState?.map((item, index) => (
+                            <tr key={index}>
+                                <td>{item?.time}</td>
+                                <td>{item?.order_code}</td>
+                                <td>{}</td>
+                                <td>{item?.paymentStatus}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>

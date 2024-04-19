@@ -1,6 +1,7 @@
 const Success = ({setIsOpenPopupSuccess}) => {
 
     const handleCloseQRCodeChange = async () => {
+        window.location.href = "http://localhost:5173/"
         setIsOpenPopupSuccess(false);
     }
   
@@ -44,7 +45,7 @@ const Success = ({setIsOpenPopupSuccess}) => {
                     </div>
                         
                     <div style={{ textAlign: 'center', marginTop: '30px' }}>
-                        <button onClick={handleCloseQRCodeChange} className="btn btn-primary" style={{ padding: '8px 35px', background: '#ccc', border: 'none' }}>OK</button>
+                        <button onClick={handleCloseQRCodeChange} className="btn btn-primary" style={{ padding: '8px 35px', background: '#ccc', border: 'none' }}>VỀ TRANG CHỦ</button>
                     </div>
                 </div>
             </div>
