@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAppDispatch } from "@/app/hooks"
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { User } from '@/services/auth/auth.interface';
 import { useSelector } from 'react-redux';
 import { usePaymentMutation } from "@/services/payment/payments.services"
@@ -15,6 +15,7 @@ import Load from '../popup/payment/Load';
 const Payment = () => {
 
     const dispatch = useAppDispatch()
+    const navigate = useNavigate();
     const location = useLocation();
     const { pathname, search } = location;
     const currentURL = "http://localhost:5173" + `${pathname}${search}`;
@@ -221,6 +222,8 @@ const Payment = () => {
     const handleSubmit = async () => {
         if(selectedBank === null){
             toastError('Bạn chưa chọn ngân hàng')
+        }else if(!user){
+            navigate('/login');
         }else{
             setIsLoading(true);
             const payment = {

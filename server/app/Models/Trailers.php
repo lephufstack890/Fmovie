@@ -10,6 +10,7 @@ class Trailers extends Model
     use HasFactory;
 
     protected $fillable = [
+        'id_movie',
         'url',
         'dateShow'
     ];

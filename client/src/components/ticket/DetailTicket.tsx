@@ -6,10 +6,21 @@ import { MdOutlineBedroomParent } from "react-icons/md";
 import { GiRockingChair } from "react-icons/gi";
 import { useGetShowTimeQuery } from "@/services/schedule/schedules.services"
 import { NavLink } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 
 const DetailTicket = ({ timeshow, idMovie, selectedSeats, handlerNext }) => {
-    
+
+    const [isSeatsSelected, setIsSeatsSelected] = useState(false);
+
+    useEffect(() => {
+        if (selectedSeats && selectedSeats.length > 0) {
+            setIsSeatsSelected(true); 
+        } else {
+            setIsSeatsSelected(false); 
+        }
+    }, [selectedSeats]); 
+
     const {
         data: showtime,
     } = useGetShowTimeQuery( idMovie! );
@@ -71,6 +82,8 @@ const DetailTicket = ({ timeshow, idMovie, selectedSeats, handlerNext }) => {
                         <button
                             onClick={handlerNext}
                             className='mb-4'
+                            disabled={!isSeatsSelected}
+                            style={{ backgroundColor: isSeatsSelected ? '#007bff' : '#76accf', cursor: isSeatsSelected ? 'pointer' : 'not-allowed' }}
                         >
                             Tiếp tục
                         </button>

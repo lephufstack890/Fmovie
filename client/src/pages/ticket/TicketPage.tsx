@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate  } from 'react-router-dom';
 import { toastError } from "@/hook/Toast"
 import './TicketPage.scss';
 import { IoIosArrowForward } from "react-icons/io";
@@ -18,11 +18,14 @@ const TicketPage = () => {
 
     const {id} = useParams()
     const location = useLocation();
+    const navigate = useNavigate();
 
     const { pathname, search } = location;
     const currentURL = "http://localhost:5173" + `${pathname}${search}`;
 
     const user = useSelector((state: any) => state.auth.user) as User;
+
+    console.log(user)
 
     const [totalPriceProps, setTotalPriceProps] = useState(0);
     const [quantity, setQuantity] = useState(0);
@@ -55,8 +58,9 @@ const TicketPage = () => {
     const nextPage = async () => {
         if(selectedSeatsId.length == 0){
             toastError('Bạn chưa chọn ghế')
-        }else{
-            const seats = selectedSeats.map((str: any) => parseInt(str.replace(/[^\d]/g, ''), 10));
+        }
+
+        const seats = selectedSeats.map((str: any) => parseInt(str.replace(/[^\d]/g, ''), 10));
             await chooseSeat({
                 id_user: user?.id,
                 id_seat: seats,
@@ -73,7 +77,6 @@ const TicketPage = () => {
                 currentURL: currentURL
             }
             localStorage.setItem('payment', JSON.stringify(formData));
-        }
         
     };
 
