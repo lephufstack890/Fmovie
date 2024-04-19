@@ -71,6 +71,7 @@ Route::post('upload/file',[UploadImageController::class, 'upload']);
 // Route::post('payment/update',[TransactionController::class, 'UpdatePayment']);
 
 Route::get('/get_all_transaction', [VNPayController::class, 'get_all_transaction']);
+Route::get('/get_transaction/{user_id}', [VNPayController::class, 'get_transaction_id']);
 Route::delete('/delete_transaction/{id}', [VNPayController::class, 'destroy']);
 Route::post('/payment', [VNPayController::class, 'index']);
 Route::post('/vnpay/callback', [VNPayController::class, 'callback'])->name('vnpay.callback');

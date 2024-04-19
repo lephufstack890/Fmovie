@@ -135,6 +135,13 @@ class VNPayController extends Controller
         ]);
     }
 
+    public function get_transaction_id(string $id_user) {
+        $data = Transaction::where('id_user', $id_user)->get();
+        return response()->json([
+            'data' => $data,
+        ]);
+    }
+
 
     public function destroy(string $id)
     {
