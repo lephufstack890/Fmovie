@@ -7,9 +7,10 @@ import { GiRockingChair } from "react-icons/gi";
 import { useGetShowTimeQuery } from "@/services/schedule/schedules.services"
 import { NavLink } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useGetMoviesQuery } from "@/services/movies/movies.services";
 
 
-const DetailTicket = ({ timeshow, idMovie, selectedSeats, handlerNext }) => {
+const DetailTicket = ({ timeshow, id_movie, selectedSeats, handlerNext }) => {
 
     const [isSeatsSelected, setIsSeatsSelected] = useState(false);
 
@@ -23,7 +24,26 @@ const DetailTicket = ({ timeshow, idMovie, selectedSeats, handlerNext }) => {
 
     const {
         data: showtime,
-    } = useGetShowTimeQuery( idMovie! );
+    } = useGetShowTimeQuery( id_movie! );
+
+    const {
+        data: movie,
+    } = useGetMoviesQuery( id_movie! );
+
+
+    const getCategoryNames = (categories: { name: string }[]) => {
+      
+        if(categories && categories.length > 0){
+          const categoryNames: string[] = [];
+          
+          categories.forEach(function(category) {
+            categoryNames.push(category.name);
+          });
+          const output = categoryNames.join(', ');
+    
+          return output;
+        }
+      }
 
     const formatDate = (dateString: string) => {
         const [year, month, day] = dateString.split('-');
@@ -35,9 +55,9 @@ const DetailTicket = ({ timeshow, idMovie, selectedSeats, handlerNext }) => {
      <div className="dat-ve-sidebar col-lg-4 col-md-4 col-12 ">
                 <div className="row pb-2">
                     <img className='col-lg-6 p-0 w-80' 
-                    src={showtime?.data?.movies?.image} alt="" />
+                    src={movie?.data?.image} alt="" />
                     <div className="box-content-top col-lg-6">
-                        <h2 className="title" style={{ fontSize: '25px' }}>{showtime?.data?.movies?.name}</h2>
+                        <h2 className="title" style={{ fontSize: '25px' }}>{movie?.data?.name}</h2>
                         <span>2D Phụ đề</span>
                     </div>
                 </div>
@@ -45,11 +65,11 @@ const DetailTicket = ({ timeshow, idMovie, selectedSeats, handlerNext }) => {
                     <div className="col-lg-12">
                         <div className="row pb-2">
                             <span className='d-flex align-items-center col-lg-6'><FaTag /> Thể loại</span>
-                            <span className='col-lg-6'>{showtime?.data?.movies.categories.join(', ')}</span>
+                            <span className='col-lg-6'>{getCategoryNames(movie?.data?.id_category)}</span>
                         </div>
                         <div className="row pb-2">
                             <span className='d-flex align-items-center col-lg-6'><IoTime /> Thời gian</span>
-                            <span className='col-lg-6'>{showtime?.data?.movies.time} phút</span>
+                            <span className='col-lg-6'>{movie?.data?.time} phút</span>
                         </div>
                     </div>
                 </div>

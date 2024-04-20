@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { useSelector } from 'react-redux';
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import './InfoAccount.scss'
@@ -15,27 +15,16 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import {
-    useGetPaymentListQuery,
+    useGetPaymentQuery,
 } from "@/services/payment/payments.services";
-import { loadPaymentList } from "@/services/payment/paymentsSlices";
+import { User } from '@/services/auth/auth.interface';
 
 const Login = () => {
 
+    const user = useSelector((state: any) => state.auth.user) as User;
     const [activeTab, setActiveTab] = useState("THÔNG TIN TÀI KHOẢN");
 
-    const dispatch = useAppDispatch();
-    const paymentState = useAppSelector(
-        (state) => state.payments.payments
-    );
-
-    const {
-        data: payment,
-        isSuccess: isPaymentListSuccess,
-    } = useGetPaymentListQuery([]);
-
-    useEffect(() => {
-        dispatch(loadPaymentList(payment?.data));
-    }, [isPaymentListSuccess]);
+    const {data: payment} = useGetPaymentQuery(user?.id)
 
     const handleSetTab = (active: string) => {
         setActiveTab(active)
@@ -259,7 +248,7 @@ const Login = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {paymentState?.map((item, index) => (
+                        {payment?.data?.map((item, index) => (
                             <tr key={index}>
                                 <td>{item?.time}</td>
                                 <td>{item?.order_code}</td>

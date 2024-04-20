@@ -50,10 +50,6 @@ const SchedulePage: React.FC = () => {
         setIdMovie(id);
     }
 
-    const handleNavLinkClick = (id: string) => {
-        localStorage.setItem('hiddenInfo', id);
-    };
-
     return (
         <Drawer>
         <div className='container'>
@@ -108,8 +104,7 @@ const SchedulePage: React.FC = () => {
                                         {item?.time_shows.map((itemTimeShow: any, index: number) => (
                                             <li key={index} className="item-time">
                                                 <NavLink
-                                                    to={`/ticket/${itemTimeShow?.id}`}
-                                                    onClick={() => handleNavLinkClick(item?.id)}
+                                                    to={`/ticket/${itemTimeShow?.id}?id_movie=${item?.id}`}
                                                     className='text-decoration-none text-black'
                                                 >
                                                     <span>{itemTimeShow?.name}</span>

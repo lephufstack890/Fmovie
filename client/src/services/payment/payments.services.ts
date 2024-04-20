@@ -12,6 +12,13 @@ export const paymentApi = createApi( {
             query: () => `/get_all_transaction`,
             providesTags: [ 'Payment' ]
         } ),
+        getPayment: builder.query({
+            query: (user_id: string | number) => ({
+                url: `/get_transaction/${user_id}`,
+                method: "GET",
+            }),
+            providesTags: [ 'Payment' ]
+        }),
         payment: builder.mutation<void, any>( {
             query: ( payment ) => ( {
                 url: `/payment`,
@@ -37,4 +44,4 @@ export const paymentApi = createApi( {
     } )
 } )
 
-export const { useGetPaymentListQuery, usePaymentMutation, useVnpayCallbackMutation, useDeletePaymentMutation } = paymentApi    
+export const { useGetPaymentListQuery, useGetPaymentQuery, usePaymentMutation, useVnpayCallbackMutation, useDeletePaymentMutation } = paymentApi    

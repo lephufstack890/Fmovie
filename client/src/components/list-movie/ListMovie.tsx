@@ -25,9 +25,6 @@ const ListMovie = () => {
 
     const { data: movies } = useGetMoviesByStatusQuery(status)
 
-    console.log(movies);
-    
-
     const { data: movie } = useGetMoviesQuery(idMovie)
 
     return (
@@ -99,8 +96,8 @@ const ListMovie = () => {
                                     <strong>Thời lượng:</strong> {movie.time} phút
                                 </p>
                                 <DrawerTrigger
-                                    onClick={() => {setModal("showtime"); if (movie.id) {
-                                        setIdMovie(movie.id);
+                                    onClick={() => {setModal("showtime"); if (movie?.id) {
+                                        setIdMovie(movie?.id);
                                     }}}
                                     className={cn("btn-ticket")}
                                 >

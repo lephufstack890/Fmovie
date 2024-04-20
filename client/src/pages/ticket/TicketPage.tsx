@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation, useNavigate  } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { toastError } from "@/hook/Toast"
 import './TicketPage.scss';
 import { IoIosArrowForward } from "react-icons/io";
@@ -12,20 +12,19 @@ import { useSelector } from 'react-redux';
 import { useGetTimeShowQuery } from "@/services/timeshow/timeshows.services"
 import { useGetShowTimeQuery } from "@/services/schedule/schedules.services"
 import { useChooseSeatMutation } from "@/services/seats/seats.services"
+import { useGetMoviesQuery } from "@/services/movies/movies.services";
 
 const TicketPage = () => {
-    const idMovie = localStorage.getItem('hiddenInfo');
 
     const {id} = useParams()
     const location = useLocation();
-    const navigate = useNavigate();
+    const searchParams = new URLSearchParams(location.search);
+    const id_movie = searchParams.get('id_movie');
 
     const { pathname, search } = location;
     const currentURL = "http://localhost:5173" + `${pathname}${search}`;
 
     const user = useSelector((state: any) => state.auth.user) as User;
-
-    console.log(user)
 
     const [totalPriceProps, setTotalPriceProps] = useState(0);
     const [quantity, setQuantity] = useState(0);
@@ -40,7 +39,13 @@ const TicketPage = () => {
 
     const {
         data: showtime,
-    } = useGetShowTimeQuery( idMovie! );
+    } = useGetShowTimeQuery( id_movie! );
+
+    const {
+        data: movie,
+    } = useGetMoviesQuery( id_movie! );
+
+    console.log(movie)
 
     const handleSeatClick = (seatId: any, rowName: any) => {
         const seatString = rowName + seatId;
@@ -83,7 +88,7 @@ const TicketPage = () => {
   return (
     <div className='container'>
         <div className="d-flex align-items-center py-2 breadcrumb">
-            <span>Trang chủ</span><IoIosArrowForward /><span>Đặt vé</span><IoIosArrowForward /><span>{showtime?.data?.movies?.name}</span>
+            <span>Trang chủ</span><IoIosArrowForward /><span>Đặt vé</span><IoIosArrowForward /><span>{movie?.data?.name}</span>
         </div>
 
         <div className="row pb-4">
@@ -96,7 +101,7 @@ const TicketPage = () => {
             {currentPage === 'payment' && <Payment />}
             {showDetailTicket && <DetailTicket 
                                         timeshow={timeshow} 
-                                        idMovie={idMovie} 
+                                        id_movie={id_movie} 
                                         selectedSeats={selectedSeats} 
                                         handlerNext={nextPage} 
                                 />}

@@ -59,7 +59,7 @@ const Showtime = ({ idMovie }: { idMovie: number }) => {
                 <div className="flex ">
                     {movie?.data.time_shows.map((item: TimeShow, index: number) => (
                         <div key={index} className='mr-4'>
-                            <NavLink to={`/ticket/${item?.id}`} className="px-[5px] text-[#333] cursor-pointer">
+                            <NavLink to={`/ticket/${item?.id}?id_movie=${idMovie}`} className="px-[5px] text-[#333] cursor-pointer">
                                 <div className="bg-[#E5E5E5] text-[#333] text-center text-sm py-1">
                                     {item?.name}
                                 </div>
