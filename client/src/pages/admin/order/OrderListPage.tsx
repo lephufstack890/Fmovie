@@ -1,6 +1,6 @@
 import { DeleteIcon } from "lucide-react";
 import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { useAppDispatch } from "@/app/hooks";
 import {
     useDeletePaymentMutation,
     useGetPaymentListQuery,
@@ -8,27 +8,40 @@ import {
 import { deletePayment, loadPaymentList } from "@/services/payment/paymentsSlices";
 import { toastError, toastSuccess } from "@/hook/Toast";
 
+interface payment {
+    id: number,
+    order_code: string,
+    user: {
+        name: string,
+        phone_number: string
+    },
+    name_movie: string,
+    name_cinemas: string,
+    name_room: string,
+    day_movie: string,
+    time_show: string,
+    totalPayment: number
+}
+
 const OrderListPage = () => {
 
     const dispatch = useAppDispatch();
-    const paymentState = useAppSelector(
-        (state) => state.payments.payments
-    );
 
     const {
         data: payment,
         isSuccess: isPaymentListSuccess,
     } = useGetPaymentListQuery([]);
 
-    const [deletePaymentApi, ] =
-    useDeletePaymentMutation();
+    console.log(payment)
+
+    const [deletePaymentApi, ] = useDeletePaymentMutation();
 
     useEffect(() => {
         dispatch(loadPaymentList(payment?.data));
-    }, [isPaymentListSuccess]);
+    }, [dispatch, payment, isPaymentListSuccess]);
 
     function formatCurrency(amount: string | number) {
-        let intAmount = parseInt(amount);
+        const intAmount: number = Number(amount);
         let formattedAmount = intAmount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
 
         formattedAmount = formattedAmount.replace('₫', '') + ' VND';
@@ -80,7 +93,7 @@ const OrderListPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {paymentState?.map((item, index) => (
+                            {payment?.data?.map((item: payment, index: number) => (
                                 <tr key={index} className="border-b">
                                     <td className="py-2 px-3 text-base font-medium text-gray-900">
                                         {index + 1}

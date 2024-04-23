@@ -7,12 +7,23 @@ import { cn } from "@/lib/utils";
 import Showtime from "../show-time/Showtime";
 import Trailer from "../trailer/Trailer";
 import { useGetMoviesByStatusQuery, useGetMoviesQuery } from "@/services/movies/movies.services";
-import { Movie } from "@/services/movies/movies.interface";
+
+interface Movie {
+    id: number,
+    image: string,
+    name: string,
+    time: number,
+    id_category: []
+}
+
+interface Category {
+    name: string
+}
 
 const ListMovie = () => {
     const [activeTab, setActiveTab] = useState("PHIM SẮP CHIẾU");
     const [modal, setModal] = useState("");
-    const [idMovie, setIdMovie] = useState(1);
+    const [idMovie, setIdMovie] = useState<number>(1);
     const [status, setStatus] = useState('Phim sắp chiếu')
     const handleGetMovie = (status: string, active: string) => {
         setActiveTab(active)
@@ -68,13 +79,13 @@ const ListMovie = () => {
                             <DrawerTrigger className={cn('p-0 ')}>
                                 <div className={cn('movie-item__image ') }>
                                     <img
-                                        src={movie.image}
+                                        src={movie?.image}
                                         alt=""
                                     />
                                     <div
                                         onClick={(): void => {
-                                            if (movie.id) {
-                                                handleTrailer(movie.id);
+                                            if (movie?.id) {
+                                                handleTrailer(movie?.id);
                                             }
                                         }}
                                         className="movie-item__overlay flex items-center justify-center"
@@ -86,14 +97,14 @@ const ListMovie = () => {
                                 </div>
                             </DrawerTrigger>
                             <div className="movie-item__bottom">
-                                <Link className="movie-item__title" to={`/movie/${movie.id}`}>
-                                    {movie.name}
+                                <Link className="movie-item__title" to={`/movie/${movie?.id}`}>
+                                    {movie?.name}
                                 </Link>
                                 <p>
-                                    <strong>Thể loại:</strong>{movie?.id_category.map((category) => category.name).join(', ')}
+                                    <strong>Thể loại:</strong>{movie?.id_category?.map((category: Category) => category?.name).join(', ')}
                                 </p>
                                 <p>
-                                    <strong>Thời lượng:</strong> {movie.time} phút
+                                    <strong>Thời lượng:</strong> {movie?.time} phút
                                 </p>
                                 <DrawerTrigger
                                     onClick={() => {setModal("showtime"); if (movie?.id) {

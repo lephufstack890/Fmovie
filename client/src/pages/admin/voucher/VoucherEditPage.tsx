@@ -24,10 +24,9 @@ const VoucherEditPage = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
-  const [editVoucherMutation, { isLoading }] = useEditVoucherMutation();
+  const [editVoucherMutation] = useEditVoucherMutation();
   const {
     data: voucher,
-    isLoading: isLoadingVoucher
   } = useGetVoucherQuery( id! );
 
   const FormSchema = z.object({
@@ -65,7 +64,7 @@ console.log(voucher);
         condition: voucher.data.condition,
       })
     }
-  },[voucher])
+  },[form, voucher])
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     const formData = {

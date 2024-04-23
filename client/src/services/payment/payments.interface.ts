@@ -7,7 +7,7 @@ export interface Payment {
     totalPayment: string | number;
     paymentStatus?: string;
     seats: string[];
-    order_code: string;
+    order_code: string | null;
     name_cinemas: string;
     name_movie: string;
     name_room: string;

@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
-import { Category } from "@/services/categories/categories.interface"
 import { editNewCategory } from "@/services/categories/categoriesSlices"
 import { useEditCategoryMutation, useGetCategoryQuery } from "@/services/categories/categories.services"
 import { useAppDispatch } from "@/app/hooks"
@@ -25,11 +24,9 @@ const MovieTypeEditPage = () => {
   const {id} = useParams()
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const {setValue} = useForm()
-  const [editCategoryMutation, { isLoading }] = useEditCategoryMutation();
+  const [editCategoryMutation] = useEditCategoryMutation();
   const {
     data: category,
-    isLoading: isLoadingCategory
 } = useGetCategoryQuery( id! );
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -51,7 +48,7 @@ const form = useForm<z.infer<typeof FormSchema>>({
         name: category.data.name
       })
     }
-  },[category])
+  },[form, category])
 const onSubmit = async (data: z.infer<typeof FormSchema>) => {
   const formData = {
     id,

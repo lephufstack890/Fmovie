@@ -23,7 +23,7 @@ const MovieTypeAddPage = () => {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const [addCategoryMutation, {isLoading}] = useAddCategoryMutation()
+  const [addCategoryMutation] = useAddCategoryMutation()
 
   const FormSchema = z.object({
     name: z.string().min(2, {

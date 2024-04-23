@@ -1,6 +1,6 @@
 import { DeleteIcon, EditIcon } from "lucide-react";
 import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { useAppDispatch } from "@/app/hooks";
 import {
     useDeleteRoomMutation,
     useGetRoomListQuery,
@@ -9,25 +9,28 @@ import { deleteRoom, loadRoomList } from "@/services/rooms/roomsSlices";
 import { toastError, toastSuccess } from "@/hook/Toast";
 import { Link } from "react-router-dom";
 
+interface room {
+    id: number,
+    cinema: {
+        name: string
+    },
+    name_room: string
+}
+
 const RoomListPage = () => {
 
     const dispatch = useAppDispatch();
-    const roomState = useAppSelector(
-        (state) => state.rooms.rooms
-    );
 
     const {
         data: room,
-        isLoading: isRoomListLoading,
         isSuccess: isRoomListSuccess,
     } = useGetRoomListQuery([]);
 
-    const [deleteRoomApi, { isError: isDeleteRoomError }] =
-    useDeleteRoomMutation();
+    const [deleteRoomApi] = useDeleteRoomMutation();
 
     useEffect(() => {
         dispatch(loadRoomList(room?.data));
-    }, [isRoomListSuccess]);
+    }, [dispatch, room, isRoomListSuccess]);
 
 
     const tHead = ["STT", "Tên rạp phim", "Tên phòng chiếu", "Tác vụ", ""];
@@ -90,7 +93,7 @@ const RoomListPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {roomState?.map((item, index) => (
+                            {room?.data?.map((item: room, index: number) => (
                                 <tr key={index} className="border-b">
                                     <td className="py-2 px-3 text-base font-medium text-gray-900">
                                         {index + 1}

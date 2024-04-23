@@ -21,16 +21,15 @@ const MovieTypeListPage = () => {
     const tHead = ["STT", "Tên danh mục", ""];
     const {
         data: category,
-        isLoading: isCategoryListLoading,
         isSuccess: isCategoryListSuccess,
     } = useGetCategoryListQuery([]);
     //delete
-    const [deleteCategoryApi, { isError: isDeleteCategoryError }] =
+    const [deleteCategoryApi] =
     useDeleteCategoryMutation();
   
     useEffect(() => {
         dispatch(loadCategoryList(category?.data));
-    }, [isCategoryListSuccess]);
+    }, [dispatch, category, isCategoryListSuccess]);
 
   
   const handleDelete = async (id: string | number) => {

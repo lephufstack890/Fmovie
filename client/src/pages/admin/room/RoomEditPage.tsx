@@ -28,11 +28,10 @@ const RoomEditPage = () => {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const [editRoomMutation, {isLoading}] = useEditRoomMutation()
+  const [editRoomMutation] = useEditRoomMutation()
 
   const {
     data: room,
-    isLoading: isLoadingRoom
   } = useGetRoomQuery( id! );
 
   const cinemaState = useAppSelector(
@@ -58,17 +57,16 @@ const RoomEditPage = () => {
         name: room.data.name_room,
       })
     }
-  },[room])
+  },[form, room])
 
   const {
     data: cinema,
-    isLoading: isCinemaListLoading,
     isSuccess: isCinemaListSuccess,
   } = useGetCinemaListQuery([]);
 
   useEffect(() => {
     dispatch(loadCinemaList(cinema?.data));
-  }, [isCinemaListSuccess])
+  }, [dispatch, cinema, isCinemaListSuccess])
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     const formData = {

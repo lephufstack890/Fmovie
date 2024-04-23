@@ -24,11 +24,10 @@ const DayMovieEditPage = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const [editDayMovieMutation, {isLoading}] = useEditDayMovieMutation()
+  const [editDayMovieMutation, ] = useEditDayMovieMutation()
 
   const {
     data: daymovie,
-    isLoading: isLoadingDayMovie
   } = useGetDayMovieQuery( id! );
 
   const FormSchema = z.object({

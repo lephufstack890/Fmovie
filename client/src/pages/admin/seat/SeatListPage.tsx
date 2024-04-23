@@ -1,7 +1,7 @@
 import { DeleteIcon, EditIcon } from "lucide-react";
 import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { useAppDispatch} from "@/app/hooks";
 import {
     useDeleteSeatMutation,
     useGetSeatListQuery,
@@ -11,6 +11,18 @@ import { toastError, toastSuccess } from "@/hook/Toast";
 import Pagination from "@/components/pagination/Pagination";
 import "./index.scss";
 
+interface seat {
+    id: number,
+    room: {
+        name: string
+    },
+    nameRow: string,
+    seats_type: {
+        name: string
+    },
+    seatStatus: string
+}
+
 const SeatsPage = () => {
 
     const [activeTab, setActiveTab] = useState("Ghế chưa đặt");
@@ -19,23 +31,17 @@ const SeatsPage = () => {
     const itemsPerPage = 10; 
 
     const dispatch = useAppDispatch();
-    const seatState = useAppSelector(
-        (state) => state.seats.seats
-    );
-    const totalPages = seatState?.last_page;
-
-    // console.log(seatState?.seats);
 
     const tHead = ["STT", "Tên phòng", "Tên ghế","Kiểu ghế", "Trạng thái", "Tác vụ"];
 
     const {
         data: seat,
-        isLoading: isSeatListLoading,
         isSuccess: isSeatListSuccess,
     } = useGetSeatListQuery({ page: currentPage, status });
 
-    const [deleteSeatApi, { isError: isDeleteSeatError }] =
-    useDeleteSeatMutation();
+    const totalPages = seat?.seats?.last_page;
+
+    const [deleteSeatApi] = useDeleteSeatMutation();
 
     useEffect(() => {
         if (seat) {
@@ -49,7 +55,7 @@ const SeatsPage = () => {
         setCurrentPage(1);
     }
 
-    const handlePageChange = (newPage) => {
+    const handlePageChange = (newPage: number) => {
         setCurrentPage(newPage)
     }
 
@@ -109,7 +115,7 @@ const SeatsPage = () => {
 
                 <div className="mt-8 flow-root overflow-hidden">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    {seatState?.data?.length > 0 ? (
+                    {seat?.seats?.data?.length > 0 ? (
                         <table className="w-full text-left ">
                             <thead className="bg-white">
                                 <tr className="border-t border-b">
@@ -125,7 +131,7 @@ const SeatsPage = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {seatState?.data?.map((item, index) => (
+                                {seat?.seats?.data?.map((item: seat, index: number) => (
                                     <tr key={index} className="border-b">
                                         <td className="py-2 px-3 text-base font-medium text-gray-900">
                                             {getSTT(index)}
@@ -165,7 +171,7 @@ const SeatsPage = () => {
                     ) : (
                         <h3 style={{ textAlign: 'center' }}>Hiện tại không có ghế nào!</h3>
                     )}
-                    { seatState?.total > 10 && 
+                    { seat?.seats?.total > 10 && 
                         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange}/>
                     }
                 </div>

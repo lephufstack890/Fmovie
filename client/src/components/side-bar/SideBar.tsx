@@ -2,17 +2,17 @@ import { Disclosure } from "@headlessui/react";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import {
     CalendarIcon,
-    ChartPieIcon,
-    DocumentDuplicateIcon,
-    FolderIcon,
+    // ChartPieIcon,
+    // DocumentDuplicateIcon,
+    // FolderIcon,
 } from "@heroicons/react/24/outline";
 
 import { Link } from "react-router-dom";
 import MovieIcon from "../../assets/icon/MovieIcon";
 import HomeIcon from "../../assets/icon/HomeIcon";
 import MovieType from "../../assets/icon/MovieType";
-import CinemaIcon from "@/assets/icon/CinemaIcon";
-import VoucherIcon from "@/assets/icon/VoucherIcon";
+// import CinemaIcon from "@/assets/icon/CinemaIcon";
+// import VoucherIcon from "@/assets/icon/VoucherIcon";
 import UserIcon from "@/assets/icon/UserIcon";
 import OrderIcon from "@/assets/icon/OrderIcon";
 

@@ -18,11 +18,10 @@ const DayMovieListPage = () => {
 
     const {
         data: daymovie,
-        isLoading: isDayMovieListLoading,
         isSuccess: isDayMovieListSuccess,
     } = useGetDayMovieListQuery([]);
 
-    const [deleteDayMovieApi, { isError: isDeleteDayMovieError }] =
+    const [deleteDayMovieApi, ] =
     useDeleteDayMovieMutation();
 
     useEffect(() => {

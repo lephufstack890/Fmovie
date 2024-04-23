@@ -1,4 +1,9 @@
-const Success = ({setIsOpenPopupSuccess}) => {
+interface SuccessProps {
+    setIsOpenPopupSuccess: (isOpen: boolean) => void;
+    linkVnpay: unknown;
+}
+
+const Success: React.FC<SuccessProps> = ({setIsOpenPopupSuccess}) => {
 
     const handleCloseQRCodeChange = async () => {
         window.location.href = "http://localhost:5173/"

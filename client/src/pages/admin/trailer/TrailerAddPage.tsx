@@ -27,7 +27,7 @@ const TrailerAddPage = () => {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const [addTrailerMutation, {isLoading}] = useAddTrailerMutation()
+  const [addTrailerMutation] = useAddTrailerMutation()
 
   const FormSchema = z.object({
     id_movie: z.string(),
@@ -54,7 +54,7 @@ const TrailerAddPage = () => {
 
   useEffect(() => {
     dispatch(loadMovieList(movie?.data));
-  }, [isMovieListSuccess])
+  }, [dispatch, movie, isMovieListSuccess])
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     const formData = {

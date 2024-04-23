@@ -35,7 +35,7 @@ const FormSchema = z.object({
 const Login = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const [loginMutation, { isLoading }] = useLoginMutation();
+    const [loginMutation] = useLoginMutation();
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -53,7 +53,7 @@ const Login = () => {
                 dispatch(login(result));
                 navigate("/");
             })
-            .catch((error:any) => {
+            .catch((error) => {
                 toastError(error.data.message)
             });
     };

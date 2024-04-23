@@ -5,7 +5,6 @@ import { deleteCinema, loadCinemaList } from "@/services/cinema/cinemasSlices";
 import { DeleteIcon, EditIcon } from "lucide-react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-// type Props = {};
 
 const CinemaPage = () => {
     const dispatch = useAppDispatch();
@@ -15,12 +14,10 @@ const CinemaPage = () => {
   
     const {
         data: cinema,
-        isLoading: isCinemaListLoading,
         isSuccess: isCinemaListSuccess,
     } = useGetCinemaListQuery([]);
-    //delete
-    const [deleteCinemaApi, { isError: isDeleteCinemaError }] =
-    useDeleteCinemaMutation();
+
+    const [deleteCinemaApi, ] = useDeleteCinemaMutation();
   
     useEffect(() => {
         dispatch(loadCinemaList(cinema?.data));

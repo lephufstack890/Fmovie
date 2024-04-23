@@ -23,19 +23,22 @@ import {
 import { loadRoomList } from "@/services/rooms/roomsSlices"
 
 
+interface seattype {
+  regular: string,
+  vip: string,
+  double: string
+}
+
 const TimeShowEditPage = () => {
 
   const { id } = useParams();
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const [editTimeShowMutation, {isLoading}] = useEditTimeShowMutation()
+  const [editTimeShowMutation] = useEditTimeShowMutation()
 
   const {
     data: timeshow,
-    // isLoading: isLoadingTrailer
   } = useGetTimeShowQuery( id! );
-
-  console.log(timeshow);
 
   const roomState = useAppSelector(
     (state) => state.rooms.rooms
@@ -55,7 +58,7 @@ const TimeShowEditPage = () => {
     },
   })
 
-  function convertJsonToString(str) {
+  function convertJsonToString(str: seattype) {
     const convertedStr = `Ghế thường: ${str?.regular} cái, Ghế vip: ${str?.vip} cái, Ghế đôi: ${str?.double} cái`;
     return convertedStr;
   }
@@ -72,9 +75,9 @@ const TimeShowEditPage = () => {
       }
 
       const jsonObject = {
-          regular: parseInt(matches[0]),
-          vip: parseInt(matches[1]),
-          double: parseInt(matches[2])
+          regular: Number(matches[0]),
+          vip: Number(matches[1]),
+          double: Number(matches[2])
       };
   
       return jsonObject;
@@ -89,27 +92,25 @@ const TimeShowEditPage = () => {
         seat_quantities: convertJsonToString(timeshow.data[0].seat_quantities)
       })
     }
-  },[timeshow])
+  },[form, timeshow])
 
   const {
     data: room,
-    isLoading: isRoomListLoading,
     isSuccess: isRoomListSuccess,
   } = useGetRoomListQuery([]);
 
   useEffect(() => {
     dispatch(loadRoomList(room?.data));
-  }, [isRoomListSuccess]);
+  }, [dispatch, room, isRoomListSuccess]);
 
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     const formData = {
-      id,
+      id: Number(id),
       name: data.name,
-      id_room: data.id_room,
+      id_room: String(data.id_room),
       seat_quantities: convertStringToJson(data.seat_quantities),
     }
-    console.log(formData);
     try {
       await editTimeShowMutation(formData).unwrap().then(() => {
         dispatch(editNewTimeShow(formData))

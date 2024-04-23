@@ -19,17 +19,17 @@ const Payment = () => {
     const location = useLocation();
     const { pathname, search } = location;
     const currentURL = "http://localhost:5173" + `${pathname}${search}`;
-    const user = useSelector((state: any) => state.auth.user) as User;
+    const user = useSelector((state: { auth: { user: User } }) => state.auth.user);
     
-    const [selectedInput, setSelectedInput] = useState("Chuyển khoản");
+    const [selectedInput, setSelectedInput] = useState<string | null>("Chuyển khoản");
     const [orderNumber, setOrderNumber] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [isOpenPopup, setIsOpenPopup] = useState(false);
     const [isOpenPopupSuccess, setIsOpenPopupSuccess] = useState(false);
     const [isOpenPopupLoad, setIsOpenPopupLoad] = useState(false);
     const [timeLeft, setTimeLeft] = useState(360); 
-    const [selectedBank, setSelectedBank] = useState(null);
-    const [linkVnpay, setLinkVnpay] = useState("");
+    const [selectedBank, setSelectedBank] = useState<string>('');
+    const [linkVnpay, setLinkVnpay] = useState<unknown>(null);
 
     const [paymentMutation, ] = usePaymentMutation()
     const [addTransaction, ] = useVnpayCallbackMutation();
@@ -37,11 +37,11 @@ const Payment = () => {
     const [isPaymentProcessed, setIsPaymentProcessed] = useState(true);
     const [isChooseSeatCalled, setIsChooseSeatCalled] = useState(false);
 
-    const handleInputChange = (inputId: any): void => {
+    const handleInputChange = (inputId: string): void => {
         setSelectedInput(inputId === selectedInput ? null : inputId);
     };
 
-    const handlePopupClick = (responseData: any) => {
+    const handlePopupClick = (responseData: unknown) => {
         setIsOpenPopup(true);
         setLinkVnpay(responseData)
     }
@@ -50,7 +50,7 @@ const Payment = () => {
         setIsOpenPopupSuccess(true);
     }
 
-    const handleBankImageClick = (bankId: any) => {
+    const handleBankImageClick = (bankId: string) => {
         setSelectedBank(bankId); 
     }
 
@@ -69,7 +69,7 @@ const Payment = () => {
     };
 
     const storedPayment = localStorage.getItem('payment');
-    let totalPriceProps: number, quantity: number, seatsConvert: any, selectedSeats: any, currentURL1: string, showtime: any, timeshow: any;
+    let totalPriceProps: number | undefined, quantity: number, seatsConvert: unknown, selectedSeats: string[], currentURL1: string, showtime: unknown, timeshow: unknown;
         if(storedPayment){
             const paymentInfo = JSON.parse(storedPayment);
             totalPriceProps = paymentInfo?.totalPriceProps;
@@ -79,7 +79,7 @@ const Payment = () => {
             showtime = paymentInfo?.showtime;
             timeshow = paymentInfo?.timeshow;
 
-            seatsConvert = selectedSeats.map(str => parseInt(str.replace(/[^\d]/g, ''), 10));
+            seatsConvert = selectedSeats.map((str: string) => parseInt(str.replace(/[^\d]/g, ''), 10));
         }
     
     let queryString = window.location.search;
@@ -100,7 +100,7 @@ const Payment = () => {
             time_show = paymentInfo.timeshow?.data[0].name;
 
             //convert từ mảng chuỗi sang mảng số nguyên 
-            numbersArray = seats.map(str => parseInt(str.replace(/[^\d]/g, ''), 10));
+            numbersArray = seats.map((str: string) => parseInt(str.replace(/[^\d]/g, ''), 10));
 
             //convert từ ngày kiểu 2024-01-01 sang 01/01/2024
             const dateShow = paymentInfo.showtime.data.movies.trailer.dateShow;
@@ -115,15 +115,16 @@ const Payment = () => {
         const formData = {
             id_user: user?.id,
             totalQuantity: quantity,
+            time: '',
             paymentMethod: "Chuyển khoản",
-            totalPayment: parseInt(vnp_Amount)/100,
+            totalPayment: Number(vnp_Amount)/100,
             paymentStatus: "Đã thanh toán",
             seats: seats,
             order_code: vnp_TxnRef,
             name_cinemas: name_cinema,
             name_movie: name_movie,
             name_room: name_room,
-            day_movie: formattedDate,
+            day_movie: String(formattedDate),
             time_show: time_show,
             email: user?.email
         }
@@ -164,7 +165,7 @@ const Payment = () => {
     }
 
     useEffect(() => {
-        const handleBeforeUnload = (event) => {
+        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
             if(isPaymentProcessed){
                 chooseSeat({
                     id_user: user?.id,
@@ -182,7 +183,7 @@ const Payment = () => {
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
         };
-    }, [chooseSeat, user, seatsConvert]);
+    }, [chooseSeat, user, seatsConvert, isPaymentProcessed]);
 
     
     useEffect(() => {
@@ -201,7 +202,7 @@ const Payment = () => {
         return () => clearInterval(countdownTimer);
     }, []);
 
-    const formatTime = (time:any) => {
+    const formatTime = (time: number) => {
         const minutes = Math.floor(time / 60);
         const seconds = time % 60;
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
@@ -242,10 +243,10 @@ const Payment = () => {
             try { 
                 await paymentMutation(payment).unwrap()
                 .then(response => {
-                    const responseData = response?.link.data; 
-                    handlePopupClick(responseData);
-                    localStorage.setItem('paymentInfo', JSON.stringify(formData));
-                });
+                      const responseData = response;
+                      handlePopupClick(responseData);
+                      localStorage.setItem('paymentInfo', JSON.stringify(formData));
+                  });
             } 
             catch (error:unknown) {
                 toastError('Thanh toán thất bại!')

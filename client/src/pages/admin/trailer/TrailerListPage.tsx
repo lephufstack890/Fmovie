@@ -1,6 +1,6 @@
 import { DeleteIcon, EditIcon } from "lucide-react";
 import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { useAppDispatch } from "@/app/hooks";
 import {
     useDeleteTrailerMutation,
     useGetTrailerListQuery,
@@ -9,25 +9,29 @@ import { deleteTrailer, loadTrailerList } from "@/services/trailer/trailersSlice
 import { toastError, toastSuccess } from "@/hook/Toast";
 import { Link } from "react-router-dom";
 
+interface trailer {
+    id: number,
+    id_movie: {
+        name: string
+    },
+    url: string,
+    dateShow: string
+}
+
 const TrailerListPage = () => {
 
     const dispatch = useAppDispatch();
-    const trailerState = useAppSelector(
-        (state) => state.trailers.trailers
-    );
 
     const {
         data: trailer,
-        isLoading: isTrailerListLoading,
         isSuccess: isTrailerListSuccess,
     } = useGetTrailerListQuery([]);
 
-    const [deleteTrailerApi, { isError: isDeleteTrailerError }] =
-    useDeleteTrailerMutation();
+    const [deleteTrailerApi] = useDeleteTrailerMutation();
 
     useEffect(() => {
         dispatch(loadTrailerList(trailer?.data));
-    }, [isTrailerListSuccess]);
+    }, [dispatch, trailer, isTrailerListSuccess]);
 
 
     const tHead = ["STT","Tên phim", "Link Trailer", "Thời gian", "Tác vụ", ""];
@@ -90,7 +94,7 @@ const TrailerListPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {trailerState?.map((item, index) => (
+                            {trailer?.data?.map((item: trailer, index: number) => (
                                 <tr key={index} className="border-b">
                                     <td className="py-2 px-3 text-base font-medium text-gray-900">
                                         {index + 1}

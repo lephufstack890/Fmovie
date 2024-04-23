@@ -19,12 +19,18 @@ import {
 } from "@/services/payment/payments.services";
 import { User } from '@/services/auth/auth.interface';
 
-const Login = () => {
+interface Payment {
+    time: string,
+    order_code: string,
+    paymentStatus: string
+}
 
-    const user = useSelector((state: any) => state.auth.user) as User;
+const InfoAccount = () => {
+
+    const user = useSelector((state: { auth: { user: User | undefined } }) => state.auth.user);
     const [activeTab, setActiveTab] = useState("THÔNG TIN TÀI KHOẢN");
 
-    const {data: payment} = useGetPaymentQuery(user?.id)
+    const {data: payment} = useGetPaymentQuery(user?.id || "")
 
     const handleSetTab = (active: string) => {
         setActiveTab(active)
@@ -248,7 +254,7 @@ const Login = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {payment?.data?.map((item, index) => (
+                        {payment?.data?.map((item: Payment, index: number) => (
                             <tr key={index}>
                                 <td>{item?.time}</td>
                                 <td>{item?.order_code}</td>
@@ -264,4 +270,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default InfoAccount;

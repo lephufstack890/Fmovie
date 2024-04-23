@@ -30,7 +30,7 @@ const CinemaAddPage = () => {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const [addCinemaMutation, {isLoading}] = useAddCinemaMutation()
+  const [addCinemaMutation, ] = useAddCinemaMutation()
 
   const FormSchema = z.object({
     name: z.string().min(2, {
@@ -62,8 +62,6 @@ const CinemaAddPage = () => {
   })
  
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    
-    
     try {
       await addCinemaMutation(data).unwrap().then(() => {
         dispatch(addNewCinema(data))

@@ -4,7 +4,7 @@ export interface Seat {
     nameRow: string
     seatStatus: string
     id_seatstype: string | number
-    id_time: string | number
+    // id_time: string | number
 }
 
 export interface SeatState {

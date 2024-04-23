@@ -37,30 +37,63 @@ import {
 import { loadDayMovieList } from "@/services/daymovie/daymoviesSlices"
 
 
+interface trailer {
+  id: number,
+  url: string,
+  id_movie: {
+    name: string
+  }
+}
 
 const MovieAddPage = () => {
 
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [selectedDays, setSelectedDays] = useState([]);
-  const [selectedTimes, setSelectedTimes] = useState([]);
+  // const [selectedCategories, setSelectedCategories] = useState([]);
+  // const [selectedDays, setSelectedDays] = useState([]);
+  // const [selectedTimes, setSelectedTimes] = useState([]);
 
-  const [isFile, setIsFile] = useState('')
-  const [previewImage, setPreviewImage] = useState(null);
+  // const [isFile, setIsFile] = useState('')
+  // const [previewImage, setPreviewImage] = useState(null);
+
+  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
+  const [selectedDays, setSelectedDays] = useState<number[]>([]);
+  const [selectedTimes, setSelectedTimes] = useState<number[]>([]);
+
+  const [isFile, setIsFile] = useState<string>('');
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
 
   const [uploadImage, ] = useUploadImageMutation()
 
-  const handleImageChange = async (e) => {
-    const file = e.target.files[0];
+  // const handleImageChange = async (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = async () => {
+  //       setPreviewImage(reader.result);
+  //       const formData = new FormData();
+  //       formData.append('image', file);
+  //       try {
+  //         const pathFile = await uploadImage(formData);
+  //         setIsFile(pathFile?.data.url);
+  //       } catch (error) {
+  //         console.error('Error uploading image:', error);
+  //       }
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = async () => {
-        setPreviewImage(reader.result);
+        setPreviewImage(reader.result as string);
         const formData = new FormData();
         formData.append('image', file);
         try {
           const pathFile = await uploadImage(formData);
-          setIsFile(pathFile?.data.url);
+          setIsFile(pathFile?.data?.url);
         } catch (error) {
           console.error('Error uploading image:', error);
         }
@@ -71,36 +104,35 @@ const MovieAddPage = () => {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const [addMovieMutation, {isLoading}] = useAddMoviesMutation()
-  
+  const [addMovieMutation] = useAddMoviesMutation()
 
-  const handleSelectCategoryChange = (event: any) => {
-    const selectedValue = event.target.value
-    const selectedCategory = categoryState?.find((category) => category.id == selectedValue)
-    if (selectedCategory && !selectedCategories.includes(selectedCategory.id)) {
-      setSelectedCategories((prevItems) => [...prevItems, selectedCategory.id])
+  const handleSelectCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = event.target.value;
+    const selectedCategory = categoryState?.find((category) => category.id == selectedValue);
+    if (selectedCategory && !selectedCategories?.includes(Number(selectedCategory?.id))) {
+      setSelectedCategories((prevItems) => [...prevItems, Number(selectedCategory?.id)]);
     }
   };
   const handleRemoveCategory = (selectedItemId: number | undefined | string) => {
     setSelectedCategories((prevItems) => prevItems.filter((itemId) => itemId !== selectedItemId))
   }
 
-  const handleSelectTimeShowChange = (event: any) => {
+  const handleSelectTimeShowChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value
     const selectedTimeShow = timeshowState?.find((timeshow) => timeshow.id == selectedValue)
-    if (selectedTimeShow && !selectedTimes.includes(selectedTimeShow.id)) {
-      setSelectedTimes((prevItems) => [...prevItems, selectedTimeShow.id])
+    if (selectedTimeShow && !selectedTimes.includes(Number(selectedTimeShow.id))) {
+      setSelectedTimes((prevItems) => [...prevItems, Number(selectedTimeShow.id)])
     }
   };
   const handleRemoveTimeShow = (selectedItemId : number | undefined | string) => {
     setSelectedTimes((prevItems) => prevItems.filter((itemId) => itemId !== selectedItemId))
   }
 
-  const handleSelectDayMovieChange = (event: any) => {
+  const handleSelectDayMovieChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value
     const selectedDayMovie = daymovieState?.find((daymovie) => daymovie.id == selectedValue)
-    if (selectedDayMovie && !selectedDays.includes(selectedDayMovie.id)) {
-      setSelectedDays((prevItems) => [...prevItems, selectedDayMovie.id])
+    if (selectedDayMovie && !selectedDays.includes(Number(selectedDayMovie.id))) {
+      setSelectedDays((prevItems) => [...prevItems, Number(selectedDayMovie.id)])
     }
   };
   const handleRemoveDayMovie = (selectedItemId: number | undefined | string) => {
@@ -116,18 +148,18 @@ const MovieAddPage = () => {
   } = useGetCategoryListQuery([]);
   useEffect(() => {
     dispatch(loadCategoryList(category?.data));
-  }, [isCategoryListSuccess])
+  }, [dispatch, category, isCategoryListSuccess])
 
-  const trailerState = useAppSelector(
-    (state) => state.trailers.trailers
-  );
+  // const trailerState = useAppSelector(
+  //   (state) => state.trailers.trailers
+  // );
   const {
     data: trailer,
     isSuccess: isTrailerListSuccess,
   } = useGetTrailerListQuery([]);
   useEffect(() => {
     dispatch(loadTrailerList(trailer?.data));
-  }, [isTrailerListSuccess])
+  }, [dispatch, trailer, isTrailerListSuccess])
 
   const timeshowState = useAppSelector(
     (state) => state.timeshows.timeshows
@@ -138,7 +170,7 @@ const MovieAddPage = () => {
   } = useGetTimeShowListQuery([]);
   useEffect(() => {
     dispatch(loadTimeShowList(timeshow?.data));
-  }, [isTimeShowListSuccess])
+  }, [dispatch, timeshow, isTimeShowListSuccess])
 
   const daymovieState = useAppSelector(
     (state) => state.daymovies.daymovies
@@ -149,7 +181,7 @@ const MovieAddPage = () => {
   } = useGetDayMovieListQuery([]);
   useEffect(() => {
     dispatch(loadDayMovieList(daymovie?.data));
-  }, [isDayMovieListSuccess])
+  }, [dispatch, daymovie, isDayMovieListSuccess])
 
 
   const FormSchema = z.object({
@@ -397,7 +429,7 @@ const MovieAddPage = () => {
                     <FormControl>
                       <select {...field} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option selected>Chọn link video</option>
-                        {trailerState?.map((item, index) => (
+                        {trailer?.data?.map((item: trailer, index: number) => (
                           <option key={index} value={item?.id}>
                             {item?.url} - {item?.id_movie?.name}
                           </option>

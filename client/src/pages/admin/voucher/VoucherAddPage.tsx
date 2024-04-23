@@ -22,7 +22,7 @@ const VoucherAddPage = () => {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const [addVoucherMutation, {isLoading}] = useAddVoucherMutation()
+  const [addVoucherMutation] = useAddVoucherMutation()
 
   const FormSchema = z.object({
     code: z.string(),

@@ -48,10 +48,9 @@ const SeatEditPage = () => {
     (state) => state.timeshows.timeshows
   );
 
-  const [editSeatMutation, { isLoading }] = useEditSeatMutation();
+  const [editSeatMutation] = useEditSeatMutation();
   const {
     data: seat,
-    isLoading: isLoadingSeat
   } = useGetSeatQuery( id! );
 
   const FormSchema = z.object({
@@ -82,46 +81,43 @@ const SeatEditPage = () => {
         id_time: seat.data.id_time
       })
     }
-  },[seat])
+  },[form, seat])
 
   const {
     data: room,
-    isLoading: isRoomListLoading,
     isSuccess: isRoomListSuccess,
   } = useGetRoomListQuery([]);
 
   useEffect(() => {
     dispatch(loadRoomList(room?.data));
-  }, [isRoomListSuccess]);
+  }, [dispatch, room, isRoomListSuccess]);
 
   const {
     data: seattype,
-    isLoading: isSeatTypeListLoading,
     isSuccess: isSeatTypeListSuccess,
   } = useGetSeatTypeListQuery([]);
 
   useEffect(() => {
     dispatch(loadSeatTypeList(seattype?.data));
-  }, [isSeatTypeListSuccess]);
+  }, [dispatch, seattype, isSeatTypeListSuccess]);
 
   const {
     data: timeshow,
-    isLoading: isTimeShowListLoading,
     isSuccess: isTimeShowListSuccess,
   } = useGetTimeShowListQuery([]);
 
   useEffect(() => {
     dispatch(loadTimeShowList(timeshow?.data));
-  }, [isTimeShowListSuccess]);
+  }, [dispatch, timeshow, isTimeShowListSuccess]);
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     const formData = {
-      id: parseInt(id),
-      id_room: parseInt(data.id_room),
+      id: Number(id),
+      id_room: Number(data.id_room),
       nameRow: data.nameRow,
       seatStatus: data.seatStatus,
-      id_seatstype: parseInt(data.id_seatstype),
-      id_time: parseInt(data.id_time)
+      id_seatstype: Number(data.id_seatstype),
+      id_time: Number(data.id_time)
     }
     console.log(formData)
     try {

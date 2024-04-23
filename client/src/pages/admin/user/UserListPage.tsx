@@ -12,7 +12,7 @@ import UserDetail from "@/pages/popup/user/UserDetail";
 const UserListPage = () => {
 
     const [isOpenPopup, setIsOpenPopup] = useState(false);
-    const [idUser, setIdUser] = useState(0);
+    const [idUser, setIdUser] = useState<string | number>(0);
 
     const dispatch = useAppDispatch();
     const userState = useAppSelector(
@@ -29,7 +29,7 @@ const UserListPage = () => {
 
     useEffect(() => {
         dispatch(loadUserList(user?.data));
-    }, [isUserListSuccess]);
+    }, [dispatch, user, isUserListSuccess]);
 
     const handlePopupOpen = (id: string | number) => {
         setIsOpenPopup(true);

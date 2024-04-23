@@ -6,7 +6,7 @@ import { IoTime } from 'react-icons/io5';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { cn } from '@/lib/utils';
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { useAppDispatch} from "@/app/hooks";
 import { useGetDayMovieListQuery } from "@/services/daymovie/daymovies.services";
 import { loadDayMovieList } from "@/services/daymovie/daymoviesSlices";
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
@@ -14,10 +14,44 @@ import Trailer from '@/components/trailer/Trailer';
 import Showtime from "../../components/show-time/Showtime";
 import { useGetMoviesByStatusQuery, useGetMoviesQuery, useGetMoviesByDateQuery } from "@/services/movies/movies.services";
 
+interface daymovie {
+    id: number,
+    day: number,
+    month_rank: string
+}
+
+interface moviebydate {
+    id: number,
+    image: string,
+    name: string,
+    time: string,
+    time_shows: timeshow[],
+    id_category: Category[]
+}
+
+interface Category {
+    name: string
+}
+
+interface timeshow {
+    id: number,
+    name: string,
+    available_seats: number
+}
+
+interface movie {
+    id: number,
+    image: string,
+    name: string,
+    time: string,
+    detail: {
+        categories: Category[]
+    }
+}
 
 const SchedulePage: React.FC = () => {
     const dispatch = useAppDispatch();
-    const daymovieState = useAppSelector((state) => state.daymovies.daymovies);
+    // const daymovieState = useAppSelector((state) => state.daymovies.daymovies);
     const [activeTab, setActiveTab] = useState(1);
     const [modal, setModal] = useState("");
     const [idMovie, setIdMovie] = useState(1);
@@ -36,7 +70,7 @@ const SchedulePage: React.FC = () => {
 
     useEffect(() => {
         if (daymovie) {
-            dispatch(loadDayMovieList(daymovie.data));
+            dispatch(loadDayMovieList(daymovie?.data));
         }
     }, [dispatch, daymovie, isDayMovieListSuccess]);
 
@@ -54,7 +88,7 @@ const SchedulePage: React.FC = () => {
         <Drawer>
         <div className='container'>
             <ul className="nav nav-tabs dayofweek mb-4">
-                {daymovieState?.map((item: any, index: number) => (
+                {daymovie?.data?.map((item: daymovie, index: number) => (
                     <li key={index} className={activeTab === item?.id ? 'activeTab' : ''}>
                         <NavLink to="" onClick={() => handleTabClick(item.id)} className='text-black text-decoration-none'>
                             <span className='text-black fw-bold' style={{ fontSize: '38px' }}>{item?.day}</span>/{item?.month_rank}
@@ -63,7 +97,7 @@ const SchedulePage: React.FC = () => {
                 ))}
             </ul>
             <div>
-                {movieByDate?.data?.map((item: any, index: number) => (
+                {movieByDate?.data?.map((item: moviebydate, index: number) => (
                     <div key={index} className="row">
                         <div className="col-lg-12 col-md-12 col-12 mb-3" style={{ borderBottom: '1px solid #ccc' }}>
                             <div className='row mb-3'>
@@ -92,7 +126,7 @@ const SchedulePage: React.FC = () => {
                                     <div className="d-flex align-items-center mb-4">
                                         <span className='d-flex align-items-center fw-bold pr-4'>
                                             <FaTag style={{ color: '#337ab7' }} />
-                                            {item?.id_category.map((category) => category.name).join(', ')}
+                                            {item?.id_category.map((category: Category) => category.name).join(', ')}
                                         </span>
                                         <span className='d-flex align-items-center fw-bold'>
                                             <IoTime style={{ color: '#337ab7' }} />
@@ -101,7 +135,7 @@ const SchedulePage: React.FC = () => {
                                     </div>
                                     <span className="subtitle">2D phụ đề</span>
                                     <ul className="list-time mt-2">
-                                        {item?.time_shows.map((itemTimeShow: any, index: number) => (
+                                        {item?.time_shows.map((itemTimeShow: timeshow, index: number) => (
                                             <li key={index} className="item-time">
                                                 <NavLink
                                                     to={`/ticket/${itemTimeShow?.id}?id_movie=${item?.id}`}
@@ -123,7 +157,7 @@ const SchedulePage: React.FC = () => {
                 <h2 className='text-center fw-bold mb-4'><span className='title-swiper'>PHIM SẮP CHIẾU</span></h2>
 
                 <div className="list-movie flex ">
-                    {movies?.data?.map((movie) => (
+                    {movies?.data?.map((movie: movie) => (
                         <div className="movie-item" key={movie.id}>
                             <DrawerTrigger className={cn('p-0 ')}>
                                 <div className={cn('movie-item__image ') }>
@@ -151,7 +185,7 @@ const SchedulePage: React.FC = () => {
                                     {movie.name}
                                 </Link>
                                 <p>
-                                    <strong>Thể loại:</strong>{movie.detail.categories.map((category) => category.name).join(', ')}
+                                    <strong>Thể loại:</strong>{movie.detail.categories.map((category: Category) => category.name).join(', ')}
                                 </p>
                                 <p>
                                     <strong>Thời lượng:</strong> {movie.time} phút

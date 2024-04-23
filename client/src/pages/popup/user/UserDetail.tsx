@@ -1,6 +1,21 @@
 import { useGetUserQuery } from "@/services/users/users.services"
 
-const UserDetail = ({setIsOpenPopup, idUser}) => {
+interface UserDetailProps {
+    setIsOpenPopup: (isOpen: boolean) => void;
+    idUser: number | string;
+}
+
+interface transaction {
+    order_code: string,
+    name_movie: string,
+    name_cinemas: string,
+    name_room: string,
+    day_movie: string,
+    time_show: string,
+    totalPayment: number
+}
+
+const UserDetail: React.FC<UserDetailProps> = ({setIsOpenPopup, idUser}) => {
 
     const handleCloseQRCodeChange = async () => {
         setIsOpenPopup(false);
@@ -11,7 +26,7 @@ const UserDetail = ({setIsOpenPopup, idUser}) => {
     } = useGetUserQuery( idUser );
 
     function formatCurrency(amount: string | number) {
-        let intAmount = parseInt(amount);
+        const intAmount = Number(amount);
         let formattedAmount = intAmount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
 
         formattedAmount = formattedAmount.replace('₫', '') + ' VND';
@@ -69,7 +84,7 @@ const UserDetail = ({setIsOpenPopup, idUser}) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {user?.data?.transactions?.map((item, index) => (
+                            {user?.data?.transactions?.map((item: transaction, index: number) => (
                                 <tr key={index} className="border-b">
                                     <td className="py-2 px-3 text-base font-medium text-gray-900">
                                         {index + 1}

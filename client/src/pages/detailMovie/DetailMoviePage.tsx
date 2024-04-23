@@ -20,6 +20,10 @@ interface TimeShow {
     name: string
 }
 
+interface Category {
+    name: string
+}
+
 const DetailMoviePage: React.FC = () => {
     const { id } = useParams()
     const {data: movie} = useGetMoviesQuery(id!)
@@ -93,7 +97,7 @@ const DetailMoviePage: React.FC = () => {
                                         THỂ LOẠI: 
                                     </span>
                                     <span className="col-lg-8">
-                                    {movie?.data?.id_category.map((category) => category.name).join(', ')}
+                                    {movie?.data?.id_category?.map((category: Category) => category.name).join(', ')}
                                     </span>
                                 </div>
                                 <div className="row">

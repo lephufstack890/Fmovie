@@ -29,7 +29,7 @@ const TrailerEditPage = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
-  const [editTrailerMutation, {isLoading}] = useEditTrailerMutation()
+  const [editTrailerMutation] = useEditTrailerMutation()
 
   const {
     data: trailer,
@@ -48,7 +48,7 @@ const TrailerEditPage = () => {
 
   useEffect(() => {
     dispatch(loadMovieList(movie?.data));
-  }, [isMovieListSuccess])
+  }, [dispatch, movie, isMovieListSuccess])
 
   const FormSchema = z.object({
     id_movie: z.union([z.number(), z.string()]),
@@ -72,7 +72,7 @@ const TrailerEditPage = () => {
         dateShow: trailer.data.dateShow,
       })
     }
-  },[trailer])
+  },[form, trailer])
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     const formData = {

@@ -22,8 +22,7 @@ import {
 import { CalendarIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { useRegisterMutation } from "@/services/auth/auth.services";
-import { toastError, toastSuccess } from "@/hook/Toast";
-import { log } from "console";
+import { toastSuccess } from "@/hook/Toast";
 const FormSchema = z
     .object({
         email: z
@@ -67,7 +66,7 @@ const FormSchema = z
     });
 const Register = () => {
     const navigate = useNavigate();
-    const [registerMutation, { isLoading }] = useRegisterMutation();
+    const [registerMutation] = useRegisterMutation();
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -87,7 +86,7 @@ const Register = () => {
         await registerMutation({ ...data, date: dateFormat }).unwrap().then(() => {
           toastSuccess('Đăng kí thành công')
           navigate('/login')
-        }).catch((error: any) => {
+        }).catch((error) => {
             if(error.data.date[0]) {
                 form.setError("date", {
                     type: "server",

@@ -30,7 +30,7 @@ const SeatsAddPage = () => {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const [addSeatMutation, {isLoading}] = useAddSeatMutation()
+  const [addSeatMutation] = useAddSeatMutation()
 
   const roomState = useAppSelector(
     (state) => state.rooms.rooms
@@ -58,23 +58,21 @@ const SeatsAddPage = () => {
 
   const {
     data: room,
-    isLoading: isRoomListLoading,
     isSuccess: isRoomListSuccess,
   } = useGetRoomListQuery([]);
 
   useEffect(() => {
     dispatch(loadRoomList(room?.data));
-  }, [isRoomListSuccess]);
+  }, [dispatch, room, isRoomListSuccess]);
 
   const {
     data: seattype,
-    isLoading: isSeatTypeListLoading,
     isSuccess: isSeatTypeListSuccess,
   } = useGetSeatTypeListQuery([]);
 
   useEffect(() => {
     dispatch(loadSeatTypeList(seattype?.data));
-  }, [isSeatTypeListSuccess]);
+  }, [dispatch, seattype, isSeatTypeListSuccess]);
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     const formData = {

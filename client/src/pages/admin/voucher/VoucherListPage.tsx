@@ -18,16 +18,14 @@ const VoucherListPage = () => {
 
     const {
         data: voucher,
-        isLoading: isVoucherListLoading,
         isSuccess: isVoucherListSuccess,
     } = useGetVoucherListQuery([]);
 
-    const [deleteVoucherApi, { isError: isDeleteVoucherError }] =
-    useDeleteVoucherMutation();
+    const [deleteVoucherApi] = useDeleteVoucherMutation();
 
     useEffect(() => {
         dispatch(loadVoucherList(voucher?.data));
-    }, [isVoucherListSuccess]);
+    }, [dispatch, voucher, isVoucherListSuccess]);
 
 
     const tHead = ["STT", "Mã voucher", "Tên voucher", "Số lượng", "Giảm giá", "Hạn", "Tình Trạng", ""];

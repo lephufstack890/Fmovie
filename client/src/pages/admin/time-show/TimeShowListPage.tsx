@@ -9,6 +9,13 @@ import { deleteTimeShow, loadTimeShowList } from "@/services/timeshow/timeshowsS
 import { toastError, toastSuccess } from "@/hook/Toast";
 import { Link } from "react-router-dom";
 
+interface Timeshow {
+    id: number,
+    id_room: string,
+    name: string,
+    seat_quantities: string
+}
+
 const TrailerListPage = () => {
 
     const dispatch = useAppDispatch();
@@ -20,28 +27,26 @@ const TrailerListPage = () => {
 
     const {
         data: timeshow,
-        isLoading: isTimeShowListLoading,
         isSuccess: isTimeShowListSuccess,
     } = useGetTimeShowListQuery([]);
 
-    const [deleteTimeShowApi, { isError: isDeleteTimeShowError }] =
-    useDeleteTimeShowMutation();
+    const [deleteTimeShowApi] = useDeleteTimeShowMutation();
 
     useEffect(() => {
         dispatch(loadTimeShowList(timeshow?.data));
-    }, [isTimeShowListSuccess]);
+    }, [dispatch, timeshow, isTimeShowListSuccess]);
 
 
     const tHead = ["STT", "Phòng chiếu", "Giờ chiếu", "Số lượng loại ghế", "Tình Trạng", ""];
 
-    function convertString(str) {
+    function convertString(str: string) {
         if(typeof str !== 'string'){
             return;
         }else{
             const regex = /(\d+)/g;
             const matches = str.match(regex);
     
-            const convertedStr = `Ghế thường: ${matches[0]} cái, Ghế vip: ${matches[1]} cái, Ghế đôi: ${matches[2]} cái`;
+            const convertedStr = `Ghế thường: ${matches?.[0]} cái, Ghế vip: ${matches?.[1]} cái, Ghế đôi: ${matches?.[2]} cái`;
             
             return convertedStr;
         }
@@ -106,7 +111,7 @@ const TrailerListPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {timeshowState?.map((item, index) => (
+                            {timeshow?.data?.map((item: Timeshow, index: number) => (
                                 <tr key={index} className="border-b">
                                     <td className="py-2 px-3 text-base font-medium text-gray-900">
                                         {index + 1}

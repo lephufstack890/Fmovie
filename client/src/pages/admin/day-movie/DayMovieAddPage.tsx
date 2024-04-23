@@ -22,7 +22,7 @@ const DayMovieAddPage = () => {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const [addDayMovieMutation, {isLoading}] = useAddDayMovieMutation()
+  const [addDayMovieMutation, ] = useAddDayMovieMutation()
 
   const FormSchema = z.object({
     day: z.string(),

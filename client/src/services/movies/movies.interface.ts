@@ -1,5 +1,5 @@
 export interface Movie {
-    id?: string | number;
+    id?: number;
     name: string;
     description: string;
     status: string;
@@ -9,7 +9,7 @@ export interface Movie {
     releaseDate: string;
     language: string;
     image: string;
-    id_category?: string[] | number[];
+    id_category?: string[] | number[] | undefined;
     id_trailer?: string | number;
     id_time?: string[] | number[];
     id_day_movie?: string[] | number[];

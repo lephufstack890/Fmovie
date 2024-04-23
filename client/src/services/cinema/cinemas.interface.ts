@@ -2,10 +2,10 @@ export interface Cinema {
     id?: string | number
     name: string
     address: string
-    screeningRooms: number
+    screeningRooms: string | number
     description: string
-    phoneContact: number
-    image: string
+    phoneContact: string
+    // image: string
 }
 
 export interface CinemaState {
